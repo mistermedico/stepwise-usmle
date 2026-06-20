@@ -9,6 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="bites.css?v=4" />
+  <link rel="stylesheet" href="backend.css?v=5" />
 </head>
 <body>
   <div class="app-shell">
@@ -34,7 +35,7 @@
       <header class="topbar">
         <button class="mobile-menu">☰</button>
         <div class="search">⌕ <input placeholder="חיפוש נושא, מחלה או תרופה..." /></div>
-        <div class="top-actions"><div class="level"><span>רמה 12</span><div><i style="width:72%"></i></div></div><button class="bell">♢<b></b></button></div>
+        <div class="top-actions"><div class="level"><span>רמה 12</span><div><i style="width:72%"></i></div></div><button id="authButton" class="auth-button">התחברות</button><button class="bell">♢<b></b></button></div>
       </header>
 
       <section id="home" class="view active-view">
@@ -92,7 +93,7 @@
         </div>
       </section>
 
-      <section id="stats" class="view placeholder-view"><div class="placeholder-icon">▥</div><h1>הביצועים שלי</h1><p>76% הצלחה מתוך 1,248 שאלות. הנושא החזק ביותר: מערכת הלב.</p><button class="primary start-any">תרגול לפי נקודות חולשה</button></section>
+      <section id="stats" class="view real-stats"><div class="stats-header"><div><p class="eyebrow">נתונים אמיתיים מהתרגול שלך</p><h1>הביצועים שלי</h1><p>כל תשובה ו-Bite מתעדכנים כאן אוטומטית.</p></div><button class="primary start-any">תרגול לפי חולשות</button></div><div id="syncBanner" class="cloud-banner">מצב מקומי — ההתקדמות נשמרת במכשיר</div><div class="stats-summary"><article><span>פעילויות</span><strong id="statsTotal">0</strong></article><article><span>דיוק בשאלות</span><strong id="statsAccuracy">0%</strong></article><article><span>שליטה ב-Bites</span><strong id="statsMastery">0%</strong></article><article><span>ימים פעילים</span><strong id="statsDays">0</strong></article></div><div class="stats-grid"><article class="stats-panel"><h3>ביצועים לפי מערכת</h3><div id="systemStats"></div></article><article class="stats-panel"><h3>היסטוריה אחרונה</h3><div id="historyList"></div></article></div></section>
       <section id="saved" class="view placeholder-view"><div class="placeholder-icon">♡</div><h1>שאלות שמורות</h1><p id="savedText">עדיין לא שמרת שאלות. לחיצה על הלב בזמן תרגול תשמור אותן כאן.</p><button class="primary start-any">לתרגול</button></section>
       <section id="bites" class="view bites-view">
         <div class="bites-head"><div><p class="eyebrow">3,000 יחידות זכירה</p><h1>Step 1 Bites <span>⚡</span></h1><p>מושג אחד. תשובה אחת. חזרה עד שזה יושב.</p></div><div class="bite-filters"><button class="active" data-yield="ALL">הכול</button><button data-yield="HIGH">High Yield</button><button data-yield="MEDIUM">Medium Yield</button></div></div>
@@ -102,6 +103,7 @@
     </main>
   </div>
   <div id="toast" class="toast"></div>
-  <script src="bank.js?v=4"></script><script src="bites.js?v=4"></script><script src="app.js?v=4"></script><script src="bites-app.js?v=4"></script>
+  <div id="authModal" class="auth-modal"><div class="auth-box"><button id="authClose" class="auth-close">×</button><h2>ברוכים הבאים ל-STEPWISE</h2><p>התחברו כדי לסנכרן היסטוריה וסטטיסטיקות בין מכשירים.</p><div class="auth-tabs"><button class="active" data-mode="login">התחברות</button><button data-mode="signup">הרשמה</button></div><label>אימייל<input id="authEmail" type="email" autocomplete="email"></label><label>סיסמה<input id="authPassword" type="password" minlength="8" autocomplete="current-password"></label><p id="authMessage" class="auth-message"></p><button id="authSubmit" class="primary">התחברות</button><div class="sync-status">מאובטח באמצעות Supabase Auth</div></div></div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="supabase-config.js?v=5"></script><script src="bank.js?v=5"></script><script src="bites.js?v=5"></script><script src="app.js?v=5"></script><script src="bites-app.js?v=5"></script><script src="backend.js?v=5"></script>
 </body>
 </html>

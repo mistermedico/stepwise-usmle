@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>STEPWISE — USMLE Step 1</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="bites.css?v=4" />
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand"><span class="brand-mark">S</span><span>STEPWISE</span></div>
+      <nav>
+        <button class="nav-item active" data-view="home"><span>⌂</span> דף הבית</button>
+        <button class="nav-item" data-view="practice"><span>✦</span> תרגול שאלות</button>
+        <button class="nav-item" data-view="bites"><span>⚡</span> משחק Bites</button>
+        <button class="nav-item" data-view="stats"><span>▥</span> הביצועים שלי</button>
+        <button class="nav-item" data-view="saved"><span>♡</span> שאלות שמורות</button>
+      </nav>
+      <div class="daily-card">
+        <div class="flame">🔥</div>
+        <strong>רצף של 7 ימים!</strong>
+        <span>עוד יום אחד לשיא אישי</span>
+        <div class="week"><i>א</i><i>ב</i><i>ג</i><i>ד</i><i>ה</i><i>ו</i><i class="today">ש</i></div>
+      </div>
+      <div class="profile"><div class="avatar">NY</div><div><strong>נועם יהלום</strong><span>מסלול Step 1</span></div><button>⋮</button></div>
+    </aside>
+
+    <main>
+      <header class="topbar">
+        <button class="mobile-menu">☰</button>
+        <div class="search">⌕ <input placeholder="חיפוש נושא, מחלה או תרופה..." /></div>
+        <div class="top-actions"><div class="level"><span>רמה 12</span><div><i style="width:72%"></i></div></div><button class="bell">♢<b></b></button></div>
+      </header>
+
+      <section id="home" class="view active-view">
+        <div class="welcome-row">
+          <div><p class="eyebrow">יום שבת, 20 ביוני</p><h1>בוקר טוב, נועם <span>👋</span></h1><p>2,598 שאלות · כל מערכות Step 1 · שלוש רמות · הסברים מלאים</p></div>
+          <button class="primary" id="quickStart">התחלת תרגול מהיר <span>←</span></button>
+        </div>
+        <div class="metric-grid">
+          <article class="metric purple"><div class="metric-icon">◎</div><div><span>שאלות השבוע</span><strong>148</strong><small>↑ 18% מהשבוע שעבר</small></div><div class="spark"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></article>
+          <article class="metric teal"><div class="metric-icon">✓</div><div><span>אחוז הצלחה</span><strong>76%</strong><small>↑ 4% ב־30 הימים</small></div><div class="ring" style="--p:76"><span>76</span></div></article>
+          <article class="metric orange"><div class="metric-icon">ϟ</div><div><span>רצף נוכחי</span><strong>7 ימים</strong><small>שיא אישי: 12 ימים</small></div><div class="mini-bars"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></article>
+        </div>
+
+        <div class="content-grid">
+          <div>
+            <div class="section-head"><div><p class="eyebrow">בחירת מסלול</p><h2>איך מתרגלים היום?</h2></div></div>
+            <div class="mode-grid">
+              <article class="mode-card featured" data-mode="mixed"><span class="mode-badge">מומלץ</span><div class="mode-icon">✦</div><h3>מיקס חכם</h3><p>שאלות אדפטיביות מכל המערכות, לפי נקודות החולשה שלך.</p><div><span>15 שאלות</span><span>≈ 22 דקות</span></div><button>מתחילים ←</button></article>
+              <article class="mode-card" data-mode="systems"><div class="mode-icon peach">♡</div><h3>מערכת ממוקדת</h3><p>בחרו מערכת וצללו פנימה לתרגול ממוקד.</p><div><span>לב וכלי דם</span><span>כליות</span></div><button>לבחירת מערכת ←</button></article>
+              <article class="mode-card" data-mode="blitz"><div class="mode-icon blue">◷</div><h3>בליץ 5 דקות</h3><p>חמש שאלות מהירות לחזרה חדה כשאין הרבה זמן.</p><div><span>5 שאלות</span><span>טיימר פעיל</span></div><button>יאללה, בליץ ←</button></article>
+            </div>
+            <div class="section-head recent-head"><div><p class="eyebrow">המשך מאיפה שהפסקת</p><h2>סשנים אחרונים</h2></div><button class="text-btn" id="allSessions">לכל הסשנים ←</button></div>
+            <div class="session-list">
+              <article><div class="session-icon cardio">♥</div><div class="session-info"><strong>מערכת הלב וכלי הדם</strong><span>היום · 18 שאלות · 24 דקות</span></div><div class="session-score good">83%</div><div class="session-progress"><i style="width:83%"></i></div><button>המשך ←</button></article>
+              <article><div class="session-icon renal">≈</div><div class="session-info"><strong>כליות ואלקטרוליטים</strong><span>אתמול · 22 שאלות · 31 דקות</span></div><div class="session-score ok">68%</div><div class="session-progress"><i style="width:68%"></i></div><button>חזרה על טעויות ←</button></article>
+            </div>
+          </div>
+          <aside class="side-panel">
+            <article class="goal-card"><div class="section-head"><div><p class="eyebrow">היעד היומי</p><h3>ההתקדמות שלך</h3></div><button>•••</button></div><div class="big-ring"><div><strong id="dailyDone">34</strong><span>מתוך 40</span></div></div><p><b>עוד 6 שאלות</b> וסיימת את היעד היומי</p><button class="secondary" id="goalPractice">להשלמת היעד ←</button></article>
+            <article class="weak-card"><div class="section-head"><div><p class="eyebrow">כדאי לחזק</p><h3>נקודות לשיפור</h3></div><button>הכול</button></div><div class="weak-item"><span class="dot red"></span><div><strong>ביוכימיה — מטבוליזם</strong><small>58% הצלחה · 43 שאלות</small></div><button class="mini-play">▶</button></div><div class="weak-item"><span class="dot amber"></span><div><strong>אימונולוגיה</strong><small>64% הצלחה · 37 שאלות</small></div><button class="mini-play">▶</button></div><div class="weak-item"><span class="dot violet"></span><div><strong>נוירולוגיה</strong><small>69% הצלחה · 51 שאלות</small></div><button class="mini-play">▶</button></div></article>
+          </aside>
+        </div>
+      </section>
+
+      <section id="practice" class="view">
+        <div class="quiz-top"><button class="back-home">×</button><div><span id="quizLabel">מיקס חכם</span><strong><b id="qNumber">1</b> / <b id="qTotal">15</b></strong></div><div class="quiz-progress"><i id="quizProgress"></i></div><div class="timer">◷ <span id="timer">01:30</span></div></div>
+        <div class="quiz-layout">
+          <article class="question-card">
+            <div class="question-meta"><span id="systemTag">פתולוגיה · כליות</span><button id="saveQuestion">♡ שמירה</button></div>
+            <h2 id="questionText"></h2>
+            <figure id="questionImageWrap"><img id="questionImage" src="assets/renal-histology.png" alt="חתך היסטולוגי של גלומרולוס" /><figcaption>תמונת מיקרוסקופיה לימודית · הגדלה ×200</figcaption></figure>
+            <div id="answers" class="answers"></div>
+            <div class="confidence"><span>כמה בטוחים בתשובה?</span><button data-confidence="low">לא בטוח</button><button data-confidence="mid" class="selected">די בטוח</button><button data-confidence="high">בטוח מאוד</button></div>
+            <button id="submitAnswer" class="primary submit">בדיקת תשובה</button>
+          </article>
+          <aside class="quiz-aside">
+            <article><p class="eyebrow">סשן נוכחי</p><div class="session-stat"><span>נכונות</span><strong id="correctCount">0</strong></div><div class="session-stat"><span>רצף</span><strong id="streakCount">0 🔥</strong></div><div class="session-stat"><span>נקודות</span><strong id="pointsCount">0</strong></div></article>
+            <article class="tip"><span>💡</span><strong>טיפ לבחינה</strong><p>לפני שמסתכלים על התשובות, נסו לנסח בעצמכם את האבחנה.</p></article>
+          </aside>
+        </div>
+        <div id="explanation" class="explanation-panel">
+          <div class="result-title"><span id="resultIcon">✓</span><div><h3 id="resultTitle">בדיוק!</h3><p id="resultSubtitle"></p></div><button id="closeExplanation">×</button></div>
+          <div class="explanation-body"><div><h4>למה זו התשובה?</h4><p id="explanationText"></p><div class="pearl"><b>פנינת Step 1</b><span id="pearlText"></span></div></div><div><h4>למה האחרות לא?</h4><div id="whyWrong"></div></div></div>
+          <button id="nextQuestion" class="primary">לשאלה הבאה ←</button>
+        </div>
+      </section>
+
+      <section id="stats" class="view placeholder-view"><div class="placeholder-icon">▥</div><h1>הביצועים שלי</h1><p>76% הצלחה מתוך 1,248 שאלות. הנושא החזק ביותר: מערכת הלב.</p><button class="primary start-any">תרגול לפי נקודות חולשה</button></section>
+      <section id="saved" class="view placeholder-view"><div class="placeholder-icon">♡</div><h1>שאלות שמורות</h1><p id="savedText">עדיין לא שמרת שאלות. לחיצה על הלב בזמן תרגול תשמור אותן כאן.</p><button class="primary start-any">לתרגול</button></section>
+      <section id="bites" class="view bites-view">
+        <div class="bites-head"><div><p class="eyebrow">3,000 יחידות זכירה</p><h1>Step 1 Bites <span>⚡</span></h1><p>מושג אחד. תשובה אחת. חזרה עד שזה יושב.</p></div><div class="bite-filters"><button class="active" data-yield="ALL">הכול</button><button data-yield="HIGH">High Yield</button><button data-yield="MEDIUM">Medium Yield</button></div></div>
+        <div class="bite-stats"><article><span>נלמדו היום</span><strong id="biteDone">0</strong></article><article><span>רצף</span><strong id="biteStreak">0 🔥</strong></article><article><span>שליטה</span><strong id="biteMastery">0%</strong></article><article><span>נותרו במאגר</span><strong id="biteRemaining">3,000</strong></article></div>
+        <div class="bite-stage"><div class="bite-card" id="biteCard"><div class="bite-card-top"><span id="biteYield" class="yield high">HIGH YIELD</span><span id="biteSystem">ביוכימיה</span></div><div class="bite-context" id="biteContext">RAPID RECALL · B-1</div><h2 id="biteConcept">Von Gierke</h2><p id="biteFront">מהו הקישור המרכזי?</p><button id="revealBite" class="primary">גילוי התשובה</button><div id="biteAnswer" class="bite-answer"><strong id="biteAnswerTitle"></strong><p id="biteDetail"></p></div></div><div class="bite-controls" id="biteControls"><button data-grade="again">↻ שוב</button><button data-grade="hard">קשה</button><button data-grade="good">ידעתי</button><button data-grade="easy">קל ✓</button></div><p class="keyboard-hint">Space לגילוי · 1–4 לדירוג</p></div>
+      </section>
+    </main>
+  </div>
+  <div id="toast" class="toast"></div>
+  <script src="bank.js?v=4"></script><script src="bites.js?v=4"></script><script src="app.js?v=4"></script><script src="bites-app.js?v=4"></script>
+</body>
+</html>

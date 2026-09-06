@@ -153,8 +153,9 @@ struct GameView: View {
                 Text(detail)
                     .font(Theme.Typography.caption)
                     .foregroundStyle(Theme.Palette.textTertiary)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.7)
+                    .lineLimit(2)
+                    .minimumScaleFactor(0.85)
+                    .multilineTextAlignment(.trailing)
             }
             Meter(value: value, tint: tint)
         }
@@ -193,7 +194,7 @@ struct GameView: View {
                 ForEach(model.ticker.prefix(6)) { event in
                     HStack(alignment: .top, spacing: 6) {
                         Text("\(L.string("hud.day")) \(event.day)")
-                            .font(Theme.Typography.figure(11, weight: .semibold))
+                            .font(Theme.Typography.figureTiny)
                             .foregroundStyle(Theme.Palette.textTertiary)
                         Text(L.event(event))
                             .font(Theme.Typography.caption)
@@ -203,7 +204,9 @@ struct GameView: View {
             }
             .frame(maxWidth: .infinity, alignment: .leading)
         }
-        .frame(height: 72)
+        // Flexible rather than fixed: at the largest text sizes a 72pt strip
+        // shows barely half a line.
+        .frame(minHeight: 64, maxHeight: 116)
         .accessibilityElement(children: .contain)
     }
 

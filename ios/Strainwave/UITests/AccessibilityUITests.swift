@@ -66,7 +66,7 @@ final class AccessibilityUITests: UITestCase {
             "The accessibility audit needs iOS 17 or later"
         )
         launch()
-        startRun(difficulty: "breezy")
+        startRun()
         tap(app.buttons[A11y.Game.abilities])
         XCTAssertTrue(app.otherElements[A11y.Tree.root].waitForExistence(timeout: shortTimeout))
         if #available(iOS 17.0, *) {

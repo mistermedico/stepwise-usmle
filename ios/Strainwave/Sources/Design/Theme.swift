@@ -18,9 +18,12 @@ enum Theme {
         /// Hairlines and dividers.
         static let outline = Color(light: 0xD8DFE9, dark: 0x2C3B4E)
 
+        // Every text role clears 4.5:1 against the surface it sits on. The
+        // accessibility audit flagged the original tertiary, warning, success
+        // and response values, which were chosen by eye and failed.
         static let textPrimary = Color(light: 0x121A25, dark: 0xF0F4FA)
-        static let textSecondary = Color(light: 0x5A687C, dark: 0x9AAABF)
-        static let textTertiary = Color(light: 0x8B98AB, dark: 0x6B7D93)
+        static let textSecondary = Color(light: 0x536174, dark: 0xA6B5C9)
+        static let textTertiary = Color(light: 0x6B7A8F, dark: 0x93A3B8)
 
         /// The signature spread colour: a glowing purple-magenta. Deliberately
         /// not blood red — the whole point is that this reads as a lab dye.
@@ -29,20 +32,20 @@ enum Theme {
         static let spreadGlow = Color(light: 0xD86BF0, dark: 0xE080FF)
 
         /// The global response: a cool scientific cyan.
-        static let response = Color(light: 0x1E9DBE, dark: 0x3FC6E8)
+        static let response = Color(light: 0x0E7590, dark: 0x3FC6E8)
         static let responseSoft = Color(light: 0xC2E7F1, dark: 0x14384A)
 
         /// A healthy, untouched territory.
         static let healthy = Color(light: 0xC9D4E2, dark: 0x2A3A4D)
 
-        static let success = Color(light: 0x2E9E6B, dark: 0x54D39B)
-        static let warning = Color(light: 0xD08A17, dark: 0xF0B44E)
+        static let success = Color(light: 0x1E7A50, dark: 0x54D39B)
+        static let warning = Color(light: 0x9A6300, dark: 0xF0B44E)
 
         /// Branch accents on the ability map.
         static func branch(_ category: TraitBranchStyle) -> Color {
             switch category {
-            case .transmission: return Color(light: 0x2E7BD6, dark: 0x5AA6F5)
-            case .resilience: return Color(light: 0x2E9E6B, dark: 0x54D39B)
+            case .transmission: return Color(light: 0x1F5FAE, dark: 0x5AA6F5)
+            case .resilience: return Color(light: 0x1E7A50, dark: 0x54D39B)
             case .symptoms: return spread
             }
         }
@@ -57,30 +60,55 @@ enum Theme {
         static let displayName: String? = nil
         static let figureName: String? = nil
 
-        static func display(_ size: CGFloat, weight: Font.Weight = .semibold) -> Font {
+        /// Headings. Built from a text style rather than a point size, so every
+        /// label scales with the reader's Dynamic Type setting — a fixed size
+        /// silently ignores it, which is what the accessibility audit flagged.
+        static func display(_ style: Font.TextStyle, weight: Font.Weight = .semibold) -> Font {
             if let displayName {
-                return .custom(displayName, size: size).weight(weight)
+                return .custom(displayName, size: size(for: style), relativeTo: style).weight(weight)
             }
-            return .system(size: size, weight: weight, design: .rounded)
+            return .system(style, design: .rounded).weight(weight)
         }
 
         /// Figures on the control panel: evolution points, percentages, the day
         /// counter. Monospaced digits so numbers never jitter as they tick.
-        static func figure(_ size: CGFloat, weight: Font.Weight = .semibold) -> Font {
+        static func figure(_ style: Font.TextStyle, weight: Font.Weight = .semibold) -> Font {
             if let figureName {
-                return .custom(figureName, size: size).weight(weight)
+                return .custom(figureName, size: size(for: style), relativeTo: style)
+                    .weight(weight)
+                    .monospacedDigit()
             }
-            return .system(size: size, weight: weight, design: .rounded).monospacedDigit()
+            return .system(style, design: .rounded).weight(weight).monospacedDigit()
         }
 
-        static let title = display(28, weight: .bold)
-        static let heading = display(20, weight: .semibold)
-        static let subheading = display(16, weight: .semibold)
+        /// Base sizes, used only when a custom face is fitted; the system faces
+        /// bring their own.
+        private static func size(for style: Font.TextStyle) -> CGFloat {
+            switch style {
+            case .largeTitle: return 34
+            case .title: return 28
+            case .title2: return 22
+            case .title3: return 20
+            case .headline: return 17
+            case .callout: return 16
+            case .subheadline: return 15
+            case .footnote: return 13
+            case .caption: return 12
+            case .caption2: return 11
+            default: return 17
+            }
+        }
+
+        static let title = display(.title, weight: .bold)
+        static let heading = display(.title3)
+        static let subheading = display(.headline)
         static let body = Font.system(.body)
         static let callout = Font.system(.callout)
         static let caption = Font.system(.caption)
-        static let readout = figure(34, weight: .bold)
-        static let readoutSmall = figure(17, weight: .semibold)
+        static let readout = figure(.largeTitle, weight: .bold)
+        static let readoutSmall = figure(.headline)
+        static let figureSmall = figure(.caption)
+        static let figureTiny = figure(.caption2)
     }
 
     // MARK: Metrics

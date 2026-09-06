@@ -103,13 +103,16 @@ jobs:
           echo "--- accessibility audit ---"
           grep -E "Accessibility audit|  • |Longest unassisted run" build.log | head -60 || echo "none"
 
+      # Only on failure: with UI tests running, a green result bundle is
+      # hundreds of megabytes of screenshots nobody reads.
       - name: Upload test results
-        if: always()
+        if: failure()
         uses: actions/upload-artifact@v4
         with:
           name: test-results-${{ strategy.job-index }}
           path: ios/Strainwave/*.xcresult
           if-no-files-found: ignore
+          retention-days: 7
 
   # Manual only. Signs, archives, and uploads a build to TestFlight.
   # Every secret this needs is listed in docs/RELEASE.md.

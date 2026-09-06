@@ -63,7 +63,11 @@ class UITestCase: XCTestCase {
         )
     }
 
-    /// Scrolls the given element into view, then taps it.
+    /// Brings an element into view and taps it.
+    ///
+    /// Scrolling is retried with a settle pause between attempts: a tap issued
+    /// while a scroll view is still decelerating lands wherever the content has
+    /// drifted to, which looks exactly like a control that does not work.
     func tap(
         _ element: XCUIElement,
         file: StaticString = #filePath,
@@ -73,22 +77,47 @@ class UITestCase: XCTestCase {
             element.waitForExistence(timeout: shortTimeout),
             "\(element) never appeared", file: file, line: line
         )
-        if !element.isHittable {
+
+        for _ in 0..<6 {
+            if element.isHittable {
+                element.tap()
+                return
+            }
             app.swipeUp()
+            Thread.sleep(forTimeInterval: 0.5)
         }
-        XCTAssertTrue(element.isHittable, "\(element) was not tappable", file: file, line: line)
-        element.tap()
+
+        XCTFail(
+            "\(element) never became tappable", file: file, line: line
+        )
     }
 
-    /// Starts a run on the given tier and waits for the board.
-    func startRun(difficulty: String = "lethal", file: StaticString = #filePath, line: UInt = #line) {
+    /// Starts a run and waits for the board.
+    ///
+    /// `difficulty` is left alone by default. Selecting one means scrolling the
+    /// set-up panel, and most tests do not care which tier they run — leaving it
+    /// out keeps them testing what they are actually about.
+    func startRun(
+        difficulty: String? = nil,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
         waitForHome(file: file, line: line)
-        tap(app.buttons[A11y.Home.difficulty(difficulty)], file: file, line: line)
+        if let difficulty {
+            tap(app.buttons[A11y.Home.difficulty(difficulty)], file: file, line: line)
+        }
         tap(app.buttons[A11y.Home.start], file: file, line: line)
-        XCTAssertTrue(
-            app.buttons[A11y.Game.abilities].waitForExistence(timeout: shortTimeout),
-            "The board never appeared", file: file, line: line
-        )
+
+        let board = app.buttons[A11y.Game.abilities]
+        if !board.waitForExistence(timeout: shortTimeout) {
+            // Print the tree: "the board never appeared" on its own says
+            // nothing about whether the app crashed, stalled, or simply stayed
+            // on the control panel.
+            print("--- element tree when the board failed to appear ---")
+            print(app.debugDescription)
+            capture("failure-board-missing")
+            XCTFail("The board never appeared", file: file, line: line)
+        }
     }
 
     /// Saves a screenshot into the result bundle. These double as the raw

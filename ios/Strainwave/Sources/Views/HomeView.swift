@@ -70,7 +70,7 @@ private struct HomeContent: View {
         }
         .background(Theme.Palette.background.ignoresSafeArea())
         .accessibilityIdentifier(A11y.Home.root)
-        .safeAreaInset(edge: .bottom) { bannerSlot }
+        .safeAreaInset(edge: .bottom) { bottomBar }
         .sheet(isPresented: $showsReports) {
             ReportsGalleryView(reports: store.reports)
         }
@@ -130,13 +130,27 @@ private struct HomeContent: View {
                     select: { model.scenario = $0 }
                 )
 
-                PrimaryButton(title: L.string("home.start"), systemImage: "bolt.fill") {
-                    environment.feedback.play(.tap)
-                    onStart(model.makeSetup())
-                }
-                .accessibilityIdentifier(A11y.Home.start)
             }
         }
+    }
+
+    /// The primary action lives in a pinned bar rather than at the end of the
+    /// scroll. At the largest text sizes the set-up panel is taller than the
+    /// screen, and a "Begin Outbreak" the reader has to hunt for is a control
+    /// that is, for them, missing.
+    private var bottomBar: some View {
+        VStack(spacing: Theme.Metrics.spacing) {
+            PrimaryButton(title: L.string("home.start"), systemImage: "bolt.fill") {
+                environment.feedback.play(.tap)
+                onStart(model.makeSetup())
+            }
+            .accessibilityIdentifier(A11y.Home.start)
+            .padding(.horizontal, Theme.Metrics.spacingWide)
+            .padding(.top, Theme.Metrics.spacing)
+
+            bannerSlot
+        }
+        .background(.ultraThinMaterial)
     }
 
     /// Samples are presented as petri-dish cards — a circular culture with the
@@ -347,10 +361,11 @@ private struct SampleCard: View {
                     .font(Theme.Typography.caption)
                     .foregroundStyle(Theme.Palette.textSecondary)
                     .multilineTextAlignment(.center)
-                    .lineLimit(2)
-                    .frame(height: 30)
+                    // No line limit and no fixed height: the card grows instead
+                    // of cutting the sentence off.
+                    .fixedSize(horizontal: false, vertical: true)
             }
-            .frame(width: 116)
+            .frame(width: 128)
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
@@ -374,18 +389,18 @@ struct ReportCard: View {
                 Text(L.reportTitle(report.title))
                     .font(Theme.Typography.callout.weight(.semibold))
                     .foregroundStyle(Theme.Palette.textPrimary)
-                    .lineLimit(1)
+                    .fixedSize(horizontal: false, vertical: true)
             }
             Text(L.format("report.durationValue", report.days))
                 .font(Theme.Typography.caption)
                 .foregroundStyle(Theme.Palette.textSecondary)
             Meter(value: report.reachFraction, tint: Theme.Palette.spread, height: 4)
             Text(Figures.percent(report.reachFraction))
-                .font(Theme.Typography.figure(12, weight: .semibold))
+                .font(Theme.Typography.figureSmall)
                 .foregroundStyle(Theme.Palette.spread)
         }
         .padding(Theme.Metrics.spacing)
-        .frame(width: 150, alignment: .leading)
+        .frame(width: 168, alignment: .leading)
         .background(
             RoundedRectangle(cornerRadius: Theme.Metrics.cornerRadiusSmall, style: .continuous)
                 .fill(Theme.Palette.surfaceRaised)

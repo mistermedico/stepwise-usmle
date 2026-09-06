@@ -6,7 +6,8 @@ final class RunFlowUITests: UITestCase {
 
     func testAWholeRunReachesTheReport() {
         launch()
-        startRun()
+        // The one test that exercises the tier picker, which means scrolling.
+        startRun(difficulty: "lethal")
         // Fastest setting, so the run finishes well inside the budget.
         tap(app.buttons[A11y.Game.speed])
         capture("01-board-early")
@@ -38,8 +39,8 @@ final class RunFlowUITests: UITestCase {
 
     func testEvolvingAnAbilitySpendsPoints() {
         launch()
-        // Breezy opens with enough points to afford a first symptom immediately.
-        startRun(difficulty: "breezy")
+        // The default tier opens with enough points for the cheapest symptom.
+        startRun()
 
         tap(app.buttons[A11y.Game.abilities])
         XCTAssertTrue(

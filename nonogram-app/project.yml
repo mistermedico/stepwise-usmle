@@ -25,7 +25,11 @@ targets:
     sources:
       - path: Nonogram
         excludes:
-          - "Resources/Levels/**" # picked up separately below as a folder reference
+          # Everything under Resources, and the entitlements file, is listed explicitly below
+          # (resources: / entitlements:) instead — excluded here so xcodegen doesn't add each
+          # of them to the project twice.
+          - "Resources/**"
+          - "*.entitlements"
     resources:
       - path: Nonogram/Resources/Levels
         buildPhase: resources
@@ -62,16 +66,18 @@ targets:
         # (or replace it here with an id they do own) before archiving for App Store submission.
         PRODUCT_BUNDLE_IDENTIFIER: com.nonogramstudio.picturecross
         PRODUCT_NAME: Nonogram
-        INFOPLIST_KEY_UILaunchScreen_Generation: true
         MARKETING_VERSION: "1.0"
         CURRENT_PROJECT_VERSION: "1"
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
-        GENERATE_INFOPLIST_FILE: true
+        # NOTE: Info.plist is generated on disk by the `info:` block below (an explicit
+        # INFOPLIST_FILE), not by Xcode's own GENERATE_INFOPLIST_FILE mechanism — using both
+        # at once is a common source of "Multiple commands produce Info.plist" build errors.
         SUPPORTS_MAC_CATALYST: false
         TARGETED_DEVICE_FAMILY: "1"
     entitlements:
+      # Pointed at the checked-in file (see Nonogram/Nonogram.entitlements) rather than
+      # generated from `properties:` here, so its explanatory comment survives `xcodegen generate`.
       path: Nonogram/Nonogram.entitlements
-      properties: {}
 
   NonogramTests:
     type: bundle.unit-test
@@ -85,9 +91,6 @@ targets:
       base:
         GENERATE_INFOPLIST_FILE: true
         SWIFT_VERSION: "5.9"
-    scheme:
-      testTargets:
-        - Nonogram
 
 schemes:
   Nonogram:

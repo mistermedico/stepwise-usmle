@@ -36,7 +36,7 @@ struct GalleryView: View {
                 .padding(.vertical)
             }
             .background(Color("BackgroundPrimary"))
-            .navigationTitle(String(localized: "tab.gallery"))
+            .navigationTitle(appViewModel.localization.string("tab.gallery"))
             .sheet(item: $selectedItem) { item in
                 if let puzzle = item.puzzle {
                     GalleryDetailView(puzzle: puzzle)
@@ -98,7 +98,7 @@ private struct GalleryDetailView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
-                    Button(String(localized: "common.done")) { dismiss() }
+                    Button(appViewModel.localization.string("common.done")) { dismiss() }
                 }
             }
         }

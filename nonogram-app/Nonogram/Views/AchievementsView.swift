@@ -24,7 +24,7 @@ struct AchievementsView: View {
                                 .font(.caption)
                                 .foregroundColor(.secondary)
                         } else {
-                            Text(String(localized: "achievements.locked"))
+                            Text(appViewModel.localization.string("achievements.locked"))
                                 .font(.caption)
                                 .foregroundColor(.secondary)
                         }
@@ -42,7 +42,7 @@ struct AchievementsView: View {
             }
             .listStyle(.plain)
             .background(Color("BackgroundPrimary"))
-            .navigationTitle(String(localized: "tab.achievements"))
+            .navigationTitle(appViewModel.localization.string("tab.achievements"))
         }
     }
 }

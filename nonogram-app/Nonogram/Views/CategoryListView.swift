@@ -25,7 +25,7 @@ struct CategoryListView: View {
                 .padding()
             }
             .background(Color("BackgroundPrimary"))
-            .navigationTitle(String(localized: "tab.play"))
+            .navigationTitle(appViewModel.localization.string("tab.play"))
             .navigationDestination(for: PuzzleCategory.self) { category in
                 LevelSelectView(viewModel: LevelListViewModel(category: category, appViewModel: appViewModel))
             }

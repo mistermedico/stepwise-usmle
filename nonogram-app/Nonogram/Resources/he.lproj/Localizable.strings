@@ -1,0 +1,50 @@
+/* Tab bar titles */
+"tab.play" = "שחק";
+"tab.daily" = "יומי";
+"tab.gallery" = "גלריה";
+"tab.achievements" = "הישגים";
+"tab.settings" = "הגדרות";
+
+/* In-game toolbar */
+"toolbar.mode.fill" = "מילוי";
+"toolbar.mode.mark" = "סימון";
+"toolbar.settings" = "הגדרות";
+
+/* Boosters */
+"booster.revealLine" = "חשוף שורה";
+"booster.checkErrors" = "בדוק טעויות";
+"booster.hint" = "רמז";
+
+/* Win screen */
+"win.title" = "נפתר!";
+"win.flawless" = "ללא רבב!";
+"win.mistakes" = "%d טעויות";
+"win.continue" = "המשך";
+
+/* Lives depleted sheet */
+"lives.title" = "נגמרו החיים";
+"lives.subtitle" = "צפו בפרסומת קצרה לקבלת חיים נוסף עכשיו, או המתינו להתחדשות חינם.";
+"lives.watchAd" = "צפייה בפרסומת לחיים נוסף";
+"lives.waitFormat" = "חיים חינמי הבא בעוד %@";
+
+/* Daily challenge */
+"daily.streakFormat" = "רצף של %d ימים";
+"daily.alreadyCompleted" = "כבר פתרתם את החידה של היום. חזרו מחר!";
+"daily.unavailable" = "אין כרגע חידה יומית זמינה.";
+
+/* Achievements */
+"achievements.locked" = "נעול";
+
+/* Settings */
+"settings.section.feedback" = "משוב";
+"settings.sound" = "אפקטים קוליים";
+"settings.haptics" = "רטט";
+"settings.section.language" = "שפה";
+"settings.language" = "שפת האפליקציה";
+"settings.section.about" = "אודות";
+"settings.privacyPolicy" = "מדיניות פרטיות";
+"settings.restorePurchases" = "שחזור רכישות";
+"settings.version" = "גרסה";
+
+/* Shared */
+"common.done" = "סיום";

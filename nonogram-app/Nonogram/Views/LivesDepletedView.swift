@@ -18,10 +18,10 @@ struct LivesDepletedView: View {
                 .foregroundColor(.red)
                 .padding(.top, 24)
 
-            Text(String(localized: "lives.title"))
+            Text(appViewModel.localization.string("lives.title"))
                 .font(.title2.bold())
 
-            Text(String(localized: "lives.subtitle"))
+            Text(appViewModel.localization.string("lives.subtitle"))
                 .font(.subheadline)
                 .foregroundColor(.secondary)
                 .multilineTextAlignment(.center)
@@ -34,7 +34,7 @@ struct LivesDepletedView: View {
                     } else {
                         Image(systemName: "play.rectangle.fill")
                     }
-                    Text(String(localized: "lives.watchAd"))
+                    Text(appViewModel.localization.string("lives.watchAd"))
                 }
                 .font(.headline)
                 .frame(maxWidth: .infinity)
@@ -46,7 +46,7 @@ struct LivesDepletedView: View {
             .disabled(isShowingAd)
             .padding(.horizontal, 24)
 
-            Text(String(format: String(localized: "lives.waitFormat"), timeRemainingText))
+            Text(appViewModel.localization.formatted("lives.waitFormat", timeRemainingText))
                 .font(.footnote)
                 .foregroundColor(.secondary)
                 .padding(.bottom, 24)

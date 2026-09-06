@@ -4,22 +4,18 @@ import SwiftUI
 /// stack as regular levels.
 struct DailyChallengeView: View {
     @EnvironmentObject private var appViewModel: AppViewModel
-    @StateObject private var viewModel: DailyChallengeViewModel
-
-    init() {
-        // Placeholder AppViewModel here is immediately replaced by `configure(with:)` in
-        // `onAppear`, mirroring the same construction-order constraint noted in GalleryView.
-        _viewModel = StateObject(wrappedValue: DailyChallengeViewModel(appViewModel: AppViewModel()))
-    }
+    @StateObject private var viewModel = DailyChallengeViewModel()
 
     var body: some View {
         NavigationStack {
             content
-                .navigationTitle(String(localized: "tab.daily"))
-                .onAppear {
-                    viewModel.load()
-                }
+                .navigationTitle(appViewModel.localization.string("tab.daily"))
+                .onAppear(perform: reload)
         }
+    }
+
+    private func reload() {
+        viewModel.load(completedDailyDates: appViewModel.progress.dailyChallengeCompletedDates)
     }
 
     @ViewBuilder
@@ -32,17 +28,22 @@ struct DailyChallengeView: View {
                 } else {
                     GameView(
                         viewModel: GameViewModel(puzzle: puzzle, appViewModel: appViewModel),
-                        onFinished: {
-                            viewModel.recordCompletion(flawless: true) // GameView already recorded the level itself; flawless flag re-derived below.
+                        onFinished: { _ in
+                            appViewModel.recordDailyChallengeCompletion(
+                                dateKey: DailyChallengeViewModel.dateKey(for: Date())
+                            )
+                            viewModel.markCompletedToday()
                         }
                     )
                 }
             }
         } else if viewModel.isLoading {
             ProgressView()
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
         } else {
-            Text(String(localized: "daily.unavailable"))
+            Text(appViewModel.localization.string("daily.unavailable"))
                 .foregroundColor(.secondary)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
     }
 
@@ -50,7 +51,7 @@ struct DailyChallengeView: View {
         HStack {
             Image(systemName: "flame.fill")
                 .foregroundColor(.orange)
-            Text(String(format: String(localized: "daily.streakFormat"), viewModel.streak))
+            Text(appViewModel.localization.formatted("daily.streakFormat", viewModel.streak))
                 .font(.subheadline.bold())
             Spacer()
         }
@@ -63,9 +64,11 @@ struct DailyChallengeView: View {
             Spacer()
             PuzzleThumbnailView(puzzle: puzzle)
                 .frame(width: 160, height: 160)
-            Text(String(localized: "daily.alreadyCompleted"))
+            Text(appViewModel.localization.string("daily.alreadyCompleted"))
                 .font(.headline)
             Spacer()
         }
+        .frame(maxWidth: .infinity)
+        .background(Color("BackgroundPrimary"))
     }
 }

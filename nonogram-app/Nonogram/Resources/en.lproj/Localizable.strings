@@ -1,0 +1,50 @@
+/* Tab bar titles */
+"tab.play" = "Play";
+"tab.daily" = "Daily";
+"tab.gallery" = "Gallery";
+"tab.achievements" = "Achievements";
+"tab.settings" = "Settings";
+
+/* In-game toolbar */
+"toolbar.mode.fill" = "Fill";
+"toolbar.mode.mark" = "Mark";
+"toolbar.settings" = "Settings";
+
+/* Boosters */
+"booster.revealLine" = "Reveal Line";
+"booster.checkErrors" = "Check Errors";
+"booster.hint" = "Hint";
+
+/* Win screen */
+"win.title" = "Solved!";
+"win.flawless" = "Flawless!";
+"win.mistakes" = "%d mistake(s)";
+"win.continue" = "Continue";
+
+/* Lives depleted sheet */
+"lives.title" = "Out of Lives";
+"lives.subtitle" = "Watch a short ad for an extra life right now, or wait for one to regenerate for free.";
+"lives.watchAd" = "Watch Ad for a Life";
+"lives.waitFormat" = "Next free life in %@";
+
+/* Daily challenge */
+"daily.streakFormat" = "%d day streak";
+"daily.alreadyCompleted" = "You already solved today's puzzle. Come back tomorrow!";
+"daily.unavailable" = "No daily puzzle available right now.";
+
+/* Achievements */
+"achievements.locked" = "Locked";
+
+/* Settings */
+"settings.section.feedback" = "Feedback";
+"settings.sound" = "Sound Effects";
+"settings.haptics" = "Haptics";
+"settings.section.language" = "Language";
+"settings.language" = "App Language";
+"settings.section.about" = "About";
+"settings.privacyPolicy" = "Privacy Policy";
+"settings.restorePurchases" = "Restore Purchases";
+"settings.version" = "Version";
+
+/* Shared */
+"common.done" = "Done";

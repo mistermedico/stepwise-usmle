@@ -6,10 +6,10 @@ import Foundation
 final class DailyChallengeViewModel: ObservableObject {
     @Published private(set) var puzzle: Puzzle?
     @Published private(set) var isCompletedToday = false
+    @Published private(set) var streak = 0
     @Published private(set) var isLoading = false
     @Published private(set) var loadError: String?
 
-    private let appViewModel: AppViewModel
     private let loader: PuzzleLoader
 
     private static let dateKeyFormatter: DateFormatter = {
@@ -21,8 +21,7 @@ final class DailyChallengeViewModel: ObservableObject {
         return formatter
     }()
 
-    init(appViewModel: AppViewModel, loader: PuzzleLoader = PuzzleLoader()) {
-        self.appViewModel = appViewModel
+    init(loader: PuzzleLoader = PuzzleLoader()) {
         self.loader = loader
     }
 
@@ -31,19 +30,20 @@ final class DailyChallengeViewModel: ObservableObject {
     }
 
     /// Consecutive days (ending today, or yesterday if today hasn't been played yet) with a
-    /// completed daily challenge.
-    var streak: Int {
+    /// completed daily challenge. Takes the completed-dates set as a parameter (rather than
+    /// holding a reference to `AppViewModel`) so this view model has no construction-order
+    /// dependency on the environment object being available yet.
+    static func computeStreak(completedDates: Set<String>, now: Date = Date()) -> Int {
         let calendar = Calendar.current
-        let completedDates = appViewModel.progress.dailyChallengeCompletedDates
-        var cursor = Date()
+        var cursor = now
 
-        if !completedDates.contains(Self.dateKey(for: cursor)) {
+        if !completedDates.contains(dateKey(for: cursor)) {
             guard let yesterday = calendar.date(byAdding: .day, value: -1, to: cursor) else { return 0 }
             cursor = yesterday
         }
 
         var count = 0
-        while completedDates.contains(Self.dateKey(for: cursor)) {
+        while completedDates.contains(dateKey(for: cursor)) {
             count += 1
             guard let previousDay = calendar.date(byAdding: .day, value: -1, to: cursor) else { break }
             cursor = previousDay
@@ -51,7 +51,9 @@ final class DailyChallengeViewModel: ObservableObject {
         return count
     }
 
-    func load(now: Date = Date()) {
+    /// Loads today's puzzle and refreshes completion/streak state from a snapshot of progress
+    /// (`completedDates`, `dailyLevelIDCompletedToday`) taken by the caller.
+    func load(now: Date = Date(), completedDailyDates: Set<String>) {
         isLoading = true
         loadError = nil
         do {
@@ -64,7 +66,8 @@ final class DailyChallengeViewModel: ObservableObject {
             let key = Self.dateKey(for: now)
             let index = Int(Self.stableHash(key) % UInt64(puzzles.count))
             puzzle = puzzles[index]
-            isCompletedToday = appViewModel.progress.dailyChallengeCompletedDates.contains(key)
+            isCompletedToday = completedDailyDates.contains(key)
+            streak = Self.computeStreak(completedDates: completedDailyDates, now: now)
         } catch {
             loadError = "\(error)"
             puzzle = nil
@@ -72,14 +75,7 @@ final class DailyChallengeViewModel: ObservableObject {
         isLoading = false
     }
 
-    func recordCompletion(now: Date = Date(), flawless: Bool) {
-        guard let puzzle else { return }
-        let key = Self.dateKey(for: now)
-        appViewModel.recordDailyChallengeCompletion(dateKey: key)
-        // Completing the daily puzzle also counts toward its category's normal progression —
-        // a deliberate bonus, since the daily pick can land on a level the player hasn't
-        // reached yet in that category's linear order.
-        appViewModel.recordLevelCompletion(levelID: puzzle.id, flawless: flawless)
+    func markCompletedToday() {
         isCompletedToday = true
     }
 

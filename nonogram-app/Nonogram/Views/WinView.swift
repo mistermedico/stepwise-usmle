@@ -32,7 +32,7 @@ struct WinView: View {
                     .frame(width: 140, height: 140)
                     .shadow(radius: 12)
 
-                Text(String(localized: "win.title"))
+                Text(appViewModel.localization.string("win.title"))
                     .font(.title.bold())
                     .foregroundColor(.white)
 
@@ -41,7 +41,7 @@ struct WinView: View {
                     .foregroundColor(.white.opacity(0.9))
 
                 if isFlawless {
-                    Label(String(localized: "win.flawless"), systemImage: "star.fill")
+                    Label(appViewModel.localization.string("win.flawless"), systemImage: "star.fill")
                         .font(.subheadline.bold())
                         .padding(.horizontal, 14)
                         .padding(.vertical, 6)
@@ -49,12 +49,12 @@ struct WinView: View {
                         .foregroundColor(.black)
                         .clipShape(Capsule())
                 } else {
-                    Text(String(format: String(localized: "win.mistakes"), mistakeCount))
+                    Text(appViewModel.localization.formatted("win.mistakes", mistakeCount))
                         .foregroundColor(.white.opacity(0.85))
                 }
 
                 Button(action: onContinue) {
-                    Text(String(localized: "win.continue"))
+                    Text(appViewModel.localization.string("win.continue"))
                         .font(.headline)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 12)

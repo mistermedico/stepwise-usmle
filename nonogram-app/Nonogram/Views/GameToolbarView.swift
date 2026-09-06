@@ -12,8 +12,8 @@ struct GameToolbarView: View {
                 livesView
                 Spacer()
                 Picker("", selection: $viewModel.inputMode) {
-                    Text(String(localized: "toolbar.mode.fill")).tag(GameViewModel.InputMode.fill)
-                    Text(String(localized: "toolbar.mode.mark")).tag(GameViewModel.InputMode.mark)
+                    Text(viewModel.appViewModel.localization.string("toolbar.mode.fill")).tag(GameViewModel.InputMode.fill)
+                    Text(viewModel.appViewModel.localization.string("toolbar.mode.mark")).tag(GameViewModel.InputMode.mark)
                 }
                 .pickerStyle(.segmented)
                 .frame(width: 160)
@@ -22,20 +22,20 @@ struct GameToolbarView: View {
                     Image(systemName: "gearshape.fill")
                         .font(.system(size: 18))
                 }
-                .accessibilityLabel(Text(String(localized: "toolbar.settings")))
+                .accessibilityLabel(Text(viewModel.appViewModel.localization.string("toolbar.settings")))
             }
 
             HStack(spacing: 12) {
                 BoosterButton(
                     systemImage: "eye.fill",
                     count: viewModel.remainingBoosterCount(.revealLine),
-                    label: String(localized: "booster.revealLine"),
+                    label: viewModel.appViewModel.localization.string("booster.revealLine"),
                     action: viewModel.useRevealLineBooster
                 )
                 BoosterButton(
                     systemImage: "checkmark.shield.fill",
                     count: viewModel.remainingBoosterCount(.checkErrors),
-                    label: String(localized: "booster.checkErrors"),
+                    label: viewModel.appViewModel.localization.string("booster.checkErrors"),
                     action: {
                         viewModel.useCheckErrorsBooster()
                         DispatchQueue.main.asyncAfter(deadline: .now() + 1.6) {
@@ -46,7 +46,7 @@ struct GameToolbarView: View {
                 BoosterButton(
                     systemImage: "lightbulb.fill",
                     count: viewModel.remainingBoosterCount(.hintCell),
-                    label: String(localized: "booster.hint"),
+                    label: viewModel.appViewModel.localization.string("booster.hint"),
                     action: viewModel.useHintBooster
                 )
             }

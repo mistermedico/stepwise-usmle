@@ -5,7 +5,10 @@ import SwiftUI
 /// of which constructs its own `GameViewModel` for the puzzle in question.
 struct GameView: View {
     @StateObject var viewModel: GameViewModel
-    var onFinished: (() -> Void)?
+    /// Fired when the player taps Continue on the win screen. Passes whether the level was
+    /// solved with zero mistakes, since `AppViewModel.recordLevelCompletion` (already called
+    /// internally by `GameViewModel` as soon as it's solved) doesn't hand that back to the view.
+    var onFinished: ((Bool) -> Void)?
 
     @Environment(\.dismiss) private var dismiss
     @State private var showSettings = false
@@ -24,7 +27,7 @@ struct GameView: View {
                     puzzle: viewModel.puzzle,
                     mistakeCount: viewModel.mistakeCount,
                     onContinue: {
-                        onFinished?()
+                        onFinished?(viewModel.mistakeCount == 0)
                         dismiss()
                     }
                 )

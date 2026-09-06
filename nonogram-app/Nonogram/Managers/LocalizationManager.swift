@@ -58,6 +58,28 @@ final class LocalizationManager: ObservableObject {
         return value
     }
 
+    /// Looks up a `Localizable.strings` key from the .lproj bundle matching the *effective*
+    /// app language (the manual override, if set, otherwise the system language) — deliberately
+    /// NOT `String(localized:)`/`NSLocalizedString`, which only ever resolve against the
+    /// system's preferred languages and would silently ignore the in-app override.
+    func string(_ key: String) -> String {
+        Self.stringsBundle(for: languageCode).localizedString(forKey: key, value: nil, table: nil)
+    }
+
+    /// Same as `string(_:)` but runs the result through `String(format:)` with the given
+    /// arguments, for keys like `"win.mistakes"` ("%d mistake(s)") or `"daily.streakFormat"`.
+    func formatted(_ key: String, _ arguments: CVarArg...) -> String {
+        String(format: string(key), arguments: arguments)
+    }
+
+    private static func stringsBundle(for languageCode: String) -> Bundle {
+        guard let path = Bundle.main.path(forResource: languageCode, ofType: "lproj"),
+              let bundle = Bundle(path: path) else {
+            return .main
+        }
+        return bundle
+    }
+
     private static func resolveLanguageCode(override: AppLanguageOverride) -> String {
         switch override {
         case .en: return "en"

@@ -1,0 +1,12 @@
+TODO before App Store submission:
+
+Add a real 1024x1024 PNG app icon at:
+  Nonogram/Resources/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png
+
+Contents.json in that folder already declares this single "universal" 1024x1024 entry
+(the modern single-size App Icon format — Xcode/App Store Connect derive every other
+required size from it), so once the PNG is dropped in with that exact filename, no other
+project changes are needed.
+
+No placeholder image was generated here on purpose, to avoid accidentally shipping a
+fake/placeholder icon as the real one.

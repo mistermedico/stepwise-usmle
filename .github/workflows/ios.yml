@@ -101,9 +101,11 @@ jobs:
             | sort -u \
             | head -60 || echo "none"
           echo "--- failing tests ---"
-          grep -E "^.*(, failed|, XCTAssert.* failed|Failed to tap).*$" build.log \
-            | sed -E 's/^[[:space:]]+//' | sort -u | head -30 || echo "none"
-          grep -E "Executed [0-9]+ tests, with [0-9]+ failure" build.log | tail -4 || true
+          # Raw xcodebuild output, not xcbeautify's: failures appear as
+          # "File.swift:12: error: -[Suite testName] : reason".
+          grep -E "\.swift:[0-9]+: error:" build.log \
+            | sed -E 's#^.*/##' | sort -u | head -30 || echo "none"
+          grep -E "Executed [0-9]+ tests, with [1-9][0-9]* failure" build.log | tail -4 || true
           echo "--- accessibility audit ---"
           grep -E "Accessibility audit|  • |Longest unassisted run" build.log | head -60 || echo "none"
           echo "--- element tree on failure (if any) ---"

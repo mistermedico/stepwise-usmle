@@ -104,11 +104,12 @@ final class RunFlowUITests: UITestCase {
             sheet.waitForExistence(timeout: shortTimeout),
             "Leaving a run asked for no confirmation"
         )
-        // `.firstMatch`: the identifier survives into the action sheet, but it
-        // matches more than one element there, and an ambiguous query is a
-        // failure rather than a choice.
-        let identified = sheet.buttons.matching(identifier: A11y.Game.quitConfirm).firstMatch
-        let confirm = identified.exists ? identified : sheet.buttons.element(boundBy: 0)
+        // By position, not by identifier: SwiftUI's identifier reaches several
+        // elements inside the UIKit sheet, and picking one of them tapped
+        // something that was not the button. SwiftUI orders an action sheet
+        // with the destructive choice first and cancel last.
+        XCTAssertGreaterThanOrEqual(sheet.buttons.count, 2, "The confirmation has no choices")
+        let confirm = sheet.buttons.element(boundBy: 0)
         XCTAssertTrue(confirm.waitForExistence(timeout: shortTimeout))
         confirm.tap()
 

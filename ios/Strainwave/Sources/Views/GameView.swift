@@ -17,13 +17,13 @@ struct GameView: View {
     var body: some View {
         VStack(spacing: Theme.Metrics.spacing) {
             topBar
-            ScrollView {
-                VStack(spacing: Theme.Metrics.spacing) {
-                    readoutRow
-                    mapSection
-                    tickerSection
-                }
-            }
+            readoutRow
+            // Not inside a ScrollView: the board sizes itself from its aspect
+            // ratio, and a scroll view proposes an unbounded height, which
+            // collapses it — on the smallest screen the territories then stop
+            // being laid out at all. Only the ticker scrolls.
+            mapSection
+            tickerSection
         }
         .padding(.horizontal, Theme.Metrics.spacing)
         .background(Theme.Palette.background.ignoresSafeArea())
@@ -213,7 +213,7 @@ struct GameView: View {
     // MARK: Ticker
 
     private var tickerSection: some View {
-        Group {
+        ScrollView(.vertical, showsIndicators: false) {
             VStack(alignment: .leading, spacing: 4) {
                 ForEach(model.ticker.prefix(6)) { event in
                     HStack(alignment: .top, spacing: 6) {
@@ -228,6 +228,9 @@ struct GameView: View {
             }
             .frame(maxWidth: .infinity, alignment: .leading)
         }
+        // The one flexible band on the screen: it gives up its height to the
+        // board and the readouts when the text is large.
+        .frame(minHeight: 44, maxHeight: 116)
         .accessibilityElement(children: .contain)
     }
 

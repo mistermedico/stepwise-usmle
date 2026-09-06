@@ -21,6 +21,10 @@ enum AdReward: Equatable {
 
 /// The surface every view uses. Keeping this behind a protocol means the game
 /// screens never import an SDK, and previews/tests get a silent implementation.
+///
+/// Main-actor isolated: every placement reads consent state and presents a view
+/// controller, both of which belong on the main thread anyway.
+@MainActor
 protocol AdServing: AnyObject {
     var isInterstitialReady: Bool { get }
     var isRewardedReady: Bool { get }
@@ -66,6 +70,7 @@ enum AdPolicy {
 
 /// Coordinates placements, applies the policy, and delegates presentation to
 /// whichever network adapter is compiled in.
+@MainActor
 final class AdManager: ObservableObject, AdServing {
 
     @Published private(set) var isInterstitialReady = false
@@ -78,9 +83,12 @@ final class AdManager: ObservableObject, AdServing {
     private let consent: ConsentManager
     private var runsSinceLastInterstitial = 0
 
-    init(consent: ConsentManager, adapter: AdNetworkAdapter = AdManager.makeAdapter()) {
+    /// `adapter` defaults to `nil` rather than to `makeAdapter()`: a default
+    /// argument is evaluated outside the actor, and picking the adapter is
+    /// main-actor work.
+    init(consent: ConsentManager, adapter: AdNetworkAdapter? = nil) {
         self.consent = consent
-        self.adapter = adapter
+        self.adapter = adapter ?? AdManager.makeAdapter()
     }
 
     static func makeAdapter() -> AdNetworkAdapter {
@@ -129,9 +137,13 @@ final class AdManager: ObservableObject, AdServing {
         }
         runsSinceLastInterstitial = 0
         isInterstitialReady = false
+        // The adapter is deliberately not actor-isolated, so that the AdMob
+        // delegate callbacks it receives stay compilable. Hop back here.
         adapter.presentInterstitial(from: presenter) { [weak self] in
-            completion()
-            self?.preload()
+            Task { @MainActor in
+                completion()
+                self?.preload()
+            }
         }
     }
 
@@ -145,13 +157,19 @@ final class AdManager: ObservableObject, AdServing {
         }
         isRewardedReady = false
         adapter.presentRewarded(from: presenter) { [weak self] granted in
-            completion(granted)
-            self?.preload()
+            Task { @MainActor in
+                completion(granted)
+                self?.preload()
+            }
         }
     }
 }
 
 /// The seam between the game and whichever ad SDK is linked.
+///
+/// Intentionally *not* main-actor isolated: an SDK delivers its callbacks from
+/// its own delegate methods, and forcing isolation here would make the real
+/// adapter uncompilable. `AdManager` hops back to the main actor instead.
 protocol AdNetworkAdapter: AnyObject {
     func start(completion: @escaping () -> Void)
     func loadInterstitial(unitID: String, completion: @escaping (Bool) -> Void)

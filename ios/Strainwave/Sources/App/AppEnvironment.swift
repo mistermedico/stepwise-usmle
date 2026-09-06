@@ -11,11 +11,14 @@ final class AppEnvironment: ObservableObject {
     let store: ReportStore
     let feedback: FeedbackProviding
 
+    /// `ConsentManager` and `ReportStore` are built here rather than defaulted
+    /// in the parameter list: a default argument is always evaluated in a
+    /// nonisolated context, so a main-actor type cannot be one.
     init(
-        consent: ConsentManager = ConsentManager(),
         store: ReportStore? = nil,
         feedback: FeedbackProviding = SoundManager.shared
     ) {
+        let consent = ConsentManager()
         self.consent = consent
         self.ads = AdManager(consent: consent)
         self.store = store ?? ReportStore()

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- No special entitlements required yet. Kept as an empty, valid entitlements file so
+	     project.yml has a stable target to point at; add capabilities here if any are needed later
+	     (e.g. push notifications for re-engagement reminders). -->
+</dict>
+</plist>

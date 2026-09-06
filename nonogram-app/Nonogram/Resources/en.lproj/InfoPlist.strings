@@ -1,0 +1,2 @@
+/* App Tracking Transparency prompt shown before requesting IDFA access for ad personalization. */
+"NSUserTrackingUsageDescription" = "We use your data to show ads that are more relevant to you. Your gameplay progress always stays on this device either way.";

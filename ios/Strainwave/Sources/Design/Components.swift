@@ -32,16 +32,24 @@ struct Readout: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 2) {
+            // Three readouts share a row, so each one is narrow. They wrap
+            // rather than truncate: a clipped "Territories" is not a label.
             Text(title)
                 .font(Theme.Typography.caption)
                 .foregroundStyle(Theme.Palette.textSecondary)
+                .fixedSize(horizontal: false, vertical: true)
             Text(value)
                 .font(Theme.Typography.readoutSmall)
+                .monospacedDigit()
                 .foregroundStyle(accent)
+                .minimumScaleFactor(0.75)
+                .fixedSize(horizontal: false, vertical: true)
             if let caption {
                 Text(caption)
                     .font(Theme.Typography.caption)
+                    .monospacedDigit()
                     .foregroundStyle(Theme.Palette.textTertiary)
+                    .fixedSize(horizontal: false, vertical: true)
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)

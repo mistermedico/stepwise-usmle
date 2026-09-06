@@ -94,7 +94,21 @@ final class RunFlowUITests: UITestCase {
         startRun()
 
         tap(app.buttons[A11y.Game.quit])
-        tap(app.buttons[A11y.Game.quitConfirm])
+
+        // The confirmation is rendered by UIKit, and an identifier set in
+        // SwiftUI does not always survive that hand-off. Prefer it when it
+        // does, and fall back to the sheet's first button — the destructive
+        // one, which SwiftUI always places first.
+        let sheet = app.sheets.firstMatch
+        XCTAssertTrue(
+            sheet.waitForExistence(timeout: shortTimeout),
+            "Leaving a run asked for no confirmation"
+        )
+        let identified = sheet.buttons[A11y.Game.quitConfirm]
+        let confirm = identified.exists ? identified : sheet.buttons.element(boundBy: 0)
+        XCTAssertTrue(confirm.waitForExistence(timeout: shortTimeout))
+        confirm.tap()
+
         waitForHome()
     }
 }

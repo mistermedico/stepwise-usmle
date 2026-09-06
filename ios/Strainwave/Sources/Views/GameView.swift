@@ -7,6 +7,9 @@ struct GameView: View {
 
     @ObservedObject var model: GameViewModel
     let onQuit: () -> Void
+    /// Called once the run reaches an outcome. Declared here because this is
+    /// the view that observes the model.
+    var onFinished: (EpidemicReport, [Achievement]) -> Void = { _, _ in }
 
     @State private var selectedRegion: RegionID?
     @State private var showQuitConfirmation = false
@@ -46,6 +49,10 @@ struct GameView: View {
             .accessibilityIdentifier(A11y.Game.quitConfirm)
             Button(L.string("settings.cancel"), role: .cancel) {}
         }
+        .onChange(of: model.finishedReport) { report in
+            guard let report else { return }
+            onFinished(report, model.freshAchievements)
+        }
         .onDisappear { model.stop() }
     }
 
@@ -82,6 +89,7 @@ struct GameView: View {
                     .foregroundStyle(Theme.Palette.textSecondary)
                 Text(Figures.integer(model.state.day))
                     .font(Theme.Typography.readout)
+                    .monospacedDigit()
                     .foregroundStyle(Theme.Palette.textPrimary)
             }
             .accessibilityElement(children: .combine)
@@ -152,9 +160,8 @@ struct GameView: View {
                 Text(detail)
                     .font(Theme.Typography.caption)
                     .foregroundStyle(Theme.Palette.textTertiary)
-                    .lineLimit(2)
-                    .minimumScaleFactor(0.85)
                     .multilineTextAlignment(.trailing)
+                    .fixedSize(horizontal: false, vertical: true)
             }
             Meter(value: value, tint: tint)
         }
@@ -193,6 +200,7 @@ struct GameView: View {
                     HStack(alignment: .top, spacing: 6) {
                         Text("\(L.string("hud.day")) \(event.day)")
                             .font(Theme.Typography.figureTiny)
+                            .monospacedDigit()
                             .foregroundStyle(Theme.Palette.textTertiary)
                         Text(L.event(event))
                             .font(Theme.Typography.caption)

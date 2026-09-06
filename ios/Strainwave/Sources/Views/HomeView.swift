@@ -149,7 +149,18 @@ private struct HomeContent: View {
 
             bannerSlot
         }
-        .background(.ultraThinMaterial)
+        // Opaque rather than a material: text scrolling underneath a
+        // translucent bar loses contrast against it, which the accessibility
+        // audit reads — correctly — as unreadable.
+        .background(
+            Theme.Palette.surface
+                .overlay(alignment: .top) {
+                    Rectangle()
+                        .fill(Theme.Palette.outline)
+                        .frame(height: Theme.Metrics.hairline)
+                }
+                .ignoresSafeArea(edges: .bottom)
+        )
     }
 
     /// Samples are presented as petri-dish cards — a circular culture with the
@@ -396,6 +407,7 @@ struct ReportCard: View {
             Meter(value: report.reachFraction, tint: Theme.Palette.spread, height: 4)
             Text(Figures.percent(report.reachFraction))
                 .font(Theme.Typography.figureSmall)
+                .monospacedDigit()
                 .foregroundStyle(Theme.Palette.spread)
         }
         .padding(Theme.Metrics.spacing)

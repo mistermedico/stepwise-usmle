@@ -79,11 +79,12 @@ private struct GameScreen: View {
     var body: some View {
         Group {
             if let model = host.model {
-                GameView(model: model, onQuit: onQuit)
-                    .onChange(of: model.finishedReport) { report in
-                        guard let report else { return }
-                        onFinished(report, model.freshAchievements)
-                    }
+                // `onFinished` is handed to GameView rather than watched here:
+                // this view holds the model but does not observe it, so a
+                // change to the run's outcome would never reach an onChange
+                // written at this level — and the player would sit on a
+                // finished board for ever.
+                GameView(model: model, onQuit: onQuit, onFinished: onFinished)
             } else {
                 // One frame at most, before the model exists.
                 LoadingView()

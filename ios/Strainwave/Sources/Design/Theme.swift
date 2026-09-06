@@ -23,7 +23,7 @@ enum Theme {
         // and response values, which were chosen by eye and failed.
         static let textPrimary = Color(light: 0x121A25, dark: 0xF0F4FA)
         static let textSecondary = Color(light: 0x536174, dark: 0xA6B5C9)
-        static let textTertiary = Color(light: 0x6B7A8F, dark: 0x93A3B8)
+        static let textTertiary = Color(light: 0x5E6C80, dark: 0x9DACC0)
 
         /// The signature spread colour: a glowing purple-magenta. Deliberately
         /// not blood red — the whole point is that this reads as a lab dye.
@@ -71,14 +71,17 @@ enum Theme {
         }
 
         /// Figures on the control panel: evolution points, percentages, the day
-        /// counter. Monospaced digits so numbers never jitter as they tick.
+        /// counter.
+        ///
+        /// Monospacing is applied at the call site with `Text.monospacedDigit()`
+        /// rather than folded into the font here: doing it on the `Font` throws
+        /// away the text-style metadata, and the accessibility audit then
+        /// reports the label as not supporting Dynamic Type.
         static func figure(_ style: Font.TextStyle, weight: Font.Weight = .semibold) -> Font {
             if let figureName {
-                return .custom(figureName, size: size(for: style), relativeTo: style)
-                    .weight(weight)
-                    .monospacedDigit()
+                return .custom(figureName, size: size(for: style), relativeTo: style).weight(weight)
             }
-            return .system(style, design: .rounded).weight(weight).monospacedDigit()
+            return .system(style, design: .rounded).weight(weight)
         }
 
         /// Base sizes, used only when a custom face is fitted; the system faces

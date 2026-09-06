@@ -51,6 +51,7 @@ struct TraitTreeView: View {
                     .foregroundStyle(Theme.Palette.spread)
                 Text(Figures.integer(model.state.evolutionPoints))
                     .font(Theme.Typography.readoutSmall)
+                    .monospacedDigit()
                     .foregroundStyle(Theme.Palette.textPrimary)
             }
             .accessibilityElement(children: .combine)
@@ -281,6 +282,8 @@ struct TraitTreeView: View {
                 Text(L.string("tree.bonusPoints"))
                     .font(Theme.Typography.callout)
                     .foregroundStyle(Theme.Palette.textSecondary)
+                    .multilineTextAlignment(.center)
+                    .fixedSize(horizontal: false, vertical: true)
                 SecondaryButton(
                     title: L.format("tree.watchForPoints", AdPolicy.rewardedPoints),
                     systemImage: "play.rectangle.fill"

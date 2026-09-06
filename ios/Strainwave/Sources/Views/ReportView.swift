@@ -162,7 +162,7 @@ struct ReportView: View {
                             .foregroundStyle(Theme.Palette.success)
                         VStack(alignment: .leading, spacing: 1) {
                             Text(L.achievementTitle(achievement))
-                                .font(Theme.Typography.callout.weight(.semibold))
+                                .font(Theme.Typography.calloutStrong)
                                 .foregroundStyle(Theme.Palette.textPrimary)
                             Text(L.achievementDetail(achievement))
                                 .font(Theme.Typography.caption)
@@ -188,7 +188,7 @@ struct ReportView: View {
                     HStack(spacing: Theme.Metrics.spacingTight) {
                         Image(systemName: "square.and.arrow.up")
                         Text(L.string("report.share"))
-                            .font(Theme.Typography.callout.weight(.semibold))
+                            .font(Theme.Typography.calloutStrong)
                     }
                     .frame(maxWidth: .infinity)
                     .frame(minHeight: Theme.Metrics.minimumTapTarget)

@@ -99,7 +99,12 @@ struct PrimaryButton: View {
                 }
                 Text(title)
                     .font(Theme.Typography.subheading)
+                    .minimumScaleFactor(0.7)
+                    .lineLimit(2)
+                    .multilineTextAlignment(.center)
             }
+            .padding(.horizontal, Theme.Metrics.spacing)
+            .padding(.vertical, Theme.Metrics.spacingTight)
             .frame(maxWidth: .infinity)
             .frame(minHeight: 54)
             .foregroundStyle(.white)
@@ -126,8 +131,13 @@ struct SecondaryButton: View {
                     Image(systemName: systemImage)
                 }
                 Text(title)
-                    .font(Theme.Typography.callout.weight(.semibold))
+                    .font(Theme.Typography.calloutStrong)
+                    .minimumScaleFactor(0.7)
+                    .lineLimit(2)
+                    .multilineTextAlignment(.center)
             }
+            .padding(.horizontal, Theme.Metrics.spacing)
+            .padding(.vertical, Theme.Metrics.spacingTight)
             .frame(maxWidth: .infinity)
             .frame(minHeight: Theme.Metrics.minimumTapTarget)
             .foregroundStyle(Theme.Palette.textPrimary)
@@ -178,7 +188,7 @@ struct Chip: View {
             if let systemImage {
                 Image(systemName: systemImage).font(.caption2)
             }
-            Text(text).font(Theme.Typography.caption.weight(.semibold))
+            Text(text).font(Theme.Typography.captionStrong)
         }
         .padding(.horizontal, 10)
         .padding(.vertical, 5)

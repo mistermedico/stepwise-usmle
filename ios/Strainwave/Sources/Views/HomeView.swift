@@ -211,7 +211,7 @@ private struct HomeContent: View {
                             )
                         VStack(alignment: .leading, spacing: 2) {
                             Text(title(option))
-                                .font(Theme.Typography.callout.weight(.semibold))
+                                .font(Theme.Typography.calloutStrong)
                                 .foregroundStyle(Theme.Palette.textPrimary)
                             Text(detail(option))
                                 .font(Theme.Typography.caption)
@@ -274,7 +274,7 @@ private struct HomeContent: View {
             VStack(alignment: .leading, spacing: Theme.Metrics.spacing) {
                 SectionHeader(title: L.string("home.reports")) {
                     Button(L.string("home.seeAll")) { showsReports = true }
-                        .font(Theme.Typography.caption.weight(.semibold))
+                        .font(Theme.Typography.captionStrong)
                         .foregroundStyle(Theme.Palette.spread)
                         .frame(minHeight: Theme.Metrics.minimumTapTarget)
                 }
@@ -364,7 +364,7 @@ private struct SampleCard: View {
                 .frame(width: 96, height: 96)
 
                 Text(L.strainTitle(strain.id))
-                    .font(Theme.Typography.callout.weight(.semibold))
+                    .font(Theme.Typography.calloutStrong)
                     .foregroundStyle(Theme.Palette.textPrimary)
 
                 Text(isPlayable ? L.signature(strain.signature) : L.string("picker.unlockWithAd"))
@@ -397,7 +397,7 @@ struct ReportCard: View {
                 Image(systemName: report.isVictory ? "checkmark.seal.fill" : "xmark.seal.fill")
                     .foregroundStyle(report.isVictory ? Theme.Palette.success : Theme.Palette.textTertiary)
                 Text(L.reportTitle(report.title))
-                    .font(Theme.Typography.callout.weight(.semibold))
+                    .font(Theme.Typography.calloutStrong)
                     .foregroundStyle(Theme.Palette.textPrimary)
                     .fixedSize(horizontal: false, vertical: true)
             }

@@ -109,7 +109,7 @@ struct AchievementsView: View {
 
                     VStack(alignment: .leading, spacing: 2) {
                         Text(L.achievementTitle(achievement))
-                            .font(Theme.Typography.callout.weight(.semibold))
+                            .font(Theme.Typography.calloutStrong)
                             .foregroundStyle(
                                 isEarned ? Theme.Palette.textPrimary : Theme.Palette.textSecondary
                             )

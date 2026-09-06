@@ -67,7 +67,10 @@ enum Theme {
             if let displayName {
                 return .custom(displayName, size: size(for: style), relativeTo: style).weight(weight)
             }
-            return .system(style, design: .rounded).weight(weight)
+            // `.system(style, design:weight:)` rather than `.system(style).weight(_)`:
+            // chaining the weight resolves the font to a fixed descriptor and
+            // throws away the text style, so the label stops scaling.
+            return .system(style, design: .rounded, weight: weight)
         }
 
         /// Figures on the control panel: evolution points, percentages, the day
@@ -81,7 +84,7 @@ enum Theme {
             if let figureName {
                 return .custom(figureName, size: size(for: style), relativeTo: style).weight(weight)
             }
-            return .system(style, design: .rounded).weight(weight)
+            return .system(style, design: .rounded, weight: weight)
         }
 
         /// Base sizes, used only when a custom face is fitted; the system faces
@@ -108,6 +111,10 @@ enum Theme {
         static let body = Font.system(.body)
         static let callout = Font.system(.callout)
         static let caption = Font.system(.caption)
+        /// Emphasised body text. Declared here rather than written as
+        /// `callout.weight(.semibold)` at the call site, for the same reason.
+        static let calloutStrong = Font.system(.callout, weight: .semibold)
+        static let captionStrong = Font.system(.caption, weight: .semibold)
         static let readout = figure(.largeTitle, weight: .bold)
         static let readoutSmall = figure(.headline)
         static let figureSmall = figure(.caption)

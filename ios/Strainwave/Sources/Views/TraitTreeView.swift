@@ -43,8 +43,11 @@ struct TraitTreeView: View {
             Text(L.string("tree.title"))
                 .font(Theme.Typography.heading)
                 .foregroundStyle(Theme.Palette.textPrimary)
+                .minimumScaleFactor(0.7)
+                .lineLimit(2)
+                .fixedSize(horizontal: false, vertical: true)
 
-            Spacer()
+            Spacer(minLength: Theme.Metrics.spacingTight)
 
             HStack(spacing: 6) {
                 Image(systemName: "hexagon.fill")
@@ -53,6 +56,8 @@ struct TraitTreeView: View {
                     .font(Theme.Typography.readoutSmall)
                     .monospacedDigit()
                     .foregroundStyle(Theme.Palette.textPrimary)
+                    .minimumScaleFactor(0.7)
+                    .lineLimit(1)
             }
             .accessibilityElement(children: .combine)
             .accessibilityLabel(Text(L.string("hud.points")))

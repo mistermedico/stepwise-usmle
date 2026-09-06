@@ -104,7 +104,10 @@ final class RunFlowUITests: UITestCase {
             sheet.waitForExistence(timeout: shortTimeout),
             "Leaving a run asked for no confirmation"
         )
-        let identified = sheet.buttons[A11y.Game.quitConfirm]
+        // `.firstMatch`: the identifier survives into the action sheet, but it
+        // matches more than one element there, and an ambiguous query is a
+        // failure rather than a choice.
+        let identified = sheet.buttons.matching(identifier: A11y.Game.quitConfirm).firstMatch
         let confirm = identified.exists ? identified : sheet.buttons.element(boundBy: 0)
         XCTAssertTrue(confirm.waitForExistence(timeout: shortTimeout))
         confirm.tap()

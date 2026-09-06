@@ -17,14 +17,34 @@ struct GameView: View {
     var body: some View {
         VStack(spacing: Theme.Metrics.spacing) {
             topBar
-            readoutRow
-            mapSection
-            tickerSection
-            controlRow
+            ScrollView {
+                VStack(spacing: Theme.Metrics.spacing) {
+                    readoutRow
+                    mapSection
+                    tickerSection
+                }
+            }
         }
         .padding(.horizontal, Theme.Metrics.spacing)
-        .padding(.bottom, Theme.Metrics.spacing)
         .background(Theme.Palette.background.ignoresSafeArea())
+        // Pinned: on the smallest screen at the largest text size the readouts
+        // and board are taller than the display, and controls the player cannot
+        // reach are controls the app does not have.
+        .safeAreaInset(edge: .bottom) {
+            controlRow
+                .padding(.horizontal, Theme.Metrics.spacing)
+                .padding(.top, Theme.Metrics.spacingTight)
+                .padding(.bottom, Theme.Metrics.spacingTight)
+                .background(
+                    Theme.Palette.surface
+                        .overlay(alignment: .top) {
+                            Rectangle()
+                                .fill(Theme.Palette.outline)
+                                .frame(height: Theme.Metrics.hairline)
+                        }
+                        .ignoresSafeArea(edges: .bottom)
+                )
+        }
         .sheet(isPresented: $model.isAbilityMapPresented) {
             TraitTreeView(model: model) {
                 model.isAbilityMapPresented = false
@@ -194,7 +214,7 @@ struct GameView: View {
     // MARK: Ticker
 
     private var tickerSection: some View {
-        ScrollView(.vertical, showsIndicators: false) {
+        Group {
             VStack(alignment: .leading, spacing: 4) {
                 ForEach(model.ticker.prefix(6)) { event in
                     HStack(alignment: .top, spacing: 6) {
@@ -210,9 +230,6 @@ struct GameView: View {
             }
             .frame(maxWidth: .infinity, alignment: .leading)
         }
-        // Flexible rather than fixed: at the largest text sizes a 72pt strip
-        // shows barely half a line.
-        .frame(minHeight: 64, maxHeight: 116)
         .accessibilityElement(children: .contain)
     }
 

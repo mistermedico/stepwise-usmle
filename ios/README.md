@@ -104,10 +104,17 @@ Apple's accessibility audit runs on three screens and **reports** rather than
 fails: it samples a live screen, so a finding can depend on where a scroll view
 happens to be. The CI summary prints it on every run.
 
-One check is worth knowing about: `testAWholeRunReachesTheReport` plays a run
-to its natural end inside a fixed time budget, so it is the one test here that
-a heavily loaded runner could fail on time alone. If that starts happening,
-give the test control of the simulated clock rather than widening the budget.
+### Status: advisory
+
+The suite runs on every push, and CI reports its result without failing on it.
+That is not a hedge about quality — the same code passed all twelve checks on
+both devices one run and failed the next. Several checks wait on a live run
+playing out inside a fixed time budget, and a loaded runner misses it.
+
+Making them block means making them deterministic rather than patient: let a
+test step the simulated clock directly instead of waiting on the timer, then
+delete `continue-on-error` from the workflow. Until then, read the interface
+result in the job summary — a green build does not assert that it passed.
 
 ## Ads
 

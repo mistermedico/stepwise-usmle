@@ -33,11 +33,11 @@ struct PathogenGlyph: View {
         Canvas { context, size in
             let center = CGPoint(x: size.width / 2, y: size.height / 2)
             let radius = min(size.width, size.height) * 0.24
-            let counts = counts
+            let branchCounts = counts
 
             // Arms first, so the core sits on top of where they attach.
             for category in TraitCategory.allCases {
-                let count = (counts[category] ?? 0) + innateArms / TraitCategory.allCases.count
+                let count = (branchCounts[category] ?? 0) + innateArms / TraitCategory.allCases.count
                 draw(
                     arms: count,
                     category: category,

@@ -21,7 +21,7 @@ jobs:
   # without a simulator. This job is the fast signal on every push.
   engine:
     name: Engine rules
-    runs-on: macos-14
+    runs-on: macos-15
     steps:
       - uses: actions/checkout@v4
 
@@ -43,14 +43,14 @@ jobs:
   # (section 8.7).
   app:
     name: App on ${{ matrix.device }}
-    runs-on: macos-14
+    runs-on: macos-15
     needs: [engine]
     strategy:
       fail-fast: false
       matrix:
         device:
           - "iPhone SE (3rd generation)"
-          - "iPhone 15 Pro Max"
+          - "iPhone 16 Pro Max"
     steps:
       - uses: actions/checkout@v4
 
@@ -101,7 +101,7 @@ jobs:
   testflight:
     name: Upload to TestFlight
     if: github.event_name == 'workflow_dispatch'
-    runs-on: macos-14
+    runs-on: macos-15
     needs: [engine, app, localisation]
     environment: release
     steps:

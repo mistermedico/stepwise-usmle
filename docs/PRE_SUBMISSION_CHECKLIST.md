@@ -10,7 +10,7 @@ job was skipped, not so you repeat the work by hand.
       Covers every global-response rule at all three tiers, the spread rules,
       determinism, and a full playthrough to victory.
 - [ ] **automated** The app test bundle is green on **iPhone SE (3rd gen)** and
-      **iPhone 15 Pro Max**.
+      **iPhone 16 Pro Max**.
 - [ ] **automated** `python3 ios/tools/check_strings.py` reports no differences
       between the English and Hebrew tables.
 - [ ] Play one complete run to victory and one to defeat on a device, not just

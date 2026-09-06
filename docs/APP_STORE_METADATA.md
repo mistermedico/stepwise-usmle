@@ -155,7 +155,7 @@ Strainwave הוא בדיון. הפתוגן, הסימפטומים, האזורים
 ## Screenshots
 
 Required: 6.7" (1290×2796) and 6.5" (1242×2688). Everything else is scaled by
-Apple. Capture on iPhone 15 Pro Max and iPhone SE (3rd gen) — the two sizes CI
+Apple. Capture on iPhone 16 Pro Max and iPhone SE (3rd gen) — the two sizes CI
 already tests.
 
 | # | Screen | Caption (en) | Caption (he) |

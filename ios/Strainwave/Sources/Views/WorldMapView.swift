@@ -225,7 +225,6 @@ private struct BubbleView: View {
                     .shadow(color: Theme.Palette.spread.opacity(0.5), radius: 6)
                 Text("+\(value)")
                     .font(Theme.Typography.figure(.caption, weight: .bold))
-                    .monospacedDigit()
                     .foregroundStyle(.white)
             }
             .frame(width: 34, height: 34)

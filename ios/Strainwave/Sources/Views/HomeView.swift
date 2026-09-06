@@ -407,7 +407,6 @@ struct ReportCard: View {
             Meter(value: report.reachFraction, tint: Theme.Palette.spread, height: 4)
             Text(Figures.percent(report.reachFraction))
                 .font(Theme.Typography.figureSmall)
-                .monospacedDigit()
                 .foregroundStyle(Theme.Palette.spread)
         }
         .padding(Theme.Metrics.spacing)

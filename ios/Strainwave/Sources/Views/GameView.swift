@@ -109,7 +109,6 @@ struct GameView: View {
                     .foregroundStyle(Theme.Palette.textSecondary)
                 Text(Figures.integer(model.state.day))
                     .font(Theme.Typography.readout)
-                    .monospacedDigit()
                     .foregroundStyle(Theme.Palette.textPrimary)
             }
             .accessibilityElement(children: .combine)
@@ -220,7 +219,6 @@ struct GameView: View {
                     HStack(alignment: .top, spacing: 6) {
                         Text("\(L.string("hud.day")) \(event.day)")
                             .font(Theme.Typography.figureTiny)
-                            .monospacedDigit()
                             .foregroundStyle(Theme.Palette.textTertiary)
                         Text(L.event(event))
                             .font(Theme.Typography.caption)

@@ -54,7 +54,6 @@ struct TraitTreeView: View {
                     .foregroundStyle(Theme.Palette.spread)
                 Text(Figures.integer(model.state.evolutionPoints))
                     .font(Theme.Typography.readoutSmall)
-                    .monospacedDigit()
                     .foregroundStyle(Theme.Palette.textPrimary)
                     .minimumScaleFactor(0.7)
                     .lineLimit(1)

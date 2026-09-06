@@ -40,14 +40,12 @@ struct Readout: View {
                 .fixedSize(horizontal: false, vertical: true)
             Text(value)
                 .font(Theme.Typography.readoutSmall)
-                .monospacedDigit()
                 .foregroundStyle(accent)
                 .minimumScaleFactor(0.75)
                 .fixedSize(horizontal: false, vertical: true)
             if let caption {
                 Text(caption)
                     .font(Theme.Typography.caption)
-                    .monospacedDigit()
                     .foregroundStyle(Theme.Palette.textTertiary)
                     .fixedSize(horizontal: false, vertical: true)
             }

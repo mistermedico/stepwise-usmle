@@ -100,6 +100,10 @@ jobs:
             | sed -E 's#^.*/([^/]+\.swift)#\1#' \
             | sort -u \
             | head -60 || echo "none"
+          echo "--- failing tests ---"
+          grep -E "^.*(, failed|, XCTAssert.* failed|Failed to tap).*$" build.log \
+            | sed -E 's/^[[:space:]]+//' | sort -u | head -30 || echo "none"
+          grep -E "Executed [0-9]+ tests, with [0-9]+ failure" build.log | tail -4 || true
           echo "--- accessibility audit ---"
           grep -E "Accessibility audit|  • |Longest unassisted run" build.log | head -60 || echo "none"
           echo "--- element tree on failure (if any) ---"

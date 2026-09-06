@@ -110,7 +110,6 @@ struct ReportView: View {
                         Spacer()
                         Text("\(report.regionsReached)/\(RegionID.allCases.count)")
                             .font(Theme.Typography.figureSmall)
-                            .monospacedDigit()
                             .foregroundStyle(Theme.Palette.textTertiary)
                     }
                 }
@@ -261,7 +260,6 @@ private struct TimelineRow: View {
             VStack(alignment: .leading, spacing: 1) {
                 Text("\(L.string("hud.day")) \(event.day)")
                     .font(Theme.Typography.figureTiny)
-                    .monospacedDigit()
                     .foregroundStyle(Theme.Palette.textTertiary)
                 Text(L.event(event))
                     .font(Theme.Typography.callout)

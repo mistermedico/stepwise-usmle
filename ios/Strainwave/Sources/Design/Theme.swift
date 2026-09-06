@@ -76,15 +76,16 @@ enum Theme {
         /// Figures on the control panel: evolution points, percentages, the day
         /// counter.
         ///
-        /// Monospacing is applied at the call site with `Text.monospacedDigit()`
-        /// rather than folded into the font here: doing it on the `Font` throws
-        /// away the text-style metadata, and the accessibility audit then
-        /// reports the label as not supporting Dynamic Type.
+        /// The monospaced *design* gives fixed-width digits, so a ticking day
+        /// counter never jitters, while staying a text-style font that scales.
+        /// `Text.monospacedDigit()` produces the same look but resolves the
+        /// font, and the accessibility audit then reports the label as not
+        /// supporting Dynamic Type. It also suits the instrument-panel tone.
         static func figure(_ style: Font.TextStyle, weight: Font.Weight = .semibold) -> Font {
             if let figureName {
                 return .custom(figureName, size: size(for: style), relativeTo: style).weight(weight)
             }
-            return .system(style, design: .rounded, weight: weight)
+            return .system(style, design: .monospaced, weight: weight)
         }
 
         /// Base sizes, used only when a custom face is fitted; the system faces

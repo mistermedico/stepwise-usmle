@@ -1,0 +1,255 @@
+# CI/CD for the "Picture Cross" Nonogram iOS app, which lives entirely under
+# nonogram-app/ in this repo. This workflow is intentionally scoped to that
+# subproject only (see the `paths:` filters below) and does not touch or
+# depend on anything in the rest of the repo (the unrelated web app).
+#
+# This file must live at the repo root (.github/workflows/) because GitHub
+# Actions only discovers workflow files there, even though the project it
+# builds lives in a subdirectory.
+#
+# Two jobs:
+#   1. build-and-test   - always runs (push / PR / manual). No secrets, so it
+#                          runs cleanly on PRs from forks too.
+#   2. release-testflight - only runs on a manual dispatch or a
+#                          `nonogram-v*` tag push, and needs real Apple/App
+#                          Store Connect secrets to sign and upload a build.
+#
+# See nonogram-app/docs/SETUP_SECRETS.md for exactly how to obtain and add
+# every secret referenced below.
+
+name: Nonogram iOS
+
+on:
+  push:
+    branches:
+      - "**"
+    tags:
+      - "nonogram-v*"
+    paths:
+      - "nonogram-app/**"
+      - ".github/workflows/nonogram-ios.yml"
+  pull_request:
+    paths:
+      - "nonogram-app/**"
+      - ".github/workflows/nonogram-ios.yml"
+  workflow_dispatch: {}
+
+# NOTE on tag pushes + `paths` filters: GitHub evaluates `paths` by diffing
+# the commits included in the push. For an ordinary tag (pointing at a commit
+# that was already pushed/merged earlier with app changes) this normally
+# still matches fine. But if a tag is created on a commit where GitHub can't
+# compute a meaningful diff (e.g. a brand-new branch tip, or a tag pushed by
+# itself well after the commit), the path filter can cause the tag push to be
+# skipped entirely. If a `nonogram-v*` tag push doesn't trigger a run, use
+# "Run workflow" (workflow_dispatch) on this workflow in the Actions tab
+# instead — it always works regardless of path filtering. This is documented
+# in nonogram-app/docs/SETUP_SECRETS.md as the reliable fallback.
+
+permissions:
+  contents: read
+
+concurrency:
+  group: nonogram-ios-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  build-and-test:
+    name: Build & Test
+    runs-on: macos-14
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+        # Plain `brew install` is the simplest, most reliable option here.
+        # It's slower than pulling a pre-warmed mint/homebrew bottle cache
+        # (~20-30s vs a few seconds), but xcodegen is only invoked once or
+        # twice per run and this avoids the extra complexity (and the extra
+        # way for a cache-restore step to silently go stale) that a caching
+        # layer would add. Revisit only if `xcodegen generate` becomes a
+        # measurable bottleneck.
+
+      - name: Generate Xcode project
+        working-directory: nonogram-app
+        run: xcodegen generate
+
+      - name: Build
+        working-directory: nonogram-app
+        run: |
+          set -o pipefail
+          xcodebuild build \
+            -project Nonogram.xcodeproj \
+            -scheme Nonogram \
+            -destination 'generic/platform=iOS Simulator'
+        # NOTE on xcpretty: piping this through `xcpretty` produces much more
+        # readable, colorized build logs. We deliberately skip it here to
+        # keep this job dependency-free (no extra `gem install xcpretty`
+        # step that could fail, hang, or drift out of sync with a newer
+        # Xcode's raw output format) and maximally reliable, since this job
+        # is required to run cleanly on every PR, including ones from forks.
+        # If raw xcodebuild output gets too noisy to work with, add a
+        # `gem install xcpretty --no-document` step before this one and
+        # change this command to `... | xcpretty`.
+
+      - name: Test (NonogramTests)
+        working-directory: nonogram-app
+        run: |
+          set -o pipefail
+          xcodebuild test \
+            -project Nonogram.xcodeproj \
+            -scheme Nonogram \
+            -destination 'platform=iOS Simulator,name=iPhone 15,OS=latest'
+        # NOTE: "iPhone 15" / OS=latest matches the simulator runtimes
+        # preinstalled on GitHub's macos-14 runner image at the time this
+        # workflow was written. GitHub periodically bumps the Xcode/simulator
+        # versions bundled in macos-14, and a future image update could drop
+        # the "iPhone 15" simulator or ship a different "latest" iOS version.
+        # If this step starts failing with something like "Unable to find a
+        # destination matching the provided destination specifier", run
+        # `xcrun simctl list devices available` in a debug step to see what's
+        # actually installed on the runner and update the device name/OS
+        # here accordingly. The app's deployment target (iOS 16+) does not
+        # need to change when you do this.
+
+  release-testflight:
+    name: Release to TestFlight
+    needs: build-and-test
+    runs-on: macos-14
+    if: |
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'push' && startsWith(github.ref, 'refs/tags/nonogram-v'))
+    # Why both triggers: workflow_dispatch gives a reliable manual "release
+    # button" in the Actions tab (works around the tag/paths-filter quirk
+    # noted above), while a `nonogram-v*` tag push gives a normal, auditable,
+    # git-native release trigger for tagged versions (e.g. `nonogram-v1.0.0`).
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install XcodeGen and fastlane
+        run: brew install xcodegen fastlane
+
+      - name: Generate Xcode project
+        working-directory: nonogram-app
+        run: xcodegen generate
+
+      # --- Code signing: import the distribution certificate and the
+      # provisioning profile into a temporary, throwaway keychain for this
+      # job only. This workflow uses manually-managed signing (no fastlane
+      # `match`); nonogram-app/fastlane/Fastfile's `release` lane expects the
+      # certificate/profile to already be installed wherever it runs — here,
+      # this keychain; for a developer running `fastlane release` locally,
+      # their own login keychain after installing the same cert/profile by
+      # hand. See nonogram-app/docs/SETUP_SECRETS.md for where these secrets
+      # come from.
+      - name: Import signing certificate and provisioning profile
+        env:
+          IOS_DIST_CERTIFICATE_BASE64: ${{ secrets.IOS_DIST_CERTIFICATE_BASE64 }}
+          IOS_DIST_CERTIFICATE_PASSWORD: ${{ secrets.IOS_DIST_CERTIFICATE_PASSWORD }}
+          IOS_PROVISIONING_PROFILE_BASE64: ${{ secrets.IOS_PROVISIONING_PROFILE_BASE64 }}
+          IOS_KEYCHAIN_PASSWORD: ${{ secrets.IOS_KEYCHAIN_PASSWORD }}
+        run: |
+          set -euo pipefail
+
+          CERT_PATH="$RUNNER_TEMP/dist_certificate.p12"
+          PROFILE_PATH="$RUNNER_TEMP/profile.mobileprovision"
+          KEYCHAIN_PATH="$RUNNER_TEMP/nonogram-signing.keychain-db"
+
+          # 1. Decode the base64 GitHub secrets back into the original binary
+          #    certificate (.p12) and provisioning profile files.
+          echo -n "$IOS_DIST_CERTIFICATE_BASE64" | base64 --decode -o "$CERT_PATH"
+          echo -n "$IOS_PROVISIONING_PROFILE_BASE64" | base64 --decode -o "$PROFILE_PATH"
+
+          # 2. Create a brand-new, throwaway keychain for this CI run only
+          #    (IOS_KEYCHAIN_PASSWORD is *not* an Apple account password —
+          #    it's just a random string this workflow invents to lock/unlock
+          #    its own temporary keychain; see the secrets doc). Unlock it so
+          #    later codesign/xcodebuild steps can use it non-interactively,
+          #    and disable the auto-relock timeout for the duration of the job.
+          security create-keychain -p "$IOS_KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+          security set-keychain-settings -lut 21600 "$KEYCHAIN_PATH"
+          security unlock-keychain -p "$IOS_KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+
+          # 3. Import the distribution certificate (+ private key) into that
+          #    keychain, and allow codesign/security to use it without a
+          #    GUI prompt (there is no GUI on a CI runner).
+          security import "$CERT_PATH" -k "$KEYCHAIN_PATH" -P "$IOS_DIST_CERTIFICATE_PASSWORD" \
+            -T /usr/bin/codesign -T /usr/bin/security
+          security set-key-partition-list -S apple-tool:,apple:,codesign: -s \
+            -k "$IOS_KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+
+          # 4. Make this keychain the default and put it first in the search
+          #    list so xcodebuild finds the signing identity without any
+          #    extra flags.
+          EXISTING_KEYCHAINS=$(security list-keychains -d user | sed 's/[[:space:]]*"\(.*\)"/\1/')
+          security list-keychains -d user -s "$KEYCHAIN_PATH" $EXISTING_KEYCHAINS
+          security default-keychain -s "$KEYCHAIN_PATH"
+
+          # 5. Install the provisioning profile where Xcode's build system
+          #    looks for it. The filename must be "<UUID>.mobileprovision",
+          #    so the UUID is read out of the profile itself rather than
+          #    hard-coded anywhere.
+          PROFILES_DIR="$HOME/Library/MobileDevice/Provisioning Profiles"
+          mkdir -p "$PROFILES_DIR"
+          PROFILE_UUID=$(security cms -D -i "$PROFILE_PATH" | \
+            plutil -extract UUID xml1 -o - - | \
+            sed -n 's/.*<string>\(.*\)<\/string>.*/\1/p')
+          cp "$PROFILE_PATH" "$PROFILES_DIR/$PROFILE_UUID.mobileprovision"
+
+          # Make the keychain path and the resolved profile UUID available to
+          # later steps (the fastlane build uses PROVISIONING_PROFILE_UUID
+          # for manual signing) and to the cleanup step at the end of the job.
+          {
+            echo "KEYCHAIN_PATH=$KEYCHAIN_PATH"
+            echo "PROVISIONING_PROFILE_UUID=$PROFILE_UUID"
+          } >> "$GITHUB_ENV"
+
+      # ExportOptions.plist needs a concrete Development Team ID, but the
+      # team ID is itself a secret (APPLE_TEAM_ID), so it can't be committed
+      # into the plist directly. Instead the committed file holds a
+      # placeholder token that gets substituted in at build time.
+      - name: Fill in Development Team ID in ExportOptions.plist
+        working-directory: nonogram-app
+        env:
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+        run: |
+          set -euo pipefail
+          sed -i '' "s/__APPLE_TEAM_ID__/$APPLE_TEAM_ID/" ExportOptions.plist
+
+      # Archive, export the .ipa, and upload it to TestFlight. All of this is
+      # delegated to `fastlane release` (nonogram-app/fastlane/Fastfile)
+      # rather than duplicated here as separate `xcodebuild archive` /
+      # `xcodebuild -exportArchive` / `xcrun altool` steps, so there is a
+      # single, authoritative place that owns the archive/export/upload
+      # recipe instead of two copies (one in this YAML, one in the Fastfile)
+      # that could quietly drift apart. fastlane's `build_app` action runs
+      # the same underlying xcodebuild archive+export xcodebuild calls,
+      # reading ExportOptions.plist for the export step, and
+      # `upload_to_testflight` performs the TestFlight upload via the App
+      # Store Connect API key (non-interactive, no Apple ID/2FA involved).
+      - name: Build and upload to TestFlight (fastlane)
+        working-directory: nonogram-app
+        env:
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
+          APP_STORE_CONNECT_API_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_ISSUER_ID }}
+          APP_STORE_CONNECT_API_KEY_BASE64: ${{ secrets.APP_STORE_CONNECT_API_KEY_BASE64 }}
+          # PROVISIONING_PROFILE_UUID and KEYCHAIN_PATH were already exported
+          # into $GITHUB_ENV by the signing step above, so they're already
+          # part of this step's environment without being repeated here.
+        run: fastlane release
+
+      # Always run, even if signing/build/upload above failed, so a
+      # temporary keychain or decoded secret file never lingers.
+      - name: Clean up signing artifacts
+        if: always()
+        run: |
+          security delete-keychain "$KEYCHAIN_PATH" 2>/dev/null || true
+          rm -f "$RUNNER_TEMP/dist_certificate.p12" "$RUNNER_TEMP/profile.mobileprovision"
+          if [ -n "${PROVISIONING_PROFILE_UUID:-}" ]; then
+            rm -f "$HOME/Library/MobileDevice/Provisioning Profiles/${PROVISIONING_PROFILE_UUID}.mobileprovision"
+          fi
+          # The runner itself is destroyed right after this job anyway, so
+          # this cleanup is mostly defense-in-depth / good hygiene rather
+          # than strictly required.

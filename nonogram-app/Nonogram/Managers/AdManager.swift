@@ -2,6 +2,9 @@ import Foundation
 #if canImport(AppTrackingTransparency)
 import AppTrackingTransparency
 #endif
+#if canImport(UIKit)
+import UIKit
+#endif
 #if canImport(GoogleMobileAds)
 import GoogleMobileAds
 #endif
@@ -50,6 +53,13 @@ protocol AdManaging: AnyObject {
 
 /// Real GoogleMobileAds-backed implementation. Uses Google's published TEST ad unit IDs so the
 /// app never serves live ads during development.
+///
+/// NOTE: written against the classic `GAD`-prefixed API surface (GADRequest, GADInterstitialAd,
+/// GADRewardedAd, GADFullScreenContentDelegate) that the GoogleMobileAds SPM package has kept
+/// available for Objective-C compatibility across recent SDK versions. If the exact SDK version
+/// added to the project has renamed these (some newer Swift-first releases dropped the `GAD`
+/// prefix, e.g. `InterstitialAd`), update the type names below to match — the public
+/// `AdManaging` contract and every other file in the app are unaffected either way.
 final class GoogleAdManager: NSObject, AdManaging {
     // TODO: replace with production ad unit ID before release.
     private let interstitialAdUnitID = "ca-app-pub-3940256099942544/4411468910"
@@ -148,22 +158,15 @@ final class GoogleAdManager: NSObject, AdManaging {
 
     private var rewardEarned = false
 
-    private static func topViewController() -> UIViewControllerType? {
-        #if canImport(UIKit)
+    #if canImport(UIKit)
+    private static func topViewController() -> UIViewController? {
         UIApplication.shared.connectedScenes
             .compactMap { $0 as? UIWindowScene }
             .flatMap { $0.windows }
             .first { $0.isKeyWindow }?.rootViewController
-        #else
-        nil
-        #endif
     }
+    #endif
 }
-
-#if canImport(UIKit)
-import UIKit
-private typealias UIViewControllerType = UIViewController
-#endif
 
 extension GoogleAdManager: GADFullScreenContentDelegate {
     func adDidDismissFullScreenContent(_ ad: GADFullScreenPresentingAd) {

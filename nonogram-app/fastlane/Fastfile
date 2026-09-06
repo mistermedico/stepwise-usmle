@@ -1,0 +1,84 @@
+# Fastlane lanes for Picture Cross (Nonogram).
+#
+# Run from inside nonogram-app/ with, e.g.:
+#   fastlane test
+#   fastlane release
+#
+# Signing strategy (must match .github/workflows/nonogram-ios.yml exactly —
+# see that file's `release-testflight` job for the full explanation):
+#   - NOT using fastlane `match`.
+#   - The distribution certificate and provisioning profile are expected to
+#     already be installed in whichever keychain is currently active:
+#       * In CI, the GitHub Actions workflow decodes IOS_DIST_CERTIFICATE_BASE64
+#         and IOS_PROVISIONING_PROFILE_BASE64 and imports them into a
+#         temporary keychain before calling `fastlane release`.
+#       * Locally, a developer installs their own copy of the same
+#         certificate (as a .p12, via Keychain Access) and the provisioning
+#         profile (double-click the .mobileprovision, or via Xcode) first.
+#   - `build_app` below is therefore configured for MANUAL code signing
+#     (CODE_SIGN_STYLE=Manual), pointed at whatever provisioning profile UUID
+#     is currently known (via PROVISIONING_PROFILE_UUID) rather than letting
+#     Xcode try to auto-manage signing.
+#   - Uploading uses an App Store Connect API key (env vars below), never an
+#     Apple ID + password/2FA, so this lane is fully non-interactive.
+#
+# Every env var read below is documented, with its exact name, in
+# nonogram-app/docs/SETUP_SECRETS.md — keep that table, this file, the
+# Appfile, and the GitHub Actions workflow's secret names in sync if any of
+# them ever change.
+
+default_platform(:ios)
+
+PROJECT = "Nonogram.xcodeproj"
+SCHEME = "Nonogram"
+
+platform :ios do
+  desc "Run the NonogramTests unit test suite (same tests as CI's build-and-test job)"
+  lane :test do
+    run_tests(
+      project: PROJECT,
+      scheme: SCHEME,
+      devices: ["iPhone 15"]
+    )
+  end
+
+  desc "Archive a Release build and upload it to TestFlight"
+  lane :release do
+    # Manual signing: rely on whatever certificate/profile is already in the
+    # active keychain (see the signing-strategy note above) rather than
+    # letting Xcode manage signing automatically.
+    xcargs = [
+      "CODE_SIGN_STYLE=Manual",
+      "CODE_SIGN_IDENTITY=Apple Distribution",
+      "DEVELOPMENT_TEAM=#{ENV['APPLE_TEAM_ID']}"
+    ]
+    if ENV["PROVISIONING_PROFILE_UUID"]
+      xcargs << "PROVISIONING_PROFILE_SPECIFIER=#{ENV['PROVISIONING_PROFILE_UUID']}"
+    end
+
+    build_app(
+      project: PROJECT,
+      scheme: SCHEME,
+      configuration: "Release",
+      export_method: "app-store",
+      export_options: "ExportOptions.plist",
+      output_directory: "build/ipa",
+      output_name: "Nonogram.ipa",
+      xcargs: xcargs.join(" ")
+    )
+
+    api_key = app_store_connect_api_key(
+      key_id: ENV["APP_STORE_CONNECT_API_KEY_ID"],
+      issuer_id: ENV["APP_STORE_CONNECT_API_ISSUER_ID"],
+      key_content: ENV["APP_STORE_CONNECT_API_KEY_BASE64"],
+      is_key_content_base64: true,
+      in_house: false
+    )
+
+    upload_to_testflight(
+      api_key: api_key,
+      ipa: "build/ipa/Nonogram.ipa",
+      skip_waiting_for_build_processing: true
+    )
+  end
+end

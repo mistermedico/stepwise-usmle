@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  Export options for `xcodebuild -exportArchive` (invoked for us by
+  fastlane's `build_app` action in fastlane/Fastfile's `release` lane; see
+  .github/workflows/nonogram-ios.yml, job `release-testflight`).
+
+  teamID below is a placeholder, NOT a real value: this file is committed to
+  git, but the Apple Development Team ID is a secret (APPLE_TEAM_ID), so it
+  can't be hard-coded here. The GitHub Actions workflow substitutes the real
+  value in with `sed` immediately before the build step. If you run a
+  release archive locally instead of through CI, replace __APPLE_TEAM_ID__
+  below with your own Team ID first (Apple Developer portal > Membership),
+  or export ExportOptions.plist from Xcode's own "Distribute App" flow
+  instead of using this file.
+-->
+<plist version="1.0">
+<dict>
+    <key>method</key>
+    <string>app-store</string>
+    <key>teamID</key>
+    <string>__APPLE_TEAM_ID__</string>
+    <key>signingStyle</key>
+    <string>manual</string>
+    <key>uploadSymbols</key>
+    <true/>
+</dict>
+</plist>

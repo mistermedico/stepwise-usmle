@@ -1,0 +1,9 @@
+# See nonogram-app/docs/SETUP_SECRETS.md for what APPLE_TEAM_ID is and how to
+# find it (Apple Developer portal > Membership).
+#
+# app_identifier is a placeholder: whoever ships this app must own
+# "com.nonogramstudio.picturecross" in their own Apple Developer account (see
+# nonogram-app/project.yml), or replace both here and in project.yml with a
+# bundle id they do own.
+app_identifier("com.nonogramstudio.picturecross")
+team_id(ENV["APPLE_TEAM_ID"])

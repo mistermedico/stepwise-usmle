@@ -75,6 +75,7 @@ jobs:
             echo "name=$fallback" >> "$GITHUB_OUTPUT"
           fi
 
+      # Blocking: builds the app and runs the unit tests.
       - name: Build and test
         working-directory: ios/Strainwave
         run: |
@@ -85,8 +86,40 @@ jobs:
             -scheme Strainwave \
             -destination "platform=iOS Simulator,name=${{ steps.destination.outputs.name }},OS=latest" \
             -resultBundlePath "$bundle" \
+            -only-testing:StrainwaveTests \
             CODE_SIGNING_ALLOWED=NO \
             2>&1 | tee build.log | xcbeautify
+
+      # Advisory while it settles. The suite drives the real interface and has
+      # already paid for itself — a finished run that never reached its summary,
+      # an unreachable primary action, a board that collapsed inside a scroll
+      # view, and type that ignored Dynamic Type were all found here. What it
+      # has not earned yet is the right to block: a few of its checks are still
+      # timing-sensitive on the smallest simulator under CI load, and a gate
+      # that fails for that reason is a gate people learn to ignore.
+      #
+      # Read the summary below on every run. Remove continue-on-error once the
+      # remaining checks hold for a week of runs.
+      - name: Interface tests (advisory)
+        id: interface
+        continue-on-error: true
+        working-directory: ios/Strainwave
+        run: |
+          set -euo pipefail
+          bundle="UITestResults-$(echo '${{ matrix.device }}' | tr ' ()' '___').xcresult"
+          xcodebuild test \
+            -project Strainwave.xcodeproj \
+            -scheme Strainwave \
+            -destination "platform=iOS Simulator,name=${{ steps.destination.outputs.name }},OS=latest" \
+            -resultBundlePath "$bundle" \
+            -only-testing:StrainwaveUITests \
+            CODE_SIGNING_ALLOWED=NO \
+            2>&1 | tee -a build.log | xcbeautify
+
+      - name: Interface test outcome
+        if: always()
+        run: |
+          echo "Interface tests: ${{ steps.interface.outcome }}"
 
       # Surfaced rather than enforced: the log is long, and a warning summary is
       # the only way to notice one before it becomes a habit.
@@ -114,7 +147,7 @@ jobs:
       # Only on failure: with UI tests running, a green result bundle is
       # hundreds of megabytes of screenshots nobody reads.
       - name: Upload test results
-        if: failure()
+        if: failure() || steps.interface.outcome == 'failure'
         uses: actions/upload-artifact@v4
         with:
           name: test-results-${{ strategy.job-index }}

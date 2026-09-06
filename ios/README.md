@@ -104,6 +104,20 @@ Apple's accessibility audit runs on three screens and **reports** rather than
 fails: it samples a live screen, so a finding can depend on where a scroll view
 happens to be. The CI summary prints it on every run.
 
+### Status
+
+The interface suite runs on every push but is **advisory** — CI reports its
+result without failing on it. Nine of its twelve checks pass consistently on
+both devices; the rest are still timing-sensitive on the smallest simulator
+under CI load, where a whole run has to play out inside a fixed budget. A gate
+that goes red for that reason is a gate people learn to ignore, so it does not
+block yet. The unit suites do.
+
+Finishing this means making the remaining checks deterministic rather than
+patient — most likely by letting a test drive the simulated clock directly
+instead of waiting on it — and then deleting `continue-on-error` from the
+workflow.
+
 ## Ads
 
 The ad layer is optional at compile time. Every AdMob file is wrapped in

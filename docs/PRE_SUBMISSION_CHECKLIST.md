@@ -13,9 +13,11 @@ job was skipped, not so you repeat the work by hand.
       **iPhone 16 Pro Max**.
 - [ ] **automated** `python3 ios/tools/check_strings.py` reports no differences
       between the English and Hebrew tables.
-- [ ] **automated** The interface tests play a whole run through the screens to
+- [ ] **advisory** The interface tests play a whole run through the screens to
       its report, evolve an ability, pause the clock, and leave a run — on both
-      devices, in English and in Hebrew.
+      devices, in English and in Hebrew. They report rather than block while the
+      last few checks are made deterministic (see `ios/README.md`), so read
+      their result rather than assuming a green build means they passed.
 - [ ] Play one complete run to victory and one to defeat on a device, not just
       the simulator. (CI reaches the report; it does not judge how the run felt.)
 - [ ] Play one Daily Challenge to completion and confirm the report is filed and

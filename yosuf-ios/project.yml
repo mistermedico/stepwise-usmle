@@ -22,7 +22,7 @@ packages:
     url: https://github.com/googleads/swift-package-manager-google-mobile-ads.git
     from: 11.13.0
   UserMessagingPlatform:
-    url: https://github.com/googleads/swift-package-manager-user-messaging-platform.git
+    url: https://github.com/googleads/swift-package-manager-google-user-messaging-platform.git
     from: 2.7.0
 
 targets:

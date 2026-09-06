@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="23222" systemVersion="23F79" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithSwiftData="false" userDefinedModelVersionIdentifier="">
+    <entity name="OutbreakReportEntity" representedClassName="OutbreakReportEntity" syncable="YES" codeGenerationType="class">
+        <attribute name="id" attributeType="UUID" usesScalarValueType="NO" optional="NO"/>
+        <attribute name="completedAt" attributeType="Date" usesScalarValueType="NO" optional="NO"/>
+        <attribute name="day" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES" optional="NO"/>
+        <attribute name="outcomeRaw" attributeType="String" optional="NO"/>
+        <attribute name="characterRaw" attributeType="String" optional="NO"/>
+        <attribute name="scenarioID" attributeType="String" optional="NO"/>
+        <attribute name="strainID" attributeType="String" optional="NO"/>
+        <attribute name="difficultyRaw" attributeType="String" optional="NO"/>
+        <attribute name="peakAwareness" attributeType="Double" defaultValueString="0" usesScalarValueType="YES" optional="NO"/>
+        <attribute name="finalInfectionFraction" attributeType="Double" defaultValueString="0" usesScalarValueType="YES" optional="NO"/>
+        <fetchIndex name="byCompletedAtIndex">
+            <fetchIndexElement property="completedAt" type="Binary" order="descending"/>
+        </fetchIndex>
+    </entity>
+    <entity name="AchievementRecordEntity" representedClassName="AchievementRecordEntity" syncable="YES" codeGenerationType="class">
+        <attribute name="id" attributeType="String" optional="NO"/>
+        <attribute name="unlockedAt" attributeType="Date" usesScalarValueType="NO" optional="NO"/>
+        <fetchIndex name="byIdIndex">
+            <fetchIndexElement property="id" type="Binary" order="ascending"/>
+        </fetchIndex>
+    </entity>
+</model>

@@ -38,7 +38,7 @@ App Store Connect allows only **one primary app name** per app record, but suppo
 ### English (`en-US`) — 2,426 / 4,000 characters
 
 ```
-Every puzzle in Picture Cross hides a picture — and only you, and a grid of number clues, stand between you and revealing it. Fill in the right cells, leave the rest empty, and watch a pixel-art image emerge line by line. It's the classic number-logic picture puzzle you already love, built fresh for iPhone and iPad.
+Every puzzle in Picture Cross hides a picture — and only you, and a grid of number clues, stand between you and revealing it. Fill in the right cells, leave the rest empty, and watch a pixel-art image emerge line by line. It's the classic number-logic picture puzzle you already love, built fresh for iPhone.
 
 HOW TO PLAY
 Each row and column carries a set of numbers telling you exactly how many filled cells appear in that line, and in what order. No guessing required — just careful logic. Mark cells you're sure about, flag the ones you've ruled out, and let the picture reveal itself as you go. Simple to learn, endlessly satisfying to master.
@@ -70,7 +70,7 @@ If you love nonogram, griddler, or picture-logic puzzles, grab your phone, pick 
 ### Hebrew (`he`) — 2,036 / 4,000 characters
 
 ```
-בכל חידה במשחק חושף התמונה מסתתרת תמונה — ורק אתם, ורשת של רמזי מספרים, עומדים בינכם לבין חשיפתה. סמנו את המשבצות הנכונות, השאירו את השאר ריקות, וצפו בתמונת פיקסל-ארט מתגלה שורה אחר שורה. זהו משחק ההיגיון הקלאסי עם רמזי המספרים שאתם כבר אוהבים, בבנייה חדשה ומלוטשת לאייפון ולאייפד.
+בכל חידה במשחק חושף התמונה מסתתרת תמונה — ורק אתם, ורשת של רמזי מספרים, עומדים בינכם לבין חשיפתה. סמנו את המשבצות הנכונות, השאירו את השאר ריקות, וצפו בתמונת פיקסל-ארט מתגלה שורה אחר שורה. זהו משחק ההיגיון הקלאסי עם רמזי המספרים שאתם כבר אוהבים, בבנייה חדשה ומלוטשת לאייפון.
 
 איך משחקים
 כל שורה וכל טור נושאים סדרת מספרים המספרת בדיוק כמה משבצות מלאות מופיעות בשורה הזו, ובאיזה סדר. אין צורך בניחושים — רק בהיגיון קפדני. סמנו משבצות שאתם בטוחים בהן, סמנו X במשבצות שפסלתם, ותנו לתמונה להתגלות בהדרגה. קל ללמוד, ומספק בלי סוף לשכלל.

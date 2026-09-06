@@ -1,0 +1,3 @@
+/* מוצג בבקשת המעקב של המערכת. */
+"NSUserTrackingUsageDescription" = "משמש רק להצגת פרסומות רלוונטיות יותר. המשחק עצמו עובד בדיוק אותו הדבר כך או כך.";
+"CFBundleDisplayName" = "Strainwave";

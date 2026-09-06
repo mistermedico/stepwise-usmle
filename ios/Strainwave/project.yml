@@ -1,0 +1,92 @@
+# XcodeGen specification.
+#
+# The Xcode project is generated rather than committed: a 4,000-line
+# `project.pbxproj` is unreviewable and merges badly, whereas this file is the
+# whole build configuration in one readable place.
+#
+#   brew install xcodegen
+#   cd ios/Strainwave && xcodegen generate && open Strainwave.xcodeproj
+name: Strainwave
+options:
+  bundleIdPrefix: com.strainwave
+  deploymentTarget:
+    iOS: "16.0"
+  createIntermediateGroups: true
+  generateEmptyDirectories: false
+  groupSortPosition: top
+
+settings:
+  base:
+    MARKETING_VERSION: "1.0.0"
+    CURRENT_PROJECT_VERSION: "1"
+    SWIFT_VERSION: "5.9"
+    DEVELOPMENT_TEAM: ${DEVELOPMENT_TEAM}
+    CODE_SIGN_STYLE: Automatic
+    ENABLE_USER_SCRIPT_SANDBOXING: YES
+    SWIFT_STRICT_CONCURRENCY: minimal
+    # Warnings are worth reading; the project is small enough to keep clean.
+    GCC_TREAT_WARNINGS_AS_ERRORS: NO
+    SWIFT_TREAT_WARNINGS_AS_ERRORS: NO
+
+packages:
+  OutbreakEngine:
+    path: ../OutbreakEngine
+  # To switch the ad layer on, uncomment this block and regenerate. Every ad
+  # file is guarded by `#if canImport(GoogleMobileAds)`, so nothing else changes.
+  # GoogleMobileAds:
+  #   url: https://github.com/googleads/swift-package-manager-google-mobile-ads
+  #   from: "11.0.0"
+
+targets:
+  Strainwave:
+    type: application
+    platform: iOS
+    sources:
+      - path: Sources
+        excludes:
+          - "**/.DS_Store"
+    dependencies:
+      - package: OutbreakEngine
+      # - package: GoogleMobileAds
+      #   product: GoogleMobileAds
+      # - package: GoogleMobileAds
+      #   product: UserMessagingPlatform
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.strainwave.app
+        PRODUCT_NAME: Strainwave
+        INFOPLIST_FILE: Sources/Resources/Info.plist
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+        TARGETED_DEVICE_FAMILY: "1,2"
+        SUPPORTS_MACCATALYST: NO
+        ENABLE_PREVIEWS: YES
+
+  StrainwaveTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: Tests
+    dependencies:
+      - target: Strainwave
+      - package: OutbreakEngine
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.strainwave.app.tests
+        GENERATE_INFOPLIST_FILE: YES
+
+schemes:
+  Strainwave:
+    build:
+      targets:
+        Strainwave: all
+        StrainwaveTests: [test]
+    run:
+      config: Debug
+    test:
+      config: Debug
+      gatherCoverageData: true
+      targets:
+        - StrainwaveTests
+    archive:
+      config: Release

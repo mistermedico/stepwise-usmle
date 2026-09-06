@@ -1,1 +1,12 @@
 supabase/.temp/
+
+# Xcode / Swift (the iOS game under ios/)
+ios/**/*.xcodeproj/
+ios/**/*.xcworkspace/
+ios/**/.build/
+ios/**/.swiftpm/
+ios/**/DerivedData/
+ios/**/*.xcresult/
+ios/**/*.xcuserstate
+xcuserdata/
+.DS_Store

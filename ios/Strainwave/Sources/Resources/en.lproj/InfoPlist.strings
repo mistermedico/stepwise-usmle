@@ -1,0 +1,3 @@
+/* Shown in the system tracking prompt. */
+"NSUserTrackingUsageDescription" = "Used only to show more relevant ads. The game itself works exactly the same either way.";
+"CFBundleDisplayName" = "Strainwave";

@@ -26,7 +26,7 @@ final class LocalizationUITests: UITestCase {
 
         tap(app.buttons[A11y.Game.abilities])
         XCTAssertTrue(
-            app.otherElements[A11y.Tree.root].waitForExistence(timeout: shortTimeout),
+            app.buttons[A11y.Tree.close].waitForExistence(timeout: shortTimeout),
             "The ability map does not open in Hebrew"
         )
         capture("12-ability-map-hebrew")

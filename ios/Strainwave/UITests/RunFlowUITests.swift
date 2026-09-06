@@ -13,7 +13,7 @@ final class RunFlowUITests: UITestCase {
         capture("01-board-early")
 
         // The clock is running: the day counter has to move on its own.
-        let day = app.otherElements[A11y.Game.day]
+        let day = element(A11y.Game.day)
         XCTAssertTrue(day.waitForExistence(timeout: shortTimeout))
         let opening = day.label
         let moved = NSPredicate(format: "label != %@", opening)
@@ -44,7 +44,7 @@ final class RunFlowUITests: UITestCase {
 
         tap(app.buttons[A11y.Game.abilities])
         XCTAssertTrue(
-            app.otherElements[A11y.Tree.root].waitForExistence(timeout: shortTimeout),
+            app.buttons[A11y.Tree.close].waitForExistence(timeout: shortTimeout),
             "The ability map never opened"
         )
         capture("04-ability-map")
@@ -74,7 +74,7 @@ final class RunFlowUITests: UITestCase {
         launch(fastClock: false)
         startRun()
 
-        let day = app.otherElements[A11y.Game.day]
+        let day = element(A11y.Game.day)
         XCTAssertTrue(day.waitForExistence(timeout: shortTimeout))
 
         tap(app.buttons[A11y.Game.playPause])

@@ -9,10 +9,14 @@ import Foundation
 /// Identifiers are for automation only — they are never shown to anyone. The
 /// human-facing text still comes from `Localizable.strings`, which is what
 /// lets the same test drive the English and Hebrew builds unchanged.
+///
+/// Every identifier here names a **leaf control**. Putting one on a container
+/// is a trap: SwiftUI pushes it down onto the descendants, so a screen-level
+/// identifier silently replaces the identifier on every button inside it, and
+/// the tests then look for controls that all answer to the same name.
 enum A11y {
 
     enum Home {
-        static let root = "home.root"
         static let start = "home.start"
         static let dailyStart = "home.daily.start"
         static let reports = "home.reports"
@@ -25,7 +29,6 @@ enum A11y {
     }
 
     enum Game {
-        static let root = "game.root"
         static let day = "game.day"
         static let points = "game.points"
         static let abilities = "game.abilities"
@@ -33,13 +36,11 @@ enum A11y {
         static let speed = "game.speed"
         static let quit = "game.quit"
         static let quitConfirm = "game.quit.confirm"
-        static let map = "game.map"
 
         static func region(_ rawValue: String) -> String { "game.region.\(rawValue)" }
     }
 
     enum Tree {
-        static let root = "tree.root"
         static let close = "tree.close"
         static let unlock = "tree.unlock"
         static let fold = "tree.fold"
@@ -49,7 +50,6 @@ enum A11y {
     }
 
     enum Report {
-        static let root = "report.root"
         static let title = "report.title"
         static let again = "report.again"
         static let home = "report.home"

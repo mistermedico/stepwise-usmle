@@ -31,7 +31,6 @@ struct ReportView: View {
             .padding(.vertical, Theme.Metrics.spacingSection)
         }
         .background(Theme.Palette.background.ignoresSafeArea())
-        .accessibilityIdentifier(A11y.Report.root)
         .onAppear(perform: revealSequentially)
     }
 

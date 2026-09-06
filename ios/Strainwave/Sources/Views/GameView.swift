@@ -22,7 +22,6 @@ struct GameView: View {
         .padding(.horizontal, Theme.Metrics.spacing)
         .padding(.bottom, Theme.Metrics.spacing)
         .background(Theme.Palette.background.ignoresSafeArea())
-        .accessibilityIdentifier(A11y.Game.root)
         .sheet(isPresented: $model.isAbilityMapPresented) {
             TraitTreeView(model: model) {
                 model.isAbilityMapPresented = false
@@ -183,7 +182,6 @@ struct GameView: View {
             onCollect: { model.collect($0) }
         )
         .frame(maxWidth: .infinity)
-        .accessibilityIdentifier(A11y.Game.map)
     }
 
     // MARK: Ticker

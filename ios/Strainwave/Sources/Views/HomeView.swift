@@ -69,7 +69,6 @@ private struct HomeContent: View {
             .padding(.vertical, Theme.Metrics.spacingWide)
         }
         .background(Theme.Palette.background.ignoresSafeArea())
-        .accessibilityIdentifier(A11y.Home.root)
         .safeAreaInset(edge: .bottom) { bottomBar }
         .sheet(isPresented: $showsReports) {
             ReportsGalleryView(reports: store.reports)

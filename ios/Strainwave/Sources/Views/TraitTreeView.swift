@@ -30,7 +30,6 @@ struct TraitTreeView: View {
             detailPanel
         }
         .background(Theme.Palette.background.ignoresSafeArea())
-        .accessibilityIdentifier(A11y.Tree.root)
         .onChange(of: model.lastUnlockedTrait) { unlocked in
             guard let unlocked else { return }
             startPulse(to: unlocked)

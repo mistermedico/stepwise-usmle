@@ -53,6 +53,15 @@ class UITestCase: XCTestCase {
         return app
     }
 
+    /// Finds an element by identifier regardless of the type SwiftUI gave it.
+    ///
+    /// A composed readout can surface as `otherElement` or `staticText`
+    /// depending on how its children combine, and a test should not fail
+    /// because of that distinction.
+    func element(_ identifier: String) -> XCUIElement {
+        app.descendants(matching: .any).matching(identifier: identifier).firstMatch
+    }
+
     // MARK: Navigation
 
     func waitForHome(file: StaticString = #filePath, line: UInt = #line) {

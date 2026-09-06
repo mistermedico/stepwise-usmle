@@ -71,7 +71,7 @@ final class AccessibilityUITests: UITestCase {
         launch()
         startRun()
         tap(app.buttons[A11y.Game.abilities])
-        XCTAssertTrue(app.otherElements[A11y.Tree.root].waitForExistence(timeout: shortTimeout))
+        XCTAssertTrue(app.buttons[A11y.Tree.close].waitForExistence(timeout: shortTimeout))
         if #available(iOS 17.0, *) {
             try audit("ability map")
         }
@@ -88,7 +88,7 @@ final class AccessibilityUITests: UITestCase {
             "ashenvale", "goldensands", "stillwater", "emberfall", "tidecrest", "sunwake"
         ]
         for identifier in identifiers {
-            let territory = app.otherElements[A11y.Game.region(identifier)]
+            let territory = element(A11y.Game.region(identifier))
             XCTAssertTrue(
                 territory.waitForExistence(timeout: shortTimeout),
                 "\(identifier) is invisible to VoiceOver"

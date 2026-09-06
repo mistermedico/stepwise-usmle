@@ -130,7 +130,9 @@ final class GameEngineTests: XCTestCase {
         )
         state.phase = .awaitingDiscard(playerID: p1)
         state.hasDrawnThisTurn = true
-        let invalidMeld = [Card.standard(.five, .hearts), .standard(.eight, .clubs), .standard(.two, .diamonds)]
+        // Reuse the actual dealt card instances (identity matters — the
+        // engine matches by card id, not by rank/suit).
+        let invalidMeld = state.players[0].hand
         XCTAssertThrowsError(try GameEngine.discard(&state, playerID: p1, cards: invalidMeld)) { error in
             XCTAssertEqual(error as? GameError, .invalidMeld)
         }
@@ -143,7 +145,7 @@ final class GameEngineTests: XCTestCase {
         )
         state.phase = .awaitingDiscard(playerID: p1)
         state.hasDrawnThisTurn = true
-        let meld = [Card.standard(.five, .hearts), .standard(.five, .clubs), .standard(.five, .spades)]
+        let meld = state.players[0].hand
         try GameEngine.discard(&state, playerID: p1, cards: meld)
         XCTAssertTrue(state.players[0].hand.isEmpty)
         XCTAssertEqual(state.phase, .awaitingDraw(playerID: p2))
@@ -324,7 +326,7 @@ final class GameEngineTests: XCTestCase {
         )
         state.phase = .awaitingDiscard(playerID: p1)
         state.hasDrawnThisTurn = true
-        let notAMeld = [Card.standard(.five, .hearts), .standard(.eight, .clubs), .standard(.two, .diamonds)]
+        let notAMeld = state.players[0].hand
         XCTAssertNoThrow(try GameEngine.discard(&state, playerID: p1, cards: notAMeld))
     }
 }

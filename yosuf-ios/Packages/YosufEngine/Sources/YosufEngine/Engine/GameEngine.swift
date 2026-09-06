@@ -180,7 +180,11 @@ public enum GameEngine {
 
         applyScoring(&state, outcome: outcome)
         state.log.append(.roundEnded(outcome: outcome))
-        state.phase = .roundEnded(outcome: outcome)
+        // `applyScoring` already sets `.matchEnded` when someone busts;
+        // only fall back to `.roundEnded` when the match is still going.
+        if !state.isMatchOver {
+            state.phase = .roundEnded(outcome: outcome)
+        }
     }
 
     private static func applyScoring(_ state: inout GameState, outcome: RoundOutcome) {

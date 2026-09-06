@@ -1,0 +1,50 @@
+{
+  "id": "nature_snowflake_05",
+  "title": {
+    "en": "Snowflake",
+    "he": "פתית שלג"
+  },
+  "category": "nature",
+  "difficulty": "easy",
+  "width": 5,
+  "height": 5,
+  "solution": [
+    "00100",
+    "00100",
+    "11110",
+    "00100",
+    "00000"
+  ],
+  "rowClues": [
+    [
+      1
+    ],
+    [
+      1
+    ],
+    [
+      4
+    ],
+    [
+      1
+    ],
+    []
+  ],
+  "colClues": [
+    [
+      1
+    ],
+    [
+      1
+    ],
+    [
+      4
+    ],
+    [
+      1
+    ],
+    []
+  ],
+  "colorHex": "#A855F7",
+  "order": 2
+}

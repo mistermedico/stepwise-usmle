@@ -1,0 +1,44 @@
+{
+  "id": "animals_fish_05",
+  "title": {
+    "en": "Fish",
+    "he": "דג"
+  },
+  "category": "animals",
+  "difficulty": "easy",
+  "width": 5,
+  "height": 5,
+  "solution": [
+    "00000",
+    "00000",
+    "01111",
+    "00000",
+    "00000"
+  ],
+  "rowClues": [
+    [],
+    [],
+    [
+      4
+    ],
+    [],
+    []
+  ],
+  "colClues": [
+    [],
+    [
+      1
+    ],
+    [
+      1
+    ],
+    [
+      1
+    ],
+    [
+      1
+    ]
+  ],
+  "colorHex": "#EF4444",
+  "order": 0
+}

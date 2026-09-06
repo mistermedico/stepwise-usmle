@@ -1,0 +1,51 @@
+{
+  "id": "animals_rabbit_06",
+  "title": {
+    "en": "Rabbit",
+    "he": "ארנב"
+  },
+  "category": "animals",
+  "difficulty": "easy",
+  "width": 6,
+  "height": 6,
+  "solution": [
+    "001100",
+    "001100",
+    "001100",
+    "001100",
+    "001100",
+    "000000"
+  ],
+  "rowClues": [
+    [
+      2
+    ],
+    [
+      2
+    ],
+    [
+      2
+    ],
+    [
+      2
+    ],
+    [
+      2
+    ],
+    []
+  ],
+  "colClues": [
+    [],
+    [],
+    [
+      5
+    ],
+    [
+      5
+    ],
+    [],
+    []
+  ],
+  "colorHex": "#F97316",
+  "order": 8
+}

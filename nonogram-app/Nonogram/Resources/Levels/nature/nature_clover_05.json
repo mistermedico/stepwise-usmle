@@ -1,0 +1,48 @@
+{
+  "id": "nature_clover_05",
+  "title": {
+    "en": "Clover",
+    "he": "תלתן"
+  },
+  "category": "nature",
+  "difficulty": "easy",
+  "width": 5,
+  "height": 5,
+  "solution": [
+    "00000",
+    "01110",
+    "01110",
+    "01110",
+    "00100"
+  ],
+  "rowClues": [
+    [],
+    [
+      3
+    ],
+    [
+      3
+    ],
+    [
+      3
+    ],
+    [
+      1
+    ]
+  ],
+  "colClues": [
+    [],
+    [
+      3
+    ],
+    [
+      4
+    ],
+    [
+      3
+    ],
+    []
+  ],
+  "colorHex": "#EC4899",
+  "order": 5
+}

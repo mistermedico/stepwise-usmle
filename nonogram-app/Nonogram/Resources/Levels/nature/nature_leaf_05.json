@@ -1,0 +1,42 @@
+{
+  "id": "nature_leaf_05",
+  "title": {
+    "en": "Leaf",
+    "he": "עלה"
+  },
+  "category": "nature",
+  "difficulty": "easy",
+  "width": 5,
+  "height": 5,
+  "solution": [
+    "00000",
+    "00100",
+    "00100",
+    "00100",
+    "00000"
+  ],
+  "rowClues": [
+    [],
+    [
+      1
+    ],
+    [
+      1
+    ],
+    [
+      1
+    ],
+    []
+  ],
+  "colClues": [
+    [],
+    [],
+    [
+      3
+    ],
+    [],
+    []
+  ],
+  "colorHex": "#EC4899",
+  "order": 3
+}

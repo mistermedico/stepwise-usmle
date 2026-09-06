@@ -1,0 +1,51 @@
+{
+  "id": "animals_bird_06",
+  "title": {
+    "en": "Bird",
+    "he": "ציפור"
+  },
+  "category": "animals",
+  "difficulty": "easy",
+  "width": 6,
+  "height": 6,
+  "solution": [
+    "000000",
+    "000000",
+    "001111",
+    "011100",
+    "000000",
+    "000000"
+  ],
+  "rowClues": [
+    [],
+    [],
+    [
+      4
+    ],
+    [
+      3
+    ],
+    [],
+    []
+  ],
+  "colClues": [
+    [],
+    [
+      1
+    ],
+    [
+      2
+    ],
+    [
+      2
+    ],
+    [
+      1
+    ],
+    [
+      1
+    ]
+  ],
+  "colorHex": "#F43F5E",
+  "order": 7
+}

@@ -1,0 +1,47 @@
+{
+  "id": "food_ice_cream_06",
+  "title": {
+    "en": "Ice Cream",
+    "he": "גלידה"
+  },
+  "category": "food",
+  "difficulty": "easy",
+  "width": 6,
+  "height": 6,
+  "solution": [
+    "000000",
+    "001100",
+    "001100",
+    "001100",
+    "000000",
+    "000000"
+  ],
+  "rowClues": [
+    [],
+    [
+      2
+    ],
+    [
+      2
+    ],
+    [
+      2
+    ],
+    [],
+    []
+  ],
+  "colClues": [
+    [],
+    [],
+    [
+      3
+    ],
+    [
+      3
+    ],
+    [],
+    []
+  ],
+  "colorHex": "#14B8A6",
+  "order": 5
+}

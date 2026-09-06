@@ -1,0 +1,48 @@
+{
+  "id": "objects_balloon_05",
+  "title": {
+    "en": "Balloon",
+    "he": "בלון"
+  },
+  "category": "objects",
+  "difficulty": "easy",
+  "width": 5,
+  "height": 5,
+  "solution": [
+    "00000",
+    "01110",
+    "00100",
+    "00100",
+    "00100"
+  ],
+  "rowClues": [
+    [],
+    [
+      3
+    ],
+    [
+      1
+    ],
+    [
+      1
+    ],
+    [
+      1
+    ]
+  ],
+  "colClues": [
+    [],
+    [
+      1
+    ],
+    [
+      4
+    ],
+    [
+      1
+    ],
+    []
+  ],
+  "colorHex": "#A855F7",
+  "order": 3
+}

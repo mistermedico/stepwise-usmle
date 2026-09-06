@@ -1,0 +1,46 @@
+{
+  "id": "objects_camera_05",
+  "title": {
+    "en": "Camera",
+    "he": "מצלמה"
+  },
+  "category": "objects",
+  "difficulty": "easy",
+  "width": 5,
+  "height": 5,
+  "solution": [
+    "00000",
+    "00100",
+    "01110",
+    "01110",
+    "00000"
+  ],
+  "rowClues": [
+    [],
+    [
+      1
+    ],
+    [
+      3
+    ],
+    [
+      3
+    ],
+    []
+  ],
+  "colClues": [
+    [],
+    [
+      2
+    ],
+    [
+      3
+    ],
+    [
+      2
+    ],
+    []
+  ],
+  "colorHex": "#10B981",
+  "order": 4
+}

@@ -1,0 +1,41 @@
+{
+  "id": "nature_wave_05",
+  "title": {
+    "en": "Wave",
+    "he": "גל"
+  },
+  "category": "nature",
+  "difficulty": "easy",
+  "width": 5,
+  "height": 5,
+  "solution": [
+    "00000",
+    "00000",
+    "10001",
+    "00000",
+    "00000"
+  ],
+  "rowClues": [
+    [],
+    [],
+    [
+      1,
+      1
+    ],
+    [],
+    []
+  ],
+  "colClues": [
+    [
+      1
+    ],
+    [],
+    [],
+    [],
+    [
+      1
+    ]
+  ],
+  "colorHex": "#A855F7",
+  "order": 4
+}

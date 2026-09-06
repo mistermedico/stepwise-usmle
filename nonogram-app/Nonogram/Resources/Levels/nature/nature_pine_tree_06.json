@@ -1,0 +1,51 @@
+{
+  "id": "nature_pine_tree_06",
+  "title": {
+    "en": "Pine Tree",
+    "he": "אשוח"
+  },
+  "category": "nature",
+  "difficulty": "easy",
+  "width": 6,
+  "height": 6,
+  "solution": [
+    "000000",
+    "001100",
+    "011110",
+    "011110",
+    "000000",
+    "000000"
+  ],
+  "rowClues": [
+    [],
+    [
+      2
+    ],
+    [
+      4
+    ],
+    [
+      4
+    ],
+    [],
+    []
+  ],
+  "colClues": [
+    [],
+    [
+      2
+    ],
+    [
+      3
+    ],
+    [
+      3
+    ],
+    [
+      2
+    ],
+    []
+  ],
+  "colorHex": "#A855F7",
+  "order": 8
+}

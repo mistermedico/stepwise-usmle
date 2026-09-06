@@ -1,0 +1,46 @@
+{
+  "id": "food_carrot_05",
+  "title": {
+    "en": "Carrot",
+    "he": "גזר"
+  },
+  "category": "food",
+  "difficulty": "easy",
+  "width": 5,
+  "height": 5,
+  "solution": [
+    "00100",
+    "00100",
+    "00100",
+    "00100",
+    "00100"
+  ],
+  "rowClues": [
+    [
+      1
+    ],
+    [
+      1
+    ],
+    [
+      1
+    ],
+    [
+      1
+    ],
+    [
+      1
+    ]
+  ],
+  "colClues": [
+    [],
+    [],
+    [
+      5
+    ],
+    [],
+    []
+  ],
+  "colorHex": "#5B6EF5",
+  "order": 2
+}

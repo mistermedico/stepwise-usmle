@@ -1,0 +1,44 @@
+{
+  "id": "animals_frog_05",
+  "title": {
+    "en": "Frog",
+    "he": "צפרדע"
+  },
+  "category": "animals",
+  "difficulty": "easy",
+  "width": 5,
+  "height": 5,
+  "solution": [
+    "00000",
+    "00000",
+    "01110",
+    "01110",
+    "00000"
+  ],
+  "rowClues": [
+    [],
+    [],
+    [
+      3
+    ],
+    [
+      3
+    ],
+    []
+  ],
+  "colClues": [
+    [],
+    [
+      2
+    ],
+    [
+      2
+    ],
+    [
+      2
+    ],
+    []
+  ],
+  "colorHex": "#EC4899",
+  "order": 3
+}

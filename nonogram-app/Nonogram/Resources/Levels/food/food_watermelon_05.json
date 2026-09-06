@@ -1,0 +1,42 @@
+{
+  "id": "food_watermelon_05",
+  "title": {
+    "en": "Watermelon",
+    "he": "אבטיח"
+  },
+  "category": "food",
+  "difficulty": "easy",
+  "width": 5,
+  "height": 5,
+  "solution": [
+    "00000",
+    "00000",
+    "01110",
+    "00000",
+    "00000"
+  ],
+  "rowClues": [
+    [],
+    [],
+    [
+      3
+    ],
+    [],
+    []
+  ],
+  "colClues": [
+    [],
+    [
+      1
+    ],
+    [
+      1
+    ],
+    [
+      1
+    ],
+    []
+  ],
+  "colorHex": "#8B5CF6",
+  "order": 1
+}

@@ -1,0 +1,46 @@
+{
+  "id": "animals_butterfly_05",
+  "title": {
+    "en": "Butterfly",
+    "he": "פרפר"
+  },
+  "category": "animals",
+  "difficulty": "easy",
+  "width": 5,
+  "height": 5,
+  "solution": [
+    "00000",
+    "01110",
+    "01110",
+    "01110",
+    "00000"
+  ],
+  "rowClues": [
+    [],
+    [
+      3
+    ],
+    [
+      3
+    ],
+    [
+      3
+    ],
+    []
+  ],
+  "colClues": [
+    [],
+    [
+      3
+    ],
+    [
+      3
+    ],
+    [
+      3
+    ],
+    []
+  ],
+  "colorHex": "#EC4899",
+  "order": 1
+}

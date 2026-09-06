@@ -1,0 +1,47 @@
+{
+  "id": "food_cupcake_06",
+  "title": {
+    "en": "Cupcake",
+    "he": "קאפקייק"
+  },
+  "category": "food",
+  "difficulty": "easy",
+  "width": 6,
+  "height": 6,
+  "solution": [
+    "000000",
+    "000000",
+    "001100",
+    "001100",
+    "001100",
+    "000000"
+  ],
+  "rowClues": [
+    [],
+    [],
+    [
+      2
+    ],
+    [
+      2
+    ],
+    [
+      2
+    ],
+    []
+  ],
+  "colClues": [
+    [],
+    [],
+    [
+      3
+    ],
+    [
+      3
+    ],
+    [],
+    []
+  ],
+  "colorHex": "#06B6D4",
+  "order": 7
+}

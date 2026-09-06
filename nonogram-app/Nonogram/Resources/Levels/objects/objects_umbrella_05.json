@@ -1,0 +1,46 @@
+{
+  "id": "objects_umbrella_05",
+  "title": {
+    "en": "Umbrella",
+    "he": "מטריה"
+  },
+  "category": "objects",
+  "difficulty": "easy",
+  "width": 5,
+  "height": 5,
+  "solution": [
+    "00000",
+    "01110",
+    "01110",
+    "00100",
+    "00000"
+  ],
+  "rowClues": [
+    [],
+    [
+      3
+    ],
+    [
+      3
+    ],
+    [
+      1
+    ],
+    []
+  ],
+  "colClues": [
+    [],
+    [
+      2
+    ],
+    [
+      3
+    ],
+    [
+      2
+    ],
+    []
+  ],
+  "colorHex": "#F59E0B",
+  "order": 2
+}

@@ -1,0 +1,54 @@
+{
+  "id": "nature_star_05",
+  "title": {
+    "en": "Star",
+    "he": "כוכב"
+  },
+  "category": "nature",
+  "difficulty": "easy",
+  "width": 5,
+  "height": 5,
+  "solution": [
+    "00100",
+    "00100",
+    "11111",
+    "00100",
+    "00100"
+  ],
+  "rowClues": [
+    [
+      1
+    ],
+    [
+      1
+    ],
+    [
+      5
+    ],
+    [
+      1
+    ],
+    [
+      1
+    ]
+  ],
+  "colClues": [
+    [
+      1
+    ],
+    [
+      1
+    ],
+    [
+      5
+    ],
+    [
+      1
+    ],
+    [
+      1
+    ]
+  ],
+  "colorHex": "#5B6EF5",
+  "order": 1
+}

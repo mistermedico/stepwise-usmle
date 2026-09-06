@@ -1,0 +1,44 @@
+{
+  "id": "food_coffee_05",
+  "title": {
+    "en": "Coffee",
+    "he": "קפה"
+  },
+  "category": "food",
+  "difficulty": "easy",
+  "width": 5,
+  "height": 5,
+  "solution": [
+    "00000",
+    "00100",
+    "00110",
+    "00110",
+    "00000"
+  ],
+  "rowClues": [
+    [],
+    [
+      1
+    ],
+    [
+      2
+    ],
+    [
+      2
+    ],
+    []
+  ],
+  "colClues": [
+    [],
+    [],
+    [
+      3
+    ],
+    [
+      2
+    ],
+    []
+  ],
+  "colorHex": "#14B8A6",
+  "order": 0
+}

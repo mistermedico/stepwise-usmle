@@ -26,9 +26,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Select Xcode
-        run: sudo xcode-select -s /Applications/Xcode_16.2.app
-
+      # Deliberately no `xcode-select` pin here: the runner's default Xcode
+      # is guaranteed to have matching simulator runtimes pre-installed,
+      # which a specific pinned version may not (bit us once already).
       - name: Run engine unit tests
         run: swift test --parallel
 
@@ -42,9 +42,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Select Xcode
-        run: sudo xcode-select -s /Applications/Xcode_16.2.app
-
       - name: Install XcodeGen
         run: brew install xcodegen
 
@@ -57,18 +54,64 @@ jobs:
             -project Yosuf.xcodeproj \
             -scheme Yosuf
 
-      - name: Build for Simulator (iPhone SE - smallest supported screen)
+      # Picks whichever installed simulators are actually smallest/largest
+      # on this runner image, instead of hard-coding a device name that a
+      # future image might not ship (as happened with a hard-coded OS version).
+      - name: Determine smallest & largest available iPhone simulators
+        id: sims
+        run: |
+          set -e
+          JSON=$(xcrun simctl list devices available -j)
+          SMALL=$(echo "$JSON" | /usr/bin/python3 -c "
+import json, sys
+data = json.load(sys.stdin)
+names = set()
+for runtime, devices in data['devices'].items():
+    if 'iOS' not in runtime:
+        continue
+    for d in devices:
+        if d.get('isAvailable', True) and d['name'].startswith('iPhone'):
+            names.add(d['name'])
+names = sorted(names)
+se = [n for n in names if 'SE' in n]
+print(se[0] if se else (names[0] if names else ''))
+")
+          LARGE=$(echo "$JSON" | /usr/bin/python3 -c "
+import json, sys
+data = json.load(sys.stdin)
+names = set()
+for runtime, devices in data['devices'].items():
+    if 'iOS' not in runtime:
+        continue
+    for d in devices:
+        if d.get('isAvailable', True) and d['name'].startswith('iPhone'):
+            names.add(d['name'])
+names = sorted(names)
+big = [n for n in names if 'Pro Max' in n]
+print(big[-1] if big else (names[-1] if names else ''))
+")
+          if [ -z "$SMALL" ] || [ -z "$LARGE" ]; then
+            echo "::error::Could not find any available iPhone simulator on this runner."
+            xcrun simctl list devices available
+            exit 1
+          fi
+          echo "Smallest available: $SMALL"
+          echo "Largest available: $LARGE"
+          echo "small=$SMALL" >> "$GITHUB_OUTPUT"
+          echo "large=$LARGE" >> "$GITHUB_OUTPUT"
+
+      - name: Build for Simulator (smallest available screen)
         run: |
           xcodebuild build \
             -project Yosuf.xcodeproj \
             -scheme Yosuf \
-            -destination "platform=iOS Simulator,name=iPhone SE (3rd generation),OS=latest" \
+            -destination "platform=iOS Simulator,name=${{ steps.sims.outputs.small }}" \
             CODE_SIGNING_ALLOWED=NO
 
-      - name: Build for Simulator (iPhone 16 Pro Max - largest supported screen)
+      - name: Build for Simulator (largest available screen)
         run: |
           xcodebuild build \
             -project Yosuf.xcodeproj \
             -scheme Yosuf \
-            -destination "platform=iOS Simulator,name=iPhone 16 Pro Max,OS=latest" \
+            -destination "platform=iOS Simulator,name=${{ steps.sims.outputs.large }}" \
             CODE_SIGNING_ALLOWED=NO

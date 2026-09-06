@@ -13,7 +13,8 @@ public enum EngineLogger {
 
     public static func debug(_ message: @autoclosure () -> String) {
         #if canImport(os)
-        logger.debug("\(message(), privacy: .public)")
+        let resolved = message()
+        logger.debug("\(resolved, privacy: .public)")
         #else
         FileHandle.standardError.write(Data("[debug] \(message())\n".utf8))
         #endif
@@ -21,7 +22,8 @@ public enum EngineLogger {
 
     public static func info(_ message: @autoclosure () -> String) {
         #if canImport(os)
-        logger.info("\(message(), privacy: .public)")
+        let resolved = message()
+        logger.info("\(resolved, privacy: .public)")
         #else
         FileHandle.standardError.write(Data("[info] \(message())\n".utf8))
         #endif
@@ -29,7 +31,8 @@ public enum EngineLogger {
 
     public static func fault(_ message: @autoclosure () -> String) {
         #if canImport(os)
-        logger.fault("\(message(), privacy: .public)")
+        let resolved = message()
+        logger.fault("\(resolved, privacy: .public)")
         #else
         FileHandle.standardError.write(Data("[fault] \(message())\n".utf8))
         #endif

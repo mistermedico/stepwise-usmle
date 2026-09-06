@@ -122,7 +122,8 @@ jobs:
       # the only way to notice one before it becomes a habit.
       - name: Interface test outcome
         if: always()
-        run: echo "Interface tests: ${{ steps.interface.outcome }}"
+        run: |
+          echo "Interface tests: ${{ steps.interface.outcome }}"
 
       - name: Warning summary
         if: always()

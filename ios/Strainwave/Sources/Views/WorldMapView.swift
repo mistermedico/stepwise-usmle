@@ -4,11 +4,18 @@ import OutbreakEngine
 
 /// The abstract board: twelve geometric pieces, no coastline anywhere.
 ///
-/// Rendering is split in two on purpose. The `Canvas` draws everything visual —
-/// pieces, the growing blot, the scatter pattern, restriction stripes. A layer
-/// of transparent shapes sits on top purely to carry hit-testing and
-/// VoiceOver labels, so the drawing stays fast and the accessibility tree stays
-/// meaningful.
+/// Each territory is one full-size layer clipped to its own outline, so the
+/// growing blot, the restriction hatch and the speckle can all be ordinary
+/// SwiftUI shapes. That buys three things a `Canvas` could not:
+///
+/// - The blot animates by itself. Its size is bound to the territory's
+///   saturation, so a day's spread eases into place instead of jumping.
+/// - Nothing redraws unless the board actually changed. An earlier version
+///   drove the pulse from `TimelineView(.animation)`, which repaints thirty
+///   times a second forever — a flat battery cost, and an app that never goes
+///   idle.
+/// - The warning flash is bounded. It pulses a few times to catch the eye and
+///   then holds, rather than blinking for the rest of the run.
 struct WorldMapView: View {
 
     let regions: [RegionID: RegionState]
@@ -18,6 +25,7 @@ struct WorldMapView: View {
     var onSelectRegion: (RegionID) -> Void = { _ in }
     var onCollect: (PointBubble) -> Void = { _ in }
 
+    @State private var flash = 1.0
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     private var isAnimated: Bool {
@@ -29,180 +37,91 @@ struct WorldMapView: View {
             let rect = CGRect(origin: .zero, size: proxy.size)
 
             ZStack {
-                TimelineView(.animation(minimumInterval: 1.0 / 30.0, paused: !isAnimated)) { timeline in
-                    Canvas { context, size in
-                        draw(
-                            into: &context,
-                            size: size,
-                            time: timeline.date.timeIntervalSinceReferenceDate
-                        )
-                    }
+                ForEach(RegionCatalog.all, id: \.id) { blueprint in
+                    territory(blueprint, in: rect)
                 }
-
-                interactionLayer(in: rect)
                 bubbleLayer(in: rect)
             }
+            .frame(width: rect.width, height: rect.height)
         }
         .aspectRatio(1.04, contentMode: .fit)
+        .onChange(of: warningRegions) { updated in
+            guard isAnimated, !updated.isEmpty else {
+                flash = 1
+                return
+            }
+            // Six beats, then it settles into a solid amber outline.
+            flash = 1
+            withAnimation(.easeInOut(duration: 0.45).repeatCount(6, autoreverses: true)) {
+                flash = 0.35
+            }
+        }
         .accessibilityElement(children: .contain)
     }
 
-    // MARK: Drawing
+    // MARK: One territory
 
-    private func draw(into context: inout GraphicsContext, size: CGSize, time: TimeInterval) {
-        // One shared breath so every infected territory pulses in step.
-        let breath = isAnimated ? 1 + 0.035 * sin(time * 1.9) : 1
-        let flash = isAnimated ? 0.45 + 0.55 * abs(sin(time * 2.6)) : 1
+    private func territory(_ blueprint: RegionBlueprint, in rect: CGRect) -> some View {
+        let shape = RegionShape(points: blueprint.mapShape)
+        let state = regions[blueprint.id]
+        let saturation = state?.touchedFraction ?? 0
+        let bounds = shape.path(in: rect).boundingRect
+        let center = CGPoint(
+            x: blueprint.mapCenter.x * rect.width,
+            y: blueprint.mapCenter.y * rect.height
+        )
+        // Square-rooted so early spread shows immediately and the last stretch
+        // slows down: growth reads as gradual, never binary.
+        let diameter = max(bounds.width, bounds.height) * 1.9 * sqrt(min(1, saturation))
 
-        for blueprint in RegionCatalog.all {
-            let state = regions[blueprint.id]
-            let path = shapePath(for: blueprint, in: size)
+        return ZStack {
+            Theme.Palette.healthy
 
-            // Base fill: an untouched territory.
-            context.fill(path, with: .color(Theme.Palette.healthy))
-
-            if let state, state.isInfected {
-                drawInfection(state, blueprint: blueprint, path: path, breath: breath, into: &context, size: size)
+            if saturation > 0 {
+                Circle()
+                    .fill(Theme.Palette.spread.opacity(0.22))
+                    .frame(width: diameter * 1.3, height: diameter * 1.3)
+                    .position(center)
+                Circle()
+                    .fill(Theme.Palette.spread.opacity(0.88))
+                    .frame(width: diameter, height: diameter)
+                    .position(center)
+                SpeckleShape(seed: blueprint.id.rawValue, center: center, radius: diameter * 0.72)
+                    .fill(Theme.Palette.spreadGlow.opacity(0.55))
             }
 
             if state?.transportLocked == true {
-                drawRestrictionStripes(path: path, size: size, into: &context)
-            }
-
-            // Outline. Amber and flashing when restrictions are imminent.
-            if warningRegions.contains(blueprint.id) {
-                context.stroke(
-                    path,
-                    with: .color(Theme.Palette.warning.opacity(flash)),
-                    lineWidth: 2.6
-                )
-            } else if blueprint.id == selectedRegion {
-                context.stroke(path, with: .color(Theme.Palette.textPrimary), lineWidth: 2.2)
-            } else {
-                context.stroke(path, with: .color(Theme.Palette.outline), lineWidth: 1.2)
+                DiagonalStripes()
+                    .stroke(Theme.Palette.response.opacity(0.45), lineWidth: 1.4)
             }
         }
+        .animation(isAnimated ? .easeInOut(duration: 0.7) : nil, value: saturation)
+        .clipShape(shape)
+        .overlay(outline(for: blueprint.id, shape: shape))
+        .contentShape(shape)
+        .onTapGesture { onSelectRegion(blueprint.id) }
+        .accessibilityElement()
+        .accessibilityAddTraits(.isButton)
+        .accessibilityIdentifier(A11y.Game.region(blueprint.id.rawValue))
+        .accessibilityLabel(Text(L.region(blueprint.id)))
+        .accessibilityValue(Text(accessibilityValue(for: blueprint.id)))
     }
 
-    /// The blot: a soft disc growing out of the territory's centre, plus a
-    /// scatter of fine points that reads as spread at a microscopic scale.
-    private func drawInfection(
-        _ state: RegionState,
-        blueprint: RegionBlueprint,
-        path: Path,
-        breath: Double,
-        into context: inout GraphicsContext,
-        size: CGSize
-    ) {
-        let bounds = path.boundingRect
-        let center = CGPoint(
-            x: blueprint.mapCenter.x * size.width,
-            y: blueprint.mapCenter.y * size.height
-        )
-        let maximumRadius = max(bounds.width, bounds.height) * 0.95
-        // Square-rooted so early spread is visible immediately and the last
-        // stretch slows down — the growth reads as gradual, never binary.
-        let radius = maximumRadius * sqrt(min(1, state.touchedFraction)) * breath
-
-        context.drawLayer { layer in
-            layer.clip(to: path)
-
-            let blot = Path(ellipseIn: CGRect(
-                x: center.x - radius, y: center.y - radius,
-                width: radius * 2, height: radius * 2
-            ))
-            layer.fill(blot, with: .color(Theme.Palette.spread.opacity(0.88)))
-
-            // Softer outer ring, so the edge is a gradient rather than a cut.
-            let halo = Path(ellipseIn: CGRect(
-                x: center.x - radius * 1.3, y: center.y - radius * 1.3,
-                width: radius * 2.6, height: radius * 2.6
-            ))
-            layer.fill(halo, with: .color(Theme.Palette.spread.opacity(0.22)))
-
-            drawScatter(
-                in: bounds, center: center, radius: radius * 1.45,
-                seed: blueprint.id.rawValue, into: &layer
-            )
+    @ViewBuilder
+    private func outline(for id: RegionID, shape: RegionShape) -> some View {
+        if warningRegions.contains(id) {
+            shape.stroke(Theme.Palette.warning, lineWidth: 2.6).opacity(flash)
+        } else if id == selectedRegion {
+            shape.stroke(Theme.Palette.textPrimary, lineWidth: 2.2)
+        } else {
+            shape.stroke(Theme.Palette.outline, lineWidth: 1.2)
         }
-    }
-
-    /// Deterministic speckle. Seeded by the territory id so the pattern is
-    /// stable between frames instead of shimmering.
-    private func drawScatter(
-        in bounds: CGRect,
-        center: CGPoint,
-        radius: Double,
-        seed: String,
-        into context: inout GraphicsContext
-    ) {
-        var generator = SeededGenerator(seed: SeededGenerator.seed(from: seed))
-        for _ in 0..<26 {
-            let x = bounds.minX + generator.unit() * bounds.width
-            let y = bounds.minY + generator.unit() * bounds.height
-            let distance = hypot(x - center.x, y - center.y)
-            guard distance < radius else { continue }
-            let dotSize = 1.4 + generator.unit() * 1.8
-            let dot = Path(ellipseIn: CGRect(x: x, y: y, width: dotSize, height: dotSize))
-            context.fill(dot, with: .color(Theme.Palette.spreadGlow.opacity(0.55)))
-        }
-    }
-
-    /// Suspended transport reads as a fine cyan hatch laid over the piece.
-    private func drawRestrictionStripes(path: Path, size: CGSize, into context: inout GraphicsContext) {
-        let bounds = path.boundingRect
-        context.drawLayer { layer in
-            layer.clip(to: path)
-            var stripes = Path()
-            let spacing: CGFloat = 7
-            var offset = bounds.minX - bounds.height
-            while offset < bounds.maxX {
-                stripes.move(to: CGPoint(x: offset, y: bounds.maxY))
-                stripes.addLine(to: CGPoint(x: offset + bounds.height, y: bounds.minY))
-                offset += spacing
-            }
-            layer.stroke(stripes, with: .color(Theme.Palette.response.opacity(0.45)), lineWidth: 1.4)
-        }
-    }
-
-    private func shapePath(for blueprint: RegionBlueprint, in size: CGSize) -> Path {
-        var path = Path()
-        guard let first = blueprint.mapShape.first else { return path }
-        path.move(to: CGPoint(x: first.x * size.width, y: first.y * size.height))
-        for point in blueprint.mapShape.dropFirst() {
-            path.addLine(to: CGPoint(x: point.x * size.width, y: point.y * size.height))
-        }
-        path.closeSubpath()
-        return path
-    }
-
-    // MARK: Interaction and accessibility
-
-    private func interactionLayer(in rect: CGRect) -> some View {
-        ZStack {
-            ForEach(RegionCatalog.all, id: \.id) { blueprint in
-                RegionShape(points: blueprint.mapShape)
-                    .fill(Color.clear)
-                    .contentShape(RegionShape(points: blueprint.mapShape))
-                    .onTapGesture { onSelectRegion(blueprint.id) }
-                    .accessibilityElement()
-                    .accessibilityAddTraits(.isButton)
-                    .accessibilityIdentifier(A11y.Game.region(blueprint.id.rawValue))
-                    .accessibilityLabel(Text(L.region(blueprint.id)))
-                    .accessibilityValue(Text(accessibilityValue(for: blueprint.id)))
-            }
-        }
-        .frame(width: rect.width, height: rect.height)
     }
 
     private func accessibilityValue(for id: RegionID) -> String {
         guard let state = regions[id] else { return L.string("map.healthy") }
         var parts: [String] = []
-        if state.isInfected {
-            parts.append(Figures.percent(state.touchedFraction))
-        } else {
-            parts.append(L.string("map.healthy"))
-        }
+        parts.append(state.isInfected ? Figures.percent(state.touchedFraction) : L.string("map.healthy"))
         if state.bordersClosed {
             parts.append(L.string("map.bordersClosed"))
         } else if state.transportLocked {
@@ -231,8 +150,7 @@ struct WorldMapView: View {
     }
 }
 
-/// One territory's outline as a `Shape`, so it can be filled, hit-tested and
-/// used as a clip without going through `Canvas`.
+/// One territory's outline, in normalised map space.
 struct RegionShape: Shape {
     let points: [MapPoint]
 
@@ -247,6 +165,46 @@ struct RegionShape: Shape {
             ))
         }
         path.closeSubpath()
+        return path
+    }
+}
+
+/// Suspended transport, drawn as a fine hatch across the piece.
+private struct DiagonalStripes: Shape {
+    var spacing: CGFloat = 7
+
+    func path(in rect: CGRect) -> Path {
+        var path = Path()
+        var offset = rect.minX - rect.height
+        while offset < rect.maxX {
+            path.move(to: CGPoint(x: offset, y: rect.maxY))
+            path.addLine(to: CGPoint(x: offset + rect.height, y: rect.minY))
+            offset += spacing
+        }
+        return path
+    }
+}
+
+/// A deterministic speckle that reads as spread at a microscopic scale.
+///
+/// Seeded by the territory's own name, so the pattern is identical on every
+/// redraw and every device instead of shimmering.
+private struct SpeckleShape: Shape {
+    let seed: String
+    let center: CGPoint
+    let radius: CGFloat
+
+    func path(in rect: CGRect) -> Path {
+        var path = Path()
+        guard radius > 0 else { return path }
+        var generator = SeededGenerator(seed: SeededGenerator.seed(from: seed))
+        for _ in 0..<26 {
+            let x = rect.minX + generator.unit() * rect.width
+            let y = rect.minY + generator.unit() * rect.height
+            guard hypot(x - center.x, y - center.y) < radius else { continue }
+            let size = 1.4 + generator.unit() * 1.8
+            path.addEllipse(in: CGRect(x: x, y: y, width: size, height: size))
+        }
         return path
     }
 }

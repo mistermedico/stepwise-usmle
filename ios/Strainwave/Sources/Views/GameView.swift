@@ -63,7 +63,7 @@ struct GameView: View {
             .accessibilityIdentifier(A11y.Game.quit)
             .accessibilityLabel(Text(L.string("common.back")))
 
-            PathogenGlyph(unlockedTraits: model.state.unlockedTraits)
+            PathogenGlyph(unlockedTraits: model.state.unlockedTraits, isPulsing: false)
                 .frame(width: 46, height: 46)
 
             VStack(alignment: .leading, spacing: 0) {

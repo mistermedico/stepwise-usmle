@@ -15,7 +15,10 @@ final class AccessibilityUITests: UITestCase {
     private func audit(_ screen: String) throws {
         var findings: [String] = []
         try app.performAccessibilityAudit { issue in
-            findings.append("\(issue.auditType): \(issue.compactDescription)")
+            // The element matters as much as the rule: "contrast failed" alone
+            // does not say which label to restyle.
+            let element = issue.element?.label ?? issue.element?.identifier ?? "unnamed"
+            findings.append("\(issue.compactDescription) — on: \(element)")
             return true
         }
         if findings.isEmpty {

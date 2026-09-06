@@ -102,6 +102,8 @@ jobs:
             | head -60 || echo "none"
           echo "--- accessibility audit ---"
           grep -E "Accessibility audit|  • |Longest unassisted run" build.log | head -60 || echo "none"
+          echo "--- element tree on failure (if any) ---"
+          sed -n '/element tree when the board failed/,/^$/p' build.log | head -80 || echo "none"
 
       # Only on failure: with UI tests running, a green result bundle is
       # hundreds of megabytes of screenshots nobody reads.

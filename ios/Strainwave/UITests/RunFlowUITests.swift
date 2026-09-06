@@ -95,22 +95,18 @@ final class RunFlowUITests: UITestCase {
 
         tap(app.buttons[A11y.Game.quit])
 
-        // The confirmation is rendered by UIKit, and an identifier set in
-        // SwiftUI does not always survive that hand-off. Prefer it when it
-        // does, and fall back to the sheet's first button — the destructive
-        // one, which SwiftUI always places first.
-        let sheet = app.sheets.firstMatch
+        // Searched across the whole app rather than inside `app.sheets`: a
+        // confirmation dialog is presented as a sheet on some OS versions and
+        // as an alert on others, and it is not worth a test knowing which.
+        // Restricting to buttons keeps the identifier from also matching the
+        // label inside one, which made a plain subscript ambiguous.
+        let confirm = app.descendants(matching: .button)
+            .matching(identifier: A11y.Game.quitConfirm)
+            .firstMatch
         XCTAssertTrue(
-            sheet.waitForExistence(timeout: shortTimeout),
+            confirm.waitForExistence(timeout: shortTimeout),
             "Leaving a run asked for no confirmation"
         )
-        // By position, not by identifier: SwiftUI's identifier reaches several
-        // elements inside the UIKit sheet, and picking one of them tapped
-        // something that was not the button. SwiftUI orders an action sheet
-        // with the destructive choice first and cancel last.
-        XCTAssertGreaterThanOrEqual(sheet.buttons.count, 2, "The confirmation has no choices")
-        let confirm = sheet.buttons.element(boundBy: 0)
-        XCTAssertTrue(confirm.waitForExistence(timeout: shortTimeout))
         confirm.tap()
 
         waitForHome()

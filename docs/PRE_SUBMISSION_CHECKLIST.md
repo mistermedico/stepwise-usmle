@@ -13,8 +13,11 @@ job was skipped, not so you repeat the work by hand.
       **iPhone 16 Pro Max**.
 - [ ] **automated** `python3 ios/tools/check_strings.py` reports no differences
       between the English and Hebrew tables.
+- [ ] **automated** The interface tests play a whole run through the screens to
+      its report, evolve an ability, pause the clock, and leave a run — on both
+      devices, in English and in Hebrew.
 - [ ] Play one complete run to victory and one to defeat on a device, not just
-      the simulator.
+      the simulator. (CI reaches the report; it does not judge how the run felt.)
 - [ ] Play one Daily Challenge to completion and confirm the report is filed and
       the challenge shows as completed on the home screen.
 - [ ] Background the app mid-run and return to it. The clock stops, and nothing
@@ -22,16 +25,29 @@ job was skipped, not so you repeat the work by hand.
 
 ## Interface
 
+- [ ] **automated** The interface tests check the control panel and the board at
+      the largest and smallest content sizes, and measure the primary controls
+      against 44pt on the smallest device.
+- [ ] **automated** Apple's accessibility audit runs on the control panel, the
+      board and the ability map. It **reports** findings into the CI log rather
+      than failing the build: it samples a live screen, so a finding can depend
+      on where a scroll view happens to be. Read the summary on every run —
+      "control panel: clean" is the state to hold.
 - [ ] Every screen at the smallest size (iPhone SE) with **Larger Text** at its
       maximum: nothing clipped, nothing overlapping.
 - [ ] Every screen at the largest size (Pro Max): no stranded content, no
       stretched controls.
 - [ ] Light mode and dark mode, both — including the board, where the infection
       blot and the restriction hatch must stay distinguishable in both.
-- [ ] Hebrew, with the layout mirrored: check the control panel, the ability map
-      and the report timeline in particular.
-- [ ] VoiceOver: swipe through the board and confirm each territory announces
-      its name and status; confirm every ability node announces its cost.
+- [ ] **automated** The Hebrew build starts a run and opens the ability map,
+      driven by the same script as the English one.
+- [ ] Hebrew, by eye, with the layout mirrored: check the control panel, the
+      ability map and the report timeline in particular.
+- [ ] **automated** Every one of the twelve territories is reachable by
+      VoiceOver and announces a status — the board is drawn, so its meaning
+      exists only in the accessibility layer.
+- [ ] VoiceOver, by hand: swipe through the board and confirm the announcements
+      read well in order, and that every ability node announces its cost.
 - [ ] **Reduce Motion** on: the board stops breathing, the report appears in one
       piece, and nothing is left invisible mid-animation.
 - [ ] Every tap target is at least 44×44pt.

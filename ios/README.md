@@ -46,7 +46,9 @@ ios/
 │   │   ├── Services/         Feedback, ads, consent, logging, localisation
 │   │   ├── Persistence/      Core Data, declared in code
 │   │   └── Resources/        Strings, assets, Info.plist
-│   └── Tests/                Localisation coverage, persistence, view models
+│   ├── Tests/                Localisation coverage, persistence, view models
+│   └── UITests/              A whole run through the screens, accessibility,
+│                             Hebrew, and the text-size extremes
 └── tools/                    Icon renderer, strings checker
 ```
 
@@ -78,6 +80,29 @@ particular returns a solution date you can compute in advance, which is why the
 game can always show the player exactly how many days are left.
 
 Each rule has its own group of tests, exercised at all three difficulty tiers.
+
+## The interface tests
+
+`UITests/` drives the real app on a simulator: it plays a run from the control
+panel to its report, evolves an ability, checks the clock stops when paused,
+leaves a run, walks all twelve territories through VoiceOver, runs the same
+script against the Hebrew build, and checks the largest and smallest content
+sizes with the primary controls measured against 44pt.
+
+They found four defects the unit tests could not: a finished run that never
+reached its summary, a primary action unreachable at large text sizes, a board
+that stopped laying out inside a scroll view, and type that silently ignored
+Dynamic Type.
+
+Three test affordances live in the app, all read from launch arguments and all
+listed in `A11y.LaunchArgument`: reset stored state, skip the consent prompts
+(system alerts a test cannot dismiss), and shorten the gap between simulated
+days. The last one changes the timer only — the simulation is untouched, so a
+run plays out exactly as it would at normal speed.
+
+Apple's accessibility audit runs on three screens and **reports** rather than
+fails: it samples a live screen, so a finding can depend on where a scroll view
+happens to be. The CI summary prints it on every run.
 
 ## Ads
 

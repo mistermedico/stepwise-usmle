@@ -243,7 +243,7 @@ struct GameView: View {
             } label: {
                 Image(systemName: model.speed == .paused ? "play.fill" : "pause.fill")
                     .font(.headline)
-                    .frame(width: 54, height: 54)
+                    .frame(width: 50, height: 50)
                     .foregroundStyle(Theme.Palette.textPrimary)
                     .background(
                         RoundedRectangle(cornerRadius: Theme.Metrics.cornerRadius, style: .continuous)
@@ -258,7 +258,7 @@ struct GameView: View {
             } label: {
                 Image(systemName: model.speed == .fast ? "forward.end.fill" : "forward.fill")
                     .font(.headline)
-                    .frame(width: 54, height: 54)
+                    .frame(width: 50, height: 50)
                     .foregroundStyle(model.speed == .fast ? .white : Theme.Palette.textPrimary)
                     .background(
                         RoundedRectangle(cornerRadius: Theme.Metrics.cornerRadius, style: .continuous)
@@ -273,6 +273,8 @@ struct GameView: View {
                 model.isAbilityMapPresented = true
             }
             .accessibilityIdentifier(A11y.Game.abilities)
+            // Takes the width it needs before the two icon buttons do.
+            .layoutPriority(1)
         }
     }
 }

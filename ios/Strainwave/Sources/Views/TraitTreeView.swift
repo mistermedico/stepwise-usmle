@@ -30,6 +30,7 @@ struct TraitTreeView: View {
             detailPanel
         }
         .background(Theme.Palette.background.ignoresSafeArea())
+        .accessibilityIdentifier(A11y.Tree.root)
         .onChange(of: model.lastUnlockedTrait) { unlocked in
             guard let unlocked else { return }
             startPulse(to: unlocked)
@@ -63,6 +64,7 @@ struct TraitTreeView: View {
                     .foregroundStyle(Theme.Palette.textTertiary)
             }
             .frame(minWidth: Theme.Metrics.minimumTapTarget, minHeight: Theme.Metrics.minimumTapTarget)
+            .accessibilityIdentifier(A11y.Tree.close)
             .accessibilityLabel(Text(L.string("common.close")))
         }
         .padding(.horizontal, Theme.Metrics.spacingWide)
@@ -253,6 +255,7 @@ struct TraitTreeView: View {
                 ) {
                     model.fold(id)
                 }
+                .accessibilityIdentifier(A11y.Tree.fold)
                 .disabled(!model.state.canFold(id))
                 .opacity(model.state.canFold(id) ? 1 : 0.45)
             } else {
@@ -263,6 +266,7 @@ struct TraitTreeView: View {
                 ) {
                     model.unlock(id)
                 }
+                .accessibilityIdentifier(A11y.Tree.unlock)
             }
         }
         if isUnlocked, !model.state.canFold(id) {
@@ -324,6 +328,7 @@ private struct TraitNodeView: View {
         .onAppear {
             withAnimation(Theme.Motion.quick) { lit = true }
         }
+        .accessibilityIdentifier(A11y.Tree.node(trait.id.rawValue))
         .accessibilityLabel(Text(L.traitTitle(trait.id)))
         .accessibilityValue(Text(accessibilityValue))
         .accessibilityHint(Text(L.traitDetail(trait.id)))

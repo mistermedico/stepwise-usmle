@@ -283,6 +283,48 @@ final class SimulationEngineTests: XCTestCase {
         }
     }
 
+    /// `runToCompletion` stops a run itself once its budget is spent, so it can
+    /// only prove a run *can* be stopped. The live game has no such budget — it
+    /// simply ticks until the engine declares an outcome — so this steps day by
+    /// day and asserts the engine ends the run on its own.
+    func testEveryConfigurationEndsOnItsOwn() {
+        let limit = 1_500
+        var longest = 0
+        var slowest = ""
+
+        for difficulty in Difficulty.allCases {
+            for strain in StrainID.allCases {
+                for scenario in StartScenario.allCases {
+                    var engine = SimulationEngine(
+                        setup: Fixture.setup(
+                            strain: strain, difficulty: difficulty,
+                            scenario: scenario, seed: 90_210
+                        )
+                    )
+                    // No purchases: the worst case for reaching an outcome.
+                    while !engine.state.isFinished, engine.state.day < limit {
+                        engine.advanceDay()
+                    }
+
+                    let label = "\(strain.rawValue)/\(difficulty.rawValue)/\(scenario.rawValue)"
+                    XCTAssertNotNil(
+                        engine.state.outcome,
+                        "\(label) was still running after \(limit) days"
+                    )
+                    if engine.state.day > longest {
+                        longest = engine.state.day
+                        slowest = label
+                    }
+                }
+            }
+        }
+
+        // Recorded so a balance change that doubles run length is visible in the
+        // test log rather than only as a slower game.
+        print("Longest unassisted run: \(longest) days (\(slowest))")
+        XCTAssertLessThan(longest, limit)
+    }
+
     func testAPassiveStrainLosesOnTheHardestTier() {
         var engine = SimulationEngine(setup: Fixture.setup(difficulty: .lethal, seed: 7_777))
         let outcome = engine.runToCompletion(maxDays: 600)

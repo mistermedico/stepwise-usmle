@@ -75,12 +75,30 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: com.strainwave.app.tests
         GENERATE_INFOPLIST_FILE: YES
 
+  # Drives the real interface on a simulator: a whole run to its report, the
+  # accessibility audit, Hebrew and the text-size extremes.
+  StrainwaveUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - path: UITests
+      # Compiled into the app as well, so a renamed control breaks the build
+      # rather than leaving a test waiting on an element that no longer exists.
+      - path: Sources/Design/AccessibilityIdentifiers.swift
+    dependencies:
+      - target: Strainwave
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.strainwave.app.uitests
+        GENERATE_INFOPLIST_FILE: YES
+
 schemes:
   Strainwave:
     build:
       targets:
         Strainwave: all
         StrainwaveTests: [test]
+        StrainwaveUITests: [test]
     run:
       config: Debug
     test:
@@ -88,5 +106,6 @@ schemes:
       gatherCoverageData: true
       targets:
         - StrainwaveTests
+        - StrainwaveUITests
     archive:
       config: Release

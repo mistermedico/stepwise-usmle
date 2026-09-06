@@ -20,8 +20,8 @@ final class GameViewModel: ObservableObject {
         var interval: TimeInterval? {
             switch self {
             case .paused: return nil
-            case .normal: return 0.55
-            case .fast: return 0.22
+            case .normal: return 0.55 * LaunchOptions.dayIntervalScale
+            case .fast: return 0.22 * LaunchOptions.dayIntervalScale
             }
         }
 

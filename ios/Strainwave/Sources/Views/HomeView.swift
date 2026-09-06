@@ -69,6 +69,7 @@ private struct HomeContent: View {
             .padding(.vertical, Theme.Metrics.spacingWide)
         }
         .background(Theme.Palette.background.ignoresSafeArea())
+        .accessibilityIdentifier(A11y.Home.root)
         .safeAreaInset(edge: .bottom) { bannerSlot }
         .sheet(isPresented: $showsReports) {
             ReportsGalleryView(reports: store.reports)
@@ -113,6 +114,7 @@ private struct HomeContent: View {
                 optionRow(
                     options: Difficulty.allCases,
                     selection: model.difficulty,
+                    identifier: { A11y.Home.difficulty($0.rawValue) },
                     title: { L.difficultyTitle($0) },
                     detail: { L.difficultyDetail($0) },
                     select: { model.difficulty = $0 }
@@ -122,6 +124,7 @@ private struct HomeContent: View {
                 optionRow(
                     options: StartScenario.allCases,
                     selection: model.scenario,
+                    identifier: { A11y.Home.scenario($0.rawValue) },
                     title: { L.scenarioTitle($0) },
                     detail: { L.scenarioDetail($0) },
                     select: { model.scenario = $0 }
@@ -131,6 +134,7 @@ private struct HomeContent: View {
                     environment.feedback.play(.tap)
                     onStart(model.makeSetup())
                 }
+                .accessibilityIdentifier(A11y.Home.start)
             }
         }
     }
@@ -153,6 +157,7 @@ private struct HomeContent: View {
                             model.unlockStrain(strain.id)
                         }
                     }
+                    .accessibilityIdentifier(A11y.Home.sample(strain.id.rawValue))
                 }
             }
             .padding(.horizontal, 2)
@@ -164,6 +169,7 @@ private struct HomeContent: View {
     private func optionRow<Option: Hashable>(
         options: [Option],
         selection: Option,
+        identifier: @escaping (Option) -> String,
         title: @escaping (Option) -> String,
         detail: @escaping (Option) -> String,
         select: @escaping (Option) -> Void
@@ -194,6 +200,7 @@ private struct HomeContent: View {
                     .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
+                .accessibilityIdentifier(identifier(option))
                 .accessibilityAddTraits(option == selection ? [.isSelected, .isButton] : .isButton)
             }
         }
@@ -231,6 +238,7 @@ private struct HomeContent: View {
                     environment.feedback.play(.tap)
                     onStart(challenge.setup)
                 }
+                .accessibilityIdentifier(A11y.Home.dailyStart)
             }
         }
     }
@@ -272,9 +280,11 @@ private struct HomeContent: View {
             SecondaryButton(title: L.string("home.achievements"), systemImage: "rosette") {
                 showsAchievements = true
             }
+            .accessibilityIdentifier(A11y.Home.achievements)
             SecondaryButton(title: L.string("home.settings"), systemImage: "gearshape.fill") {
                 showsSettings = true
             }
+            .accessibilityIdentifier(A11y.Home.settings)
         }
     }
 

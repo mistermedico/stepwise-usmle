@@ -187,6 +187,7 @@ struct WorldMapView: View {
                     .onTapGesture { onSelectRegion(blueprint.id) }
                     .accessibilityElement()
                     .accessibilityAddTraits(.isButton)
+                    .accessibilityIdentifier(A11y.Game.region(blueprint.id.rawValue))
                     .accessibilityLabel(Text(L.region(blueprint.id)))
                     .accessibilityValue(Text(accessibilityValue(for: blueprint.id)))
             }

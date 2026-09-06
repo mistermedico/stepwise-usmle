@@ -25,6 +25,15 @@ final class ConsentManager: ObservableObject {
         )
     }
 
+    /// Marks consent resolved without showing anything, and denies ad requests.
+    /// Used only when the app is launched by the UI tests.
+    func resolveWithoutPrompting() {
+        hasResolvedConsent = true
+        canRequestAds = false
+        trackingStatus = .denied
+        AppLogger.consent.info("Consent prompts skipped for an automated run")
+    }
+
     /// Re-opens the privacy options form, for the Settings screen. Available
     /// only where the messaging SDK is linked and the region requires it.
     func presentPrivacyOptions() async {

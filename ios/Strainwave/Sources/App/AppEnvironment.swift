@@ -30,7 +30,18 @@ final class AppEnvironment: ObservableObject {
     func bootstrap() async {
         Settings.registerDefaults()
         AppLogger.lifecycle.info("Launching")
-        await consent.resolve()
+
+        if LaunchOptions.shouldResetState {
+            store.deleteAll()
+        }
+        if LaunchOptions.shouldSkipConsent {
+            // The consent and tracking prompts are system alerts; a UI test
+            // cannot dismiss them reliably, so the run starts already resolved
+            // with ads switched off.
+            consent.resolveWithoutPrompting()
+        } else {
+            await consent.resolve()
+        }
         ads.configure()
     }
 

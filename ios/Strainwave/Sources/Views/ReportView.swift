@@ -31,6 +31,7 @@ struct ReportView: View {
             .padding(.vertical, Theme.Metrics.spacingSection)
         }
         .background(Theme.Palette.background.ignoresSafeArea())
+        .accessibilityIdentifier(A11y.Report.root)
         .onAppear(perform: revealSequentially)
     }
 
@@ -55,6 +56,7 @@ struct ReportView: View {
                 .font(Theme.Typography.title)
                 .foregroundStyle(Theme.Palette.textPrimary)
                 .multilineTextAlignment(.center)
+                .accessibilityIdentifier(A11y.Report.title)
 
             if case .defeat(let reason) = report.outcome {
                 Text(L.defeatReason(reason))
@@ -179,6 +181,7 @@ struct ReportView: View {
     private var actions: some View {
         VStack(spacing: Theme.Metrics.spacing) {
             PrimaryButton(title: L.string("report.again"), systemImage: "arrow.clockwise", action: onPlayAgain)
+                .accessibilityIdentifier(A11y.Report.again)
 
             HStack(spacing: Theme.Metrics.spacing) {
                 ShareLink(item: shareText) {
@@ -197,6 +200,7 @@ struct ReportView: View {
                 }
 
                 SecondaryButton(title: L.string("report.home"), systemImage: "house.fill", action: onHome)
+                    .accessibilityIdentifier(A11y.Report.home)
             }
         }
     }

@@ -22,6 +22,7 @@ struct GameView: View {
         .padding(.horizontal, Theme.Metrics.spacing)
         .padding(.bottom, Theme.Metrics.spacing)
         .background(Theme.Palette.background.ignoresSafeArea())
+        .accessibilityIdentifier(A11y.Game.root)
         .sheet(isPresented: $model.isAbilityMapPresented) {
             TraitTreeView(model: model) {
                 model.isAbilityMapPresented = false
@@ -43,6 +44,7 @@ struct GameView: View {
                 model.stop()
                 onQuit()
             }
+            .accessibilityIdentifier(A11y.Game.quitConfirm)
             Button(L.string("settings.cancel"), role: .cancel) {}
         }
         .onDisappear { model.stop() }
@@ -58,6 +60,7 @@ struct GameView: View {
                     .foregroundStyle(Theme.Palette.textSecondary)
                     .frame(width: Theme.Metrics.minimumTapTarget, height: Theme.Metrics.minimumTapTarget)
             }
+            .accessibilityIdentifier(A11y.Game.quit)
             .accessibilityLabel(Text(L.string("common.back")))
 
             PathogenGlyph(unlockedTraits: model.state.unlockedTraits)
@@ -83,6 +86,7 @@ struct GameView: View {
                     .foregroundStyle(Theme.Palette.textPrimary)
             }
             .accessibilityElement(children: .combine)
+            .accessibilityIdentifier(A11y.Game.day)
         }
         .padding(.top, Theme.Metrics.spacingTight)
     }
@@ -178,6 +182,7 @@ struct GameView: View {
             onCollect: { model.collect($0) }
         )
         .frame(maxWidth: .infinity)
+        .accessibilityIdentifier(A11y.Game.map)
     }
 
     // MARK: Ticker
@@ -218,6 +223,7 @@ struct GameView: View {
                             .fill(Theme.Palette.surfaceRaised)
                     )
             }
+            .accessibilityIdentifier(A11y.Game.playPause)
             .accessibilityLabel(Text(L.string(model.speed == .paused ? "hud.play" : "hud.pause")))
 
             Button {
@@ -232,12 +238,14 @@ struct GameView: View {
                             .fill(model.speed == .fast ? Theme.Palette.response : Theme.Palette.surfaceRaised)
                     )
             }
+            .accessibilityIdentifier(A11y.Game.speed)
             .accessibilityLabel(Text(L.string("hud.speed")))
 
             PrimaryButton(title: L.string("hud.abilities"), systemImage: "circle.hexagongrid.fill") {
                 model.pause()
                 model.isAbilityMapPresented = true
             }
+            .accessibilityIdentifier(A11y.Game.abilities)
         }
     }
 }

@@ -86,7 +86,22 @@ jobs:
             -destination "platform=iOS Simulator,name=${{ steps.destination.outputs.name }},OS=latest" \
             -resultBundlePath "$bundle" \
             CODE_SIGNING_ALLOWED=NO \
-            | xcbeautify
+            2>&1 | tee build.log | xcbeautify
+
+      # Surfaced rather than enforced: the log is long, and a warning summary is
+      # the only way to notice one before it becomes a habit.
+      - name: Warning summary
+        if: always()
+        working-directory: ios/Strainwave
+        run: |
+          if [ ! -f build.log ]; then echo "No build log."; exit 0; fi
+          echo "--- compiler warnings ---"
+          grep -E "warning: " build.log \
+            | sed -E 's#^.*/([^/]+\.swift)#\1#' \
+            | sort -u \
+            | head -60 || echo "none"
+          echo "--- accessibility audit ---"
+          grep -E "Accessibility audit|  • |Longest unassisted run" build.log | head -60 || echo "none"
 
       - name: Upload test results
         if: always()

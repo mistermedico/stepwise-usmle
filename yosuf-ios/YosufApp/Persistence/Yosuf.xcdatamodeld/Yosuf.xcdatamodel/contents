@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="22522" systemVersion="23A344" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="MatchHistoryEntity" representedClassName="MatchHistoryEntity" syncable="YES" codeGenerationType="class">
+        <attribute name="id" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="date" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="rulesProfileID" attributeType="String"/>
+        <attribute name="didWin" attributeType="Boolean" usesScalarValueType="YES" defaultValueString="NO"/>
+        <attribute name="finalScore" attributeType="Integer 32" usesScalarValueType="YES" defaultValueString="0"/>
+        <attribute name="roundsPlayed" attributeType="Integer 32" usesScalarValueType="YES" defaultValueString="0"/>
+        <attribute name="opponentSummary" attributeType="String"/>
+        <attribute name="wasDailyChallenge" attributeType="Boolean" usesScalarValueType="YES" defaultValueString="NO"/>
+        <fetchIndex name="byDateIndex">
+            <fetchIndexElement property="date" type="Binary" order="descending"/>
+        </fetchIndex>
+    </entity>
+    <entity name="AchievementEntity" representedClassName="AchievementEntity" syncable="YES" codeGenerationType="class">
+        <attribute name="identifier" attributeType="String"/>
+        <attribute name="unlockedDate" attributeType="Date" usesScalarValueType="NO"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="identifier"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
+    </entity>
+    <entity name="PlayerProfileEntity" representedClassName="PlayerProfileEntity" syncable="YES" codeGenerationType="class">
+        <attribute name="skillRating" attributeType="Integer 32" usesScalarValueType="YES" defaultValueString="1000"/>
+        <attribute name="gamesPlayed" attributeType="Integer 32" usesScalarValueType="YES" defaultValueString="0"/>
+        <attribute name="gamesWon" attributeType="Integer 32" usesScalarValueType="YES" defaultValueString="0"/>
+        <attribute name="lastDailyChallengeDateKey" optional="YES" attributeType="String"/>
+        <attribute name="lastDailyChallengeScore" optional="YES" attributeType="Integer 32" usesScalarValueType="YES" defaultValueString="0"/>
+    </entity>
+</model>

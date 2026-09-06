@@ -1,0 +1,55 @@
+name: Yosuf iOS - Release to TestFlight
+
+on:
+  workflow_dispatch: {}
+  push:
+    tags:
+      - "yosuf-v*"
+
+concurrency:
+  group: yosuf-ios-release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    name: Build, sign, and upload to TestFlight
+    runs-on: macos-15
+    defaults:
+      run:
+        working-directory: yosuf-ios
+    env:
+      APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+      APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
+      APP_STORE_CONNECT_API_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_ISSUER_ID }}
+      APP_STORE_CONNECT_API_KEY_CONTENT: ${{ secrets.APP_STORE_CONNECT_API_KEY_CONTENT }}
+      IOS_DISTRIBUTION_CERTIFICATE_P12: ${{ secrets.IOS_DISTRIBUTION_CERTIFICATE_P12 }}
+      IOS_DISTRIBUTION_CERTIFICATE_PASSWORD: ${{ secrets.IOS_DISTRIBUTION_CERTIFICATE_PASSWORD }}
+      IOS_PROVISIONING_PROFILE_BASE64: ${{ secrets.IOS_PROVISIONING_PROFILE_BASE64 }}
+      KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode_16.2.app
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Generate Xcode project
+        run: xcodegen generate
+
+      - name: Install fastlane
+        working-directory: yosuf-ios/fastlane
+        run: bundle install
+
+      - name: Run engine unit tests first (never ship on top of a red suite)
+        run: swift test --package-path Packages/YosufEngine
+
+      - name: Release to TestFlight
+        env:
+          BUNDLE_GEMFILE: ${{ github.workspace }}/yosuf-ios/fastlane/Gemfile
+        run: bundle exec fastlane release_to_testflight
+
+      - name: Clean up temporary keychain
+        if: always()
+        run: security delete-keychain yosuf-ci.keychain-db || true

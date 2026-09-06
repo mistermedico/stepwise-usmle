@@ -1,0 +1,146 @@
+/* App */
+"app.name" = "Yosuf";
+"common.done" = "Done";
+
+/* Home */
+"home.tagline" = "The classic card game, reinvented";
+"home.play" = "Play";
+"home.dailyChallenge" = "Daily Challenge";
+"home.achievements" = "Achievements";
+"home.history" = "History";
+"home.settings" = "Settings";
+"home.howToPlay" = "How to Play";
+"home.gamesPlayedFormat" = "%d games played";
+"home.gamesWonFormat" = "%d wins";
+
+/* Rank tiers */
+"rank.bronze.name" = "Bronze";
+"rank.silver.name" = "Silver";
+"rank.gold.name" = "Gold";
+"rank.platinum.name" = "Platinum";
+"rank.diamond.name" = "Diamond";
+"rank.champion.name" = "Champion";
+
+/* Rule profiles */
+"rules.chooseTitle" = "Choose Your Rules";
+"rules.opponents" = "Number of Opponents";
+"rules.startMatch" = "Start Match";
+"rules.classic.name" = "Classic";
+"rules.classic.description" = "The traditional Yosuf experience — balanced and fair.";
+"rules.quick.name" = "Quick";
+"rules.quick.description" = "Shorter matches, lower stakes — perfect for a fast round.";
+"rules.grandma.name" = "Grandma's Rules";
+"rules.grandma.description" = "A stricter house variant: Aces count high and the bar for Yosuf is tougher.";
+"rules.street.name" = "Street";
+"rules.street.description" = "Party mode with surprise event cards every round.";
+"rules.custom.name" = "Custom";
+"rules.custom.description" = "Tune every number yourself.";
+"rules.custom.threshold" = "Yosuf Threshold";
+"rules.custom.penalty" = "Asaf Penalty";
+"rules.custom.maxScore" = "Match Ends At";
+"rules.custom.aceHigh" = "Aces Count as 15";
+"rules.custom.eventCards" = "Enable Event Cards";
+
+/* Party event cards */
+"event.doublePenalty.title" = "Double Penalty";
+"event.doublePenalty.description" = "The Asaf penalty is doubled this round.";
+"event.silentYosuf.title" = "Silent Yosuf";
+"event.silentYosuf.description" = "The reveal happens instantly this round — no suspense.";
+"event.skipNextPlayer.title" = "Stolen Turn";
+"event.skipNextPlayer.description" = "The next player loses their turn.";
+"event.freeOpeningDiscard.title" = "Free Opener";
+"event.freeOpeningDiscard.description" = "The first discard this round can be any single card, no meld required.";
+"event.mercyRound.title" = "Mercy Round";
+"event.mercyRound.description" = "The Asaf penalty is halved this round.";
+"event.wildDraw.title" = "Wild Draw";
+"event.wildDraw.description" = "Draw freely from either pile this round.";
+"event.reverseOrder.title" = "Reversal";
+"event.reverseOrder.description" = "Turn order reverses for the rest of the round.";
+"event.luckyJoker.title" = "Lucky Joker";
+"event.luckyJoker.description" = "A joker drawn this round can be discarded alone, penalty-free.";
+
+/* Game table */
+"game.you" = "You";
+"game.bot" = "Bot";
+"game.opponent" = "an opponent";
+"game.drawPile" = "Draw";
+"game.discardPile" = "Discard";
+"game.declareYosuf" = "Yosuf!";
+"game.discard" = "Discard";
+"game.error.title" = "Not so fast";
+
+/* Table reading hints */
+"hint.yourHandIsClose" = "Your hand is close to Yosuf!";
+"hint.opponentLikelyCloseFormat" = "%@ may be close to calling Yosuf.";
+"hint.rankRunningCold" = "That rank has been discarded repeatedly — it's running cold.";
+"hint.unclaimedJoker" = "There's an unclaimed Joker on top of the discard pile!";
+
+/* Reveal */
+"reveal.callerHand" = "Yosuf caller's hand";
+"reveal.challengerHand" = "Asaf challenger's hand";
+"reveal.handValueFormat" = "Hand value: %d";
+"reveal.yosufSuccess" = "Yosuf!";
+"reveal.asafCaught" = "Asaf! Caught!";
+"reveal.nextRound" = "Next Round";
+"reveal.finish" = "Finish";
+
+/* Daily Challenge */
+"dailyChallenge.title" = "Daily Challenge";
+"dailyChallenge.explanation" = "The same deck and opponents for everyone, every day. Compare your score with tomorrow's challenge!";
+"dailyChallenge.play" = "Play Today's Challenge";
+"dailyChallenge.done.title" = "Come back tomorrow";
+"dailyChallenge.done.message" = "You've already completed today's Daily Challenge. A new one unlocks tomorrow.";
+
+/* Achievements */
+"achievements.empty.title" = "No achievements yet";
+"achievements.empty.message" = "Play your first match to start unlocking achievements.";
+"achievement.firstWin.title" = "First Victory";
+"achievement.firstWin.description" = "Win your first match.";
+"achievement.tenWins.title" = "Regular Winner";
+"achievement.tenWins.description" = "Win 10 matches.";
+"achievement.fiftyWins.title" = "Yosuf Veteran";
+"achievement.fiftyWins.description" = "Win 50 matches.";
+"achievement.flawlessRound.title" = "Flawless";
+"achievement.flawlessRound.description" = "Win a round with a hand worth exactly 0.";
+"achievement.comebackKing.title" = "Comeback";
+"achievement.comebackKing.description" = "Win a match after coming within 5 points of elimination.";
+"achievement.dailyChallengeWeek.title" = "Daily Devotee";
+"achievement.dailyChallengeWeek.description" = "Complete 7 Daily Challenges.";
+"achievement.allProfilesPlayed.title" = "Rules Explorer";
+"achievement.allProfilesPlayed.description" = "Play a match in every rule profile.";
+"achievement.rankGold.title" = "Gold Rank";
+"achievement.rankGold.description" = "Reach Gold rank.";
+"achievement.rankDiamond.title" = "Diamond Rank";
+"achievement.rankDiamond.description" = "Reach Diamond rank.";
+
+/* History */
+"history.empty.title" = "No matches yet";
+"history.empty.message" = "Your completed matches will show up here.";
+
+/* Settings */
+"settings.section.gameplay" = "Gameplay";
+"settings.section.feedback" = "Feedback";
+"settings.section.about" = "About";
+"settings.tableHints" = "Table Reading Hints";
+"settings.cardSkin" = "Card Skin";
+"settings.skin.classic" = "Classic";
+"settings.skin.neon" = "Neon";
+"settings.sound" = "Sound Effects";
+"settings.haptics" = "Haptic Feedback";
+"settings.version" = "Version";
+"settings.privacyPolicy" = "Privacy Policy";
+"legal.privacyPolicyBody" = "See PrivacyPolicy_en.md in this project for the full text, published at the URL configured in App Store Connect.";
+
+/* How to play */
+"howToPlay.step1.title" = "The Goal";
+"howToPlay.step1.body" = "Get your hand's total value down to the Yosuf threshold or below.";
+"howToPlay.step2.title" = "Your Turn";
+"howToPlay.step2.body" = "Draw one card from either pile, then discard a single card or a valid set/run.";
+"howToPlay.step3.title" = "Declaring Yosuf";
+"howToPlay.step3.body" = "When your hand is low enough, declare Yosuf instead of drawing. If someone else's hand is just as low, they catch you with Asaf!";
+"howToPlay.step4.title" = "Winning the Match";
+"howToPlay.step4.body" = "Keep your total score below the match limit longer than everyone else.";
+
+/* Accessibility */
+"card.facedown" = "Face-down card";
+"card.joker" = "Joker";

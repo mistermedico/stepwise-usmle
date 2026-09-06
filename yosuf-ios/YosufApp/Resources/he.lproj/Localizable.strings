@@ -1,0 +1,146 @@
+/* App */
+"app.name" = "יוסוף";
+"common.done" = "סיום";
+
+/* Home */
+"home.tagline" = "משחק הקלפים הקלאסי, בגרסה חדשה";
+"home.play" = "שחק";
+"home.dailyChallenge" = "אתגר יומי";
+"home.achievements" = "הישגים";
+"home.history" = "היסטוריה";
+"home.settings" = "הגדרות";
+"home.howToPlay" = "איך משחקים";
+"home.gamesPlayedFormat" = "%d משחקים ששוחקו";
+"home.gamesWonFormat" = "%d ניצחונות";
+
+/* Rank tiers */
+"rank.bronze.name" = "ברונזה";
+"rank.silver.name" = "כסף";
+"rank.gold.name" = "זהב";
+"rank.platinum.name" = "פלטינה";
+"rank.diamond.name" = "יהלום";
+"rank.champion.name" = "אלוף";
+
+/* Rule profiles */
+"rules.chooseTitle" = "בחר את חוקי המשחק";
+"rules.opponents" = "מספר יריבים";
+"rules.startMatch" = "התחל משחק";
+"rules.classic.name" = "קלאסי";
+"rules.classic.description" = "חוויית יוסוף המסורתית - מאוזנת והוגנת.";
+"rules.quick.name" = "מהיר";
+"rules.quick.description" = "משחקים קצרים יותר, סיכון נמוך יותר - מושלם לסבב מהיר.";
+"rules.grandma.name" = "חוקי סבתא";
+"rules.grandma.description" = "וריאציית בית מחמירה: אס נחשב גבוה והרף להכרזת יוסוף גבוה יותר.";
+"rules.street.name" = "רחוב";
+"rules.street.description" = "מצב מסיבה עם קלפי אירוע מפתיעים בכל סבב.";
+"rules.custom.name" = "מותאם אישית";
+"rules.custom.description" = "כוונן כל מספר בעצמך.";
+"rules.custom.threshold" = "סף הכרזת יוסוף";
+"rules.custom.penalty" = "עונש אסף";
+"rules.custom.maxScore" = "המשחק מסתיים ב";
+"rules.custom.aceHigh" = "אס נחשב כ-15";
+"rules.custom.eventCards" = "הפעל קלפי אירוע";
+
+/* Party event cards */
+"event.doublePenalty.title" = "כפל עונשין";
+"event.doublePenalty.description" = "עונש האסף מוכפל בסבב זה.";
+"event.silentYosuf.title" = "יוסוף בשקט";
+"event.silentYosuf.description" = "החשיפה קורית מיידית בסבב זה - בלי מתח.";
+"event.skipNextPlayer.title" = "גניבת תור";
+"event.skipNextPlayer.description" = "השחקן הבא מפסיד את תורו.";
+"event.freeOpeningDiscard.title" = "פתיחה חופשית";
+"event.freeOpeningDiscard.description" = "הזריקה הראשונה בסבב זה יכולה להיות כל קלף בודד, ללא צורך בצירוף.";
+"event.mercyRound.title" = "סבב רחמים";
+"event.mercyRound.description" = "עונש האסף מופחת בחצי בסבב זה.";
+"event.wildDraw.title" = "לקיחה חופשית";
+"event.wildDraw.description" = "ניתן לקחת קלף מכל ערימה בחופשיות בסבב זה.";
+"event.reverseOrder.title" = "היפוך כיוון";
+"event.reverseOrder.description" = "סדר התורות מתהפך עד לסוף הסבב.";
+"event.luckyJoker.title" = "ג'וקר בר מזל";
+"event.luckyJoker.description" = "ג'וקר שנלקח בסבב זה יכול להיזרק לבד, ללא עונש.";
+
+/* Game table */
+"game.you" = "אתה";
+"game.bot" = "יריב";
+"game.opponent" = "יריב";
+"game.drawPile" = "קופה";
+"game.discardPile" = "זריקה";
+"game.declareYosuf" = "יוסוף!";
+"game.discard" = "זרוק";
+"game.error.title" = "רגע לא כל כך מהר";
+
+/* Table reading hints */
+"hint.yourHandIsClose" = "היד שלך קרובה להכרזת יוסוף!";
+"hint.opponentLikelyCloseFormat" = "יתכן ש-%@ קרוב להכרזת יוסוף.";
+"hint.rankRunningCold" = "הדרגה הזו נזרקת שוב ושוב - היא כבר לא מבוקשת.";
+"hint.unclaimedJoker" = "יש ג'וקר לא תפוס בראש ערימת הזריקה!";
+
+/* Reveal */
+"reveal.callerHand" = "היד של המכריז";
+"reveal.challengerHand" = "היד של קורא האסף";
+"reveal.handValueFormat" = "שווי היד: %d";
+"reveal.yosufSuccess" = "יוסוף!";
+"reveal.asafCaught" = "אסף! נתפסת!";
+"reveal.nextRound" = "הסבב הבא";
+"reveal.finish" = "סיום";
+
+/* Daily Challenge */
+"dailyChallenge.title" = "אתגר יומי";
+"dailyChallenge.explanation" = "אותה חפיסה ואותם יריבים לכולם, בכל יום. השווה את הניקוד שלך מול האתגר של מחר!";
+"dailyChallenge.play" = "שחק את אתגר היום";
+"dailyChallenge.done.title" = "חזור מחר";
+"dailyChallenge.done.message" = "כבר השלמת את האתגר היומי של היום. אתגר חדש ייפתח מחר.";
+
+/* Achievements */
+"achievements.empty.title" = "עדיין אין הישגים";
+"achievements.empty.message" = "שחק את המשחק הראשון שלך כדי להתחיל לפתוח הישגים.";
+"achievement.firstWin.title" = "ניצחון ראשון";
+"achievement.firstWin.description" = "נצח במשחק הראשון שלך.";
+"achievement.tenWins.title" = "מנצח קבוע";
+"achievement.tenWins.description" = "נצח ב-10 משחקים.";
+"achievement.fiftyWins.title" = "ותיק יוסוף";
+"achievement.fiftyWins.description" = "נצח ב-50 משחקים.";
+"achievement.flawlessRound.title" = "ללא רבב";
+"achievement.flawlessRound.description" = "נצח בסבב עם יד ששווה בדיוק 0.";
+"achievement.comebackKing.title" = "קאמבק";
+"achievement.comebackKing.description" = "נצח במשחק לאחר שהיית קרוב מאוד לתבוסה.";
+"achievement.dailyChallengeWeek.title" = "חסיד יומי";
+"achievement.dailyChallengeWeek.description" = "השלם 7 אתגרים יומיים.";
+"achievement.allProfilesPlayed.title" = "חוקר חוקים";
+"achievement.allProfilesPlayed.description" = "שחק משחק בכל פרופיל חוקים.";
+"achievement.rankGold.title" = "דרגת זהב";
+"achievement.rankGold.description" = "הגע לדרגת זהב.";
+"achievement.rankDiamond.title" = "דרגת יהלום";
+"achievement.rankDiamond.description" = "הגע לדרגת יהלום.";
+
+/* History */
+"history.empty.title" = "עדיין אין משחקים";
+"history.empty.message" = "המשחקים שתשלים יופיעו כאן.";
+
+/* Settings */
+"settings.section.gameplay" = "משחק";
+"settings.section.feedback" = "משוב";
+"settings.section.about" = "אודות";
+"settings.tableHints" = "רמזי קריאת שולחן";
+"settings.cardSkin" = "עיצוב קלפים";
+"settings.skin.classic" = "קלאסי";
+"settings.skin.neon" = "ניאון";
+"settings.sound" = "אפקטים קוליים";
+"settings.haptics" = "משוב הפטי";
+"settings.version" = "גרסה";
+"settings.privacyPolicy" = "מדיניות פרטיות";
+"legal.privacyPolicyBody" = "עיין בקובץ PrivacyPolicy_he.md בפרויקט זה לטקסט המלא, המתפרסם בכתובת שתוגדר ב-App Store Connect.";
+
+/* How to play */
+"howToPlay.step1.title" = "המטרה";
+"howToPlay.step1.body" = "הורד את שווי היד שלך לסף הכרזת היוסוף או מתחתיו.";
+"howToPlay.step2.title" = "התור שלך";
+"howToPlay.step2.body" = "קח קלף אחד מאחת הערימות, ואז זרוק קלף בודד או צירוף חוקי.";
+"howToPlay.step3.title" = "הכרזת יוסוף";
+"howToPlay.step3.body" = "כשהיד שלך נמוכה מספיק, הכרז יוסוף במקום לקחת קלף. אם ליריב יש יד נמוכה באותה מידה, הוא יתפוס אותך באסף!";
+"howToPlay.step4.title" = "ניצחון במשחק";
+"howToPlay.step4.body" = "שמור על הניקוד שלך מתחת לגבול המשחק זמן רב יותר מכל היריבים.";
+
+/* Accessibility */
+"card.facedown" = "קלף הפוך";
+"card.joker" = "ג'וקר";

@@ -1,0 +1,74 @@
+name: Yosuf iOS - Build & Test
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "yosuf-ios/**"
+      - ".github/workflows/yosuf-ios-tests.yml"
+  pull_request:
+    paths:
+      - "yosuf-ios/**"
+      - ".github/workflows/yosuf-ios-tests.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: yosuf-ios-tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  engine-unit-tests:
+    name: YosufEngine unit tests (swift test)
+    runs-on: macos-15
+    defaults:
+      run:
+        working-directory: yosuf-ios/Packages/YosufEngine
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode_16.2.app
+
+      - name: Run engine unit tests
+        run: swift test --parallel
+
+  app-build:
+    name: Build the app (XcodeGen + xcodebuild)
+    runs-on: macos-15
+    needs: engine-unit-tests
+    defaults:
+      run:
+        working-directory: yosuf-ios
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode_16.2.app
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Generate Xcode project
+        run: xcodegen generate
+
+      - name: Resolve Swift Package dependencies
+        run: |
+          xcodebuild -resolvePackageDependencies \
+            -project Yosuf.xcodeproj \
+            -scheme Yosuf
+
+      - name: Build for Simulator (iPhone SE - smallest supported screen)
+        run: |
+          xcodebuild build \
+            -project Yosuf.xcodeproj \
+            -scheme Yosuf \
+            -destination "platform=iOS Simulator,name=iPhone SE (3rd generation),OS=latest" \
+            CODE_SIGNING_ALLOWED=NO
+
+      - name: Build for Simulator (iPhone 16 Pro Max - largest supported screen)
+        run: |
+          xcodebuild build \
+            -project Yosuf.xcodeproj \
+            -scheme Yosuf \
+            -destination "platform=iOS Simulator,name=iPhone 16 Pro Max,OS=latest" \
+            CODE_SIGNING_ALLOWED=NO

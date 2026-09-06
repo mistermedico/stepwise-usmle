@@ -1,0 +1,94 @@
+name: Yosuf
+options:
+  bundleIdPrefix: com.yosufgame
+  deploymentTarget:
+    iOS: "16.0"
+  createIntermediateGroups: true
+  generateEmptyDirectories: false
+
+settings:
+  base:
+    SWIFT_VERSION: 5.9
+    MARKETING_VERSION: 1.0.0
+    CURRENT_PROJECT_VERSION: 1
+    DEVELOPMENT_LANGUAGE: he
+    SUPPORTS_MACCATALYST: false
+    ENABLE_USER_SCRIPT_SANDBOXING: true
+
+packages:
+  YosufEngine:
+    path: Packages/YosufEngine
+  GoogleMobileAds:
+    url: https://github.com/googleads/swift-package-manager-google-mobile-ads.git
+    from: 11.13.0
+  UserMessagingPlatform:
+    url: https://github.com/googleads/swift-package-manager-user-messaging-platform.git
+    from: 2.7.0
+
+targets:
+  Yosuf:
+    type: application
+    platform: iOS
+    deploymentTarget: "16.0"
+    sources:
+      - path: YosufApp
+        excludes:
+          - "**/*.md"
+    dependencies:
+      - package: YosufEngine
+        product: YosufEngine
+      - package: GoogleMobileAds
+        product: GoogleMobileAds
+      - package: UserMessagingPlatform
+        product: UserMessagingPlatform
+    info:
+      path: YosufApp/Info.plist
+      properties:
+        CFBundleDisplayName: Yosuf
+        CFBundleShortVersionString: "$(MARKETING_VERSION)"
+        CFBundleVersion: "$(CURRENT_PROJECT_VERSION)"
+        CFBundleLocalizations: [he, en]
+        CFBundleDevelopmentRegion: he
+        CFBundleAllowMixedLocalizations: true
+        ITSAppUsesNonExemptEncryption: false
+        UILaunchScreen: {}
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+        UISupportedInterfaceOrientations~ipad:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+        UIRequiresFullScreen: false
+        NSUserTrackingUsageDescription: "Your data will be used to deliver personalized ads that help keep Yosuf free."
+        # TEST AdMob App ID (Google's official sample). Replace with the real
+        # App ID from your AdMob console before release — see APPLE_SETUP.md.
+        GADApplicationIdentifier: "ca-app-pub-3940256099942544~1458002511"
+        SKAdNetworkItems:
+          - SKAdNetworkIdentifier: cstr6suwn9.skadnetwork
+        UIApplicationSceneManifest:
+          UIApplicationSupportsMultipleScenes: false
+    entitlements:
+      path: YosufApp/Yosuf.entitlements
+      properties: {}
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.yosufgame.app
+        PRODUCT_NAME: Yosuf
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        TARGETED_DEVICE_FAMILY: "1,2"
+        INFOPLIST_KEY_UILaunchScreen_Generation: true
+    scheme:
+      testTargets: []
+      gatherCoverageData: true
+
+schemes:
+  Yosuf:
+    build:
+      targets:
+        Yosuf: all
+    run:
+      config: Debug
+    test:
+      config: Debug
+    archive:
+      config: Release

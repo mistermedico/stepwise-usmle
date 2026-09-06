@@ -16,36 +16,35 @@ final class GalleryViewModel: ObservableObject {
     @Published private(set) var itemsByCategory: [PuzzleCategory: [Item]] = [:]
     @Published private(set) var isLoading = false
 
-    private let appViewModel: AppViewModel
     private let loader: PuzzleLoader
 
-    init(appViewModel: AppViewModel, loader: PuzzleLoader = PuzzleLoader()) {
-        self.appViewModel = appViewModel
+    init(loader: PuzzleLoader = PuzzleLoader()) {
         self.loader = loader
     }
 
-    func load() {
+    /// Takes a snapshot of what it needs from `AppViewModel` as plain parameters (rather than
+    /// holding a reference to it) so this view model has no construction-order dependency on
+    /// the environment object being available yet.
+    func load(
+        entriesByCategory: [PuzzleCategory: [LevelIndexEntry]],
+        completedLevelIDs: Set<String>,
+        flawlessLevelIDs: Set<String>
+    ) {
         guard !isLoading else { return }
         isLoading = true
-        let progress = appViewModel.progress
-        let categories = PuzzleCategory.allCases
-        let entriesByCategory = categories.reduce(into: [PuzzleCategory: [LevelIndexEntry]]()) {
-            $0[$1] = appViewModel.levels(in: $1)
-        }
         let loader = self.loader
 
         DispatchQueue.global(qos: .userInitiated).async {
             var result: [PuzzleCategory: [Item]] = [:]
-            for category in categories {
-                let entries = entriesByCategory[category] ?? []
+            for (category, entries) in entriesByCategory {
                 result[category] = entries.map { entry in
-                    let completed = progress.completedLevelIDs.contains(entry.id)
+                    let completed = completedLevelIDs.contains(entry.id)
                     let puzzle = completed ? try? loader.loadPuzzle(id: entry.id, category: category) : nil
                     return Item(
                         entry: entry,
                         puzzle: puzzle,
                         isCompleted: completed,
-                        isFlawless: progress.flawlessLevelIDs.contains(entry.id)
+                        isFlawless: flawlessLevelIDs.contains(entry.id)
                     )
                 }
             }

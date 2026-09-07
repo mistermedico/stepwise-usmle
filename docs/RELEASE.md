@@ -1,5 +1,7 @@
 # Releasing Strainwave
 
+> עברית: [`RELEASE.he.md`](RELEASE.he.md) — the same steps, in Hebrew.
+
 Everything else in this project is automated. This file covers the four things
 that genuinely need a human with an Apple Developer account, in the order you
 should do them.

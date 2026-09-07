@@ -11,7 +11,7 @@ struct YosufApp: App {
             RootView()
                 .environment(\.managedObjectContext, persistence.container.viewContext)
         }
-        .onChange(of: scenePhase) { _, newPhase in
+        .onChange(of: scenePhase) { newPhase in
             if newPhase == .background {
                 persistence.saveIfNeeded()
             }

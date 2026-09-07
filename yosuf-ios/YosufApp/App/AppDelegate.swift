@@ -1,6 +1,6 @@
 import UIKit
 import GoogleMobileAds
-import GoogleUserMessagingPlatform
+import UserMessagingPlatform
 import os
 
 /// Handles the one-time, UIKit-only startup sequence SwiftUI's `App`

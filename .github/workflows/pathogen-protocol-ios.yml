@@ -45,14 +45,14 @@ jobs:
           echo "Simulator runtimes before:"
           xcrun simctl list runtimes
 
-          if ! xcrun simctl list runtimes | grep -qi "iOS.*ready"; then
+          if ! xcrun simctl list runtimes | grep -qi "^iOS "; then
             echo "No ready iOS runtime found — downloading one (can take several minutes)..."
             sudo xcodebuild -downloadPlatform iOS
           fi
 
           echo "Simulator runtimes after:"
           xcrun simctl list runtimes
-          xcrun simctl list runtimes | grep -qi "iOS.*ready" || {
+          xcrun simctl list runtimes | grep -qi "^iOS " || {
             echo "::error::Still no ready iOS Simulator runtime after downloadPlatform."
             exit 1
           }
@@ -134,12 +134,12 @@ jobs:
           APP=$(ls -d /Applications/Xcode*.app | sort -rV | head -1)
           sudo xcode-select -s "$APP/Contents/Developer"
           xcodebuild -version
-          if ! xcrun simctl list runtimes | grep -qi "iOS.*ready"; then
+          if ! xcrun simctl list runtimes | grep -qi "^iOS "; then
             echo "No ready iOS runtime found — downloading one (can take several minutes)..."
             sudo xcodebuild -downloadPlatform iOS
           fi
           xcrun simctl list runtimes
-          xcrun simctl list runtimes | grep -qi "iOS.*ready" || {
+          xcrun simctl list runtimes | grep -qi "^iOS " || {
             echo "::error::Still no ready iOS Simulator runtime after downloadPlatform."
             exit 1
           }
@@ -223,12 +223,12 @@ jobs:
           APP=$(ls -d /Applications/Xcode*.app | sort -rV | head -1)
           sudo xcode-select -s "$APP/Contents/Developer"
           xcodebuild -version
-          if ! xcrun simctl list runtimes | grep -qi "iOS.*ready"; then
+          if ! xcrun simctl list runtimes | grep -qi "^iOS "; then
             echo "No ready iOS runtime found — downloading one (can take several minutes)..."
             sudo xcodebuild -downloadPlatform iOS
           fi
           xcrun simctl list runtimes
-          xcrun simctl list runtimes | grep -qi "iOS.*ready" || {
+          xcrun simctl list runtimes | grep -qi "^iOS " || {
             echo "::error::Still no ready iOS Simulator runtime after downloadPlatform."
             exit 1
           }

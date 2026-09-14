@@ -84,7 +84,9 @@ struct Hexagon: Shape {
         var path = Path()
         for i in 0..<6 {
             let angle = Angle.degrees(Double(i) / 6.0 * 360 - 90)
-            let point = CGPoint(x: center.x + radius * cos(angle.radians), y: center.y + radius * sin(angle.radians))
+            let dx = Double(radius) * cos(angle.radians)
+            let dy = Double(radius) * sin(angle.radians)
+            let point = CGPoint(x: center.x + CGFloat(dx), y: center.y + CGFloat(dy))
             if i == 0 { path.move(to: point) } else { path.addLine(to: point) }
         }
         path.closeSubpath()

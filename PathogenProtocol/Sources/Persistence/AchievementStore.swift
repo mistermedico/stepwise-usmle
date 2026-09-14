@@ -15,7 +15,7 @@ public final class AchievementStore {
     public func unlockedIDs() -> Set<String> {
         let request = AchievementRecordEntity.fetchRequest()
         guard let entities = try? controller.viewContext.fetch(request) else { return [] }
-        return Set(entities.map(\.id))
+        return Set(entities.compactMap(\.id))
     }
 
     /// Persists any IDs not already stored. Returns only the newly-unlocked subset,

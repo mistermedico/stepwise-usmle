@@ -28,29 +28,34 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # A hardcoded Xcode path has already broken CI once here: Xcode_16.app exists on
-      # this runner but has no iOS Simulator runtime actually installed for it (only
-      # placeholder destinations show up), while another installed Xcode does. Pick
-      # whichever installed Xcode has a real iOS Simulator runtime paired with it,
-      # newest first, instead of assuming a specific app name.
-      - name: Select an Xcode with a working iOS Simulator runtime
+      # A hardcoded Xcode path has already broken CI once here (Xcode_16.app has no iOS
+      # Simulator runtime installed), and it turns out *no* Xcode on this runner image
+      # ships one preinstalled. Select the newest Xcode, then explicitly download an
+      # iOS simulator runtime if none is already present.
+      - name: Select Xcode and ensure an iOS Simulator runtime is installed
         run: |
           set -euo pipefail
           echo "Installed Xcode apps:"
           ls -d /Applications/Xcode*.app
-          for APP in $(ls -d /Applications/Xcode*.app | sort -rV); do
-            echo "Trying $APP ..."
-            sudo xcode-select -s "$APP/Contents/Developer"
-            if xcrun simctl list runtimes | grep -qi "iOS.*ready"; then
-              echo "Selected $APP (has a ready iOS runtime)"
-              xcodebuild -version
-              xcrun simctl list runtimes
-              exit 0
-            fi
-          done
-          echo "::error::No installed Xcode has a ready iOS Simulator runtime."
+          APP=$(ls -d /Applications/Xcode*.app | sort -rV | head -1)
+          echo "Selecting $APP"
+          sudo xcode-select -s "$APP/Contents/Developer"
+          xcodebuild -version
+
+          echo "Simulator runtimes before:"
           xcrun simctl list runtimes
-          exit 1
+
+          if ! xcrun simctl list runtimes | grep -qi "iOS.*ready"; then
+            echo "No ready iOS runtime found — downloading one (can take several minutes)..."
+            sudo xcodebuild -downloadPlatform iOS
+          fi
+
+          echo "Simulator runtimes after:"
+          xcrun simctl list runtimes
+          xcrun simctl list runtimes | grep -qi "iOS.*ready" || {
+            echo "::error::Still no ready iOS Simulator runtime after downloadPlatform."
+            exit 1
+          }
 
       - name: Install XcodeGen
         run: brew install xcodegen
@@ -123,19 +128,21 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Select an Xcode with a working iOS Simulator runtime
+      - name: Select Xcode and ensure an iOS Simulator runtime is installed
         run: |
           set -euo pipefail
-          for APP in $(ls -d /Applications/Xcode*.app | sort -rV); do
-            sudo xcode-select -s "$APP/Contents/Developer"
-            if xcrun simctl list runtimes | grep -qi "iOS.*ready"; then
-              echo "Selected $APP (has a ready iOS runtime)"
-              xcodebuild -version
-              exit 0
-            fi
-          done
-          echo "::error::No installed Xcode has a ready iOS Simulator runtime."
-          exit 1
+          APP=$(ls -d /Applications/Xcode*.app | sort -rV | head -1)
+          sudo xcode-select -s "$APP/Contents/Developer"
+          xcodebuild -version
+          if ! xcrun simctl list runtimes | grep -qi "iOS.*ready"; then
+            echo "No ready iOS runtime found — downloading one (can take several minutes)..."
+            sudo xcodebuild -downloadPlatform iOS
+          fi
+          xcrun simctl list runtimes
+          xcrun simctl list runtimes | grep -qi "iOS.*ready" || {
+            echo "::error::Still no ready iOS Simulator runtime after downloadPlatform."
+            exit 1
+          }
 
       - name: Install XcodeGen
         run: brew install xcodegen
@@ -210,19 +217,21 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Select an Xcode with a working iOS Simulator runtime
+      - name: Select Xcode and ensure an iOS Simulator runtime is installed
         run: |
           set -euo pipefail
-          for APP in $(ls -d /Applications/Xcode*.app | sort -rV); do
-            sudo xcode-select -s "$APP/Contents/Developer"
-            if xcrun simctl list runtimes | grep -qi "iOS.*ready"; then
-              echo "Selected $APP (has a ready iOS runtime)"
-              xcodebuild -version
-              exit 0
-            fi
-          done
-          echo "::error::No installed Xcode has a ready iOS Simulator runtime."
-          exit 1
+          APP=$(ls -d /Applications/Xcode*.app | sort -rV | head -1)
+          sudo xcode-select -s "$APP/Contents/Developer"
+          xcodebuild -version
+          if ! xcrun simctl list runtimes | grep -qi "iOS.*ready"; then
+            echo "No ready iOS runtime found — downloading one (can take several minutes)..."
+            sudo xcodebuild -downloadPlatform iOS
+          fi
+          xcrun simctl list runtimes
+          xcrun simctl list runtimes | grep -qi "iOS.*ready" || {
+            echo "::error::Still no ready iOS Simulator runtime after downloadPlatform."
+            exit 1
+          }
 
       - name: Install XcodeGen
         run: brew install xcodegen

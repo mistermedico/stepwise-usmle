@@ -5,17 +5,17 @@ import GoogleMobileAds
 /// default — drop `BannerAdView()` into the layout wherever the banner should sit if
 /// you want it live; it no-ops safely (renders empty) until `ConsentManager` clears ads.
 struct BannerAdView: UIViewRepresentable {
-    func makeUIView(context: Context) -> BannerView {
-        let banner = BannerView(adSize: AdSizeBanner)
+    func makeUIView(context: Context) -> GADBannerView {
+        let banner = GADBannerView(adSize: GADAdSizeBanner)
         banner.adUnitID = AdUnitID.banner
         banner.rootViewController = UIApplication.shared.connectedScenes
             .compactMap { ($0 as? UIWindowScene)?.keyWindow }
             .first?.rootViewController
         if ConsentManager.shared.canRequestAds {
-            banner.load(Request())
+            banner.load(GADRequest())
         }
         return banner
     }
 
-    func updateUIView(_ uiView: BannerView, context: Context) {}
+    func updateUIView(_ uiView: GADBannerView, context: Context) {}
 }

@@ -43,12 +43,17 @@ public enum RewardOutcome {
 /// rewarded video for a bonus evolution-point/research boost, and a banner slot on the
 /// home screen (spec section 7). Ad loading always waits on `ConsentManager` so ATT and
 /// GDPR consent are resolved first.
+///
+/// Uses the SDK's classic `GAD`-prefixed Swift API (`GADInterstitialAd`, `GADRewardedAd`,
+/// `GADRequest`, `GADFullScreenContentDelegate`, ...) rather than the unprefixed type
+/// aliases, since the unprefixed names aren't exposed by the resolved SPM package version
+/// (confirmed by a real CI compile — see PathogenProtocol/README.md's build-status note).
 @MainActor
 public final class AdManager: NSObject {
     public static let shared = AdManager()
 
-    private var interstitialAd: InterstitialAd?
-    private var rewardedAd: RewardedAd?
+    private var interstitialAd: GADInterstitialAd?
+    private var rewardedAd: GADRewardedAd?
     private var interstitialsShownThisSession = 0
 
     /// Interstitials are only offered every other completed run, so the "between games"
@@ -60,7 +65,7 @@ public final class AdManager: NSObject {
     }
 
     public func start() {
-        MobileAds.shared.start(completionHandler: nil)
+        GADMobileAds.sharedInstance().start(completionHandler: nil)
         preloadInterstitial()
         preloadRewarded()
     }
@@ -68,7 +73,7 @@ public final class AdManager: NSObject {
     public func preloadInterstitial() {
         Task {
             do {
-                interstitialAd = try await InterstitialAd.load(with: AdUnitID.interstitial, request: Request())
+                interstitialAd = try await GADInterstitialAd.load(withAdUnitID: AdUnitID.interstitial, request: GADRequest())
                 interstitialAd?.fullScreenContentDelegate = self
             } catch {
                 interstitialAd = nil
@@ -79,7 +84,7 @@ public final class AdManager: NSObject {
     public func preloadRewarded() {
         Task {
             do {
-                rewardedAd = try await RewardedAd.load(with: AdUnitID.rewarded, request: Request())
+                rewardedAd = try await GADRewardedAd.load(withAdUnitID: AdUnitID.rewarded, request: GADRequest())
                 rewardedAd?.fullScreenContentDelegate = self
             } catch {
                 rewardedAd = nil
@@ -93,7 +98,7 @@ public final class AdManager: NSObject {
         interstitialsShownThisSession += 1
         guard interstitialsShownThisSession % interstitialFrequency == 0 else { return }
         guard ConsentManager.shared.canRequestAds, let ad = interstitialAd else { return }
-        ad.present(from: viewController)
+        ad.present(fromRootViewController: viewController)
     }
 
     public func presentRewarded(from viewController: UIViewController, completion: @escaping (RewardOutcome) -> Void) {
@@ -102,7 +107,7 @@ public final class AdManager: NSObject {
             return
         }
         var didEarnReward = false
-        ad.present(from: viewController) {
+        ad.present(fromRootViewController: viewController) {
             didEarnReward = true
         }
         // The SDK's full-screen delegate below reports dismissal; this closure only
@@ -112,14 +117,14 @@ public final class AdManager: NSObject {
     }
 }
 
-extension AdManager: FullScreenContentDelegate {
-    public func ad(_ ad: FullScreenPresentingAd, didFailToPresentFullScreenContentWithError error: Error) {
-        if ad is InterstitialAd { interstitialAd = nil; preloadInterstitial() }
-        if ad is RewardedAd { rewardedAd = nil; preloadRewarded() }
+extension AdManager: GADFullScreenContentDelegate {
+    public func ad(_ ad: GADFullScreenPresentingAd, didFailToPresentFullScreenContentWithError error: Error) {
+        if ad is GADInterstitialAd { interstitialAd = nil; preloadInterstitial() }
+        if ad is GADRewardedAd { rewardedAd = nil; preloadRewarded() }
     }
 
-    public func adDidDismissFullScreenContent(_ ad: FullScreenPresentingAd) {
-        if ad is InterstitialAd { interstitialAd = nil; preloadInterstitial() }
-        if ad is RewardedAd { rewardedAd = nil; preloadRewarded() }
+    public func adDidDismissFullScreenContent(_ ad: GADFullScreenPresentingAd) {
+        if ad is GADInterstitialAd { interstitialAd = nil; preloadInterstitial() }
+        if ad is GADRewardedAd { rewardedAd = nil; preloadRewarded() }
     }
 }

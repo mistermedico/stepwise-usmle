@@ -79,6 +79,23 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.pathogenprotocol.app.tests
 
+  # Since there's no macOS machine in this project's dev environment to run the
+  # Simulator or VoiceOver by hand, this target is the stand-in: it launches the real
+  # app in CI, captures real screenshots on multiple device sizes, and runs Apple's
+  # automated accessibility audit (XCTest's `performAccessibilityAudit()`) as a
+  # substitute for a manual VoiceOver pass. See .github/workflows for how it's driven.
+  PathogenProtocolUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    deploymentTarget: "16.0"
+    sources:
+      - path: Tests/PathogenProtocolUITests
+    dependencies:
+      - target: PathogenProtocol
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.pathogenprotocol.app.uitests
+
 schemes:
   PathogenProtocol:
     build:
@@ -88,12 +105,21 @@ schemes:
     test:
       targets:
         - PathogenProtocolTests
-      commandLineArguments:
-        "-AppleLanguages (en)": false
     run:
       config: Debug
     archive:
       config: Release
+
+  PathogenProtocolUITests:
+    build:
+      targets:
+        PathogenProtocol: all
+        PathogenProtocolUITests: [test]
+    test:
+      targets:
+        - PathogenProtocolUITests
+    run:
+      config: Debug
 
 packages:
   GoogleMobileAds:

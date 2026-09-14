@@ -43,12 +43,31 @@ jobs:
             -project PathogenProtocol.xcodeproj \
             -scheme PathogenProtocol
 
+      # Simulator names/OS versions preinstalled on a runner image drift over time, and
+      # a hardcoded "name=iPhone 16" destination has already broken CI once here. This
+      # discovers whatever iPhone simulator is actually available on the runner instead
+      # of assuming one, and fails loudly with the full device list if none exist.
+      - name: Pick an available iPhone simulator
+        id: simulator
+        run: |
+          set -euo pipefail
+          echo "Available simulators:"
+          xcrun simctl list devices available
+          LINE=$(xcrun simctl list devices available | grep -E "iPhone" | grep -v "unavailable" | head -1)
+          if [ -z "$LINE" ]; then
+            echo "::error::No available iPhone simulator found on this runner."
+            exit 1
+          fi
+          UDID=$(echo "$LINE" | grep -oE '[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}')
+          echo "Selected: $LINE"
+          echo "udid=$UDID" >> "$GITHUB_OUTPUT"
+
       - name: Build for testing
         run: |
           xcodebuild build-for-testing \
             -project PathogenProtocol.xcodeproj \
             -scheme PathogenProtocol \
-            -destination "platform=iOS Simulator,name=iPhone 16,OS=latest" \
+            -destination "id=${{ steps.simulator.outputs.udid }}" \
             -skipMacroValidation \
             CODE_SIGNING_ALLOWED=NO
 
@@ -57,7 +76,7 @@ jobs:
           xcodebuild test-without-building \
             -project PathogenProtocol.xcodeproj \
             -scheme PathogenProtocol \
-            -destination "platform=iOS Simulator,name=iPhone 16,OS=latest" \
+            -destination "id=${{ steps.simulator.outputs.udid }}" \
             -resultBundlePath TestResults.xcresult \
             CODE_SIGNING_ALLOWED=NO
 
@@ -67,6 +86,93 @@ jobs:
         with:
           name: test-results
           path: PathogenProtocol/TestResults.xcresult
+
+  # Stand-in for a manual Simulator + VoiceOver pass, since nobody on this project has
+  # a Mac: launches the real app on real simulated hardware at both screen-size
+  # extremes from the design spec, captures screenshots of the Home/Game/Evolution
+  # screens, and runs XCTest's automated accessibility audit. Screenshots + the full
+  # .xcresult are uploaded as artifacts so they can be pulled down and inspected.
+  device-screenshots:
+    name: Screenshots & Accessibility Audit (${{ matrix.device_label }})
+    runs-on: macos-15
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - device_label: iPhone-SE
+            device_pattern: "iPhone SE"
+          - device_label: iPhone-Pro-Max
+            device_pattern: "Pro Max"
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode_16.app/Contents/Developer
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Generate Xcode project
+        run: xcodegen generate
+
+      - name: Pick simulator matching "${{ matrix.device_pattern }}"
+        id: simulator
+        run: |
+          set -euo pipefail
+          echo "Available simulators:"
+          xcrun simctl list devices available
+          LINE=$(xcrun simctl list devices available | grep -i "${{ matrix.device_pattern }}" | grep -v "unavailable" | head -1)
+          if [ -z "$LINE" ]; then
+            echo "::warning::No simulator matching '${{ matrix.device_pattern }}' found; falling back to any iPhone."
+            LINE=$(xcrun simctl list devices available | grep -E "iPhone" | grep -v "unavailable" | head -1)
+          fi
+          if [ -z "$LINE" ]; then
+            echo "::error::No available iPhone simulator found on this runner at all."
+            exit 1
+          fi
+          UDID=$(echo "$LINE" | grep -oE '[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}')
+          echo "Selected: $LINE"
+          echo "udid=$UDID" >> "$GITHUB_OUTPUT"
+
+      - name: Run UI tests (screenshots + accessibility audit)
+        run: |
+          xcodebuild test \
+            -project PathogenProtocol.xcodeproj \
+            -scheme PathogenProtocolUITests \
+            -destination "id=${{ steps.simulator.outputs.udid }}" \
+            -resultBundlePath UITestResults.xcresult \
+            CODE_SIGNING_ALLOWED=NO
+
+      - name: Export screenshot attachments from the test result bundle
+        if: always()
+        continue-on-error: true
+        run: |
+          set -x
+          mkdir -p Screenshots
+          xcrun xcresulttool get test-results attachments \
+            --path UITestResults.xcresult \
+            --output-path Screenshots \
+            || xcrun xcresulttool export attachments \
+                 --path UITestResults.xcresult \
+                 --output-path Screenshots
+          echo "Exported files:"
+          find Screenshots -type f
+
+      - name: Upload screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: screenshots-${{ matrix.device_label }}
+          path: PathogenProtocol/Screenshots
+          if-no-files-found: warn
+
+      - name: Upload UI test result bundle
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ui-test-results-${{ matrix.device_label }}
+          path: PathogenProtocol/UITestResults.xcresult
+          if-no-files-found: warn
 
   release:
     name: Archive & Upload to TestFlight

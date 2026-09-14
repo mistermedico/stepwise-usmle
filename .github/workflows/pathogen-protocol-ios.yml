@@ -28,8 +28,29 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Select Xcode
-        run: sudo xcode-select -s /Applications/Xcode_16.app/Contents/Developer
+      # A hardcoded Xcode path has already broken CI once here: Xcode_16.app exists on
+      # this runner but has no iOS Simulator runtime actually installed for it (only
+      # placeholder destinations show up), while another installed Xcode does. Pick
+      # whichever installed Xcode has a real iOS Simulator runtime paired with it,
+      # newest first, instead of assuming a specific app name.
+      - name: Select an Xcode with a working iOS Simulator runtime
+        run: |
+          set -euo pipefail
+          echo "Installed Xcode apps:"
+          ls -d /Applications/Xcode*.app
+          for APP in $(ls -d /Applications/Xcode*.app | sort -rV); do
+            echo "Trying $APP ..."
+            sudo xcode-select -s "$APP/Contents/Developer"
+            if xcrun simctl list runtimes | grep -qi "iOS.*ready"; then
+              echo "Selected $APP (has a ready iOS runtime)"
+              xcodebuild -version
+              xcrun simctl list runtimes
+              exit 0
+            fi
+          done
+          echo "::error::No installed Xcode has a ready iOS Simulator runtime."
+          xcrun simctl list runtimes
+          exit 1
 
       - name: Install XcodeGen
         run: brew install xcodegen
@@ -43,10 +64,6 @@ jobs:
             -project PathogenProtocol.xcodeproj \
             -scheme PathogenProtocol
 
-      # Simulator names/OS versions preinstalled on a runner image drift over time, and
-      # a hardcoded "name=iPhone 16" destination has already broken CI once here. This
-      # discovers whatever iPhone simulator is actually available on the runner instead
-      # of assuming one, and fails loudly with the full device list if none exist.
       - name: Pick an available iPhone simulator
         id: simulator
         run: |
@@ -106,8 +123,19 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Select Xcode
-        run: sudo xcode-select -s /Applications/Xcode_16.app/Contents/Developer
+      - name: Select an Xcode with a working iOS Simulator runtime
+        run: |
+          set -euo pipefail
+          for APP in $(ls -d /Applications/Xcode*.app | sort -rV); do
+            sudo xcode-select -s "$APP/Contents/Developer"
+            if xcrun simctl list runtimes | grep -qi "iOS.*ready"; then
+              echo "Selected $APP (has a ready iOS runtime)"
+              xcodebuild -version
+              exit 0
+            fi
+          done
+          echo "::error::No installed Xcode has a ready iOS Simulator runtime."
+          exit 1
 
       - name: Install XcodeGen
         run: brew install xcodegen
@@ -149,12 +177,9 @@ jobs:
         run: |
           set -x
           mkdir -p Screenshots
-          xcrun xcresulttool get test-results attachments \
+          xcrun xcresulttool export attachments \
             --path UITestResults.xcresult \
-            --output-path Screenshots \
-            || xcrun xcresulttool export attachments \
-                 --path UITestResults.xcresult \
-                 --output-path Screenshots
+            --output-path Screenshots
           echo "Exported files:"
           find Screenshots -type f
 
@@ -185,8 +210,19 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Select Xcode
-        run: sudo xcode-select -s /Applications/Xcode_16.app/Contents/Developer
+      - name: Select an Xcode with a working iOS Simulator runtime
+        run: |
+          set -euo pipefail
+          for APP in $(ls -d /Applications/Xcode*.app | sort -rV); do
+            sudo xcode-select -s "$APP/Contents/Developer"
+            if xcrun simctl list runtimes | grep -qi "iOS.*ready"; then
+              echo "Selected $APP (has a ready iOS runtime)"
+              xcodebuild -version
+              exit 0
+            fi
+          done
+          echo "::error::No installed Xcode has a ready iOS Simulator runtime."
+          exit 1
 
       - name: Install XcodeGen
         run: brew install xcodegen

@@ -1,0 +1,138 @@
+/* App */
+"app.name" = "פתוגן פרוטוקול";
+
+/* Languages */
+"language.english" = "אנגלית";
+"language.hebrew" = "עברית";
+
+/* Regions — fictional, generic place names */
+"region.outland.name" = "אאוטלנד ריץ'";
+"region.gatecross.name" = "גייטקרוס";
+"region.meridian_delta.name" = "דלתת מרידיאן";
+"region.harbor_reach.name" = "מפרץ הנמל";
+"region.duskvale.name" = "דאסקוייל";
+"region.cinderplex.name" = "סינדרפלקס";
+
+/* Scenarios */
+"scenario.isolated.name" = "טריטוריה מבודדת";
+"scenario.isolated.desc" = "חולה אפס מופיע באזור שקט ומחובר בדלילות. התחלה איטית, מרווח בטוח יותר.";
+"scenario.hub.name" = "מרכז תחבורה";
+"scenario.hub.desc" = "חולה אפס מופיע במרכז התחבורה העמוס בעולם. התחלה מהירה, חשיפה גבוהה.";
+
+/* Difficulty */
+"difficulty.mild" = "קליל";
+"difficulty.challenging" = "מאתגר";
+"difficulty.lethal" = "קטלני";
+
+/* Strains */
+"strain.balanced.name" = "וקטריקס";
+"strain.balanced.tagline" = "מדגם יציב ומאוזן. בלי קצוות חדים, בלי ניצחונות קלים.";
+"strain.silent.name" = "האשוויין";
+"strain.silent.tagline" = "מתפשט בשקט. נשא איטי יותר, אך קשה מאוד להבחין בו.";
+"strain.virulent.name" = "אמברסטריין";
+"strain.virulent.tagline" = "מתפתח מהר ומכה חזק — אך משאיר עקבות ברורים.";
+"strain.opportunist.name" = "דריפטספור";
+"strain.opportunist.tagline" = "בנוי למהירות. עוקף את הזהירות לפני שהיא מספיקה להתעורר.";
+
+/* Upgrade categories */
+"upgrade.category.transmission" = "תעבורה";
+"upgrade.category.resistance" = "עמידות";
+"upgrade.category.symptoms" = "סימפטומים";
+
+/* Upgrades — Transmission */
+"upgrade.transmission.1.name" = "תכונות מוטסות";
+"upgrade.transmission.1.desc" = "מגביר מעט את קלות ההתפשטות בין נשאים.";
+"upgrade.transmission.2.name" = "התמדה על משטחים";
+"upgrade.transmission.2.desc" = "שורד זמן רב יותר מחוץ לנשא, ומגביר את ההתפשטות עוד יותר.";
+"upgrade.transmission.3.name" = "דגירה מהירה";
+"upgrade.transmission.3.desc" = "מקצר את הזמן עד שנשא חדש הופך למדבק.";
+"upgrade.transmission.4.name" = "פריחת על-וקטור";
+"upgrade.transmission.4.desc" = "קפיצה משמעותית בקצב ההתפשטות בכל האזורים המחוברים.";
+
+/* Upgrades — Resistance */
+"upgrade.resistance.1.name" = "חתימה נמוכה";
+"upgrade.resistance.1.desc" = "מפחית את מהירות הגילוי על ידי מערכת התגובה העולמית.";
+"upgrade.resistance.2.name" = "הסוואה מסתגלת";
+"upgrade.resistance.2.desc" = "מרסן עוד יותר את הגילוי ככל שהמודעות מתחילה לעלות.";
+"upgrade.resistance.3.name" = "סחיפה אבחונית";
+"upgrade.resistance.3.desc" = "חומק ממאמצי בדיקה מוקדמים, ומאט עוד יותר את עליית המודעות.";
+"upgrade.resistance.4.name" = "שחיקת גבולות";
+"upgrade.resistance.4.desc" = "מאפשר לזן להמשיך להתפשט מעבר לגבולות גם לאחר הכרזת סגר.";
+
+/* Upgrades — Symptoms */
+"upgrade.symptoms.1.name" = "חום קל";
+"upgrade.symptoms.1.desc" = "עלייה קטנה בקטלניות — אך הסימפטומים נעשים קלים יותר לזיהוי.";
+"upgrade.symptoms.2.name" = "עייפות כרונית";
+"upgrade.symptoms.2.desc" = "חמור יותר, גלוי יותר. הטרייד-אוף מתחדד.";
+"upgrade.symptoms.3.name" = "התפרצות חדה";
+"upgrade.symptoms.3.desc" = "קפיצה רצינית בקטלניות, במחיר גילוי ממשי.";
+"upgrade.symptoms.4.name" = "קריסה מערכתית";
+"upgrade.symptoms.4.desc" = "קטלניות מקסימלית. בלתי אפשרי לפספס.";
+
+/* Daily challenge */
+"daily.objective.winWithoutAnyLockdown" = "נצח את התפרצות היום מבלי לגרום ולו לסגר אחד.";
+"daily.objective.winWithinFifteenDays" = "נצח את התפרצות היום תוך 15 ימים.";
+"daily.objective.winWithPeakAwarenessBelowHalf" = "נצח את התפרצות היום כשהמודעות השיאית נשארת מתחת ל-50%.";
+
+/* Achievements */
+"achievement.first_run.title" = "מגע ראשון";
+"achievement.first_run.desc" = "השלם את ההתפרצות הראשונה שלך, בניצחון או בהפסד.";
+"achievement.silent_victory.title" = "התפרצות שקטה";
+"achievement.silent_victory.desc" = "נצח משחק מבלי שהמודעות העולמית תעלה מעל 30%.";
+"achievement.lightning_victory.title" = "התפרצות ברקים";
+"achievement.lightning_victory.desc" = "נצח משחק תוך 10 ימים או פחות.";
+"achievement.full_spread_ten_days.title" = "הדבקה מלאה תוך עשרה";
+"achievement.full_spread_ten_days.desc" = "הדבק את העולם כולו תוך 10 ימים.";
+"achievement.no_lockdown_victory.title" = "בלתי מתגלה, בלתי מוכל";
+"achievement.no_lockdown_victory.desc" = "נצח משחק מבלי שאזור אחד יינעל בסגר.";
+"achievement.all_branches_maxed.title" = "מפותח לחלוטין";
+"achievement.all_branches_maxed.desc" = "פתח את כל השדרוגים בשלושת הענפים במשחק אחד.";
+
+/* Outbreak report characters */
+"report.character.silentOutbreak" = "התפרצות שקטה";
+"report.character.lightningOutbreak" = "התפרצות ברקים";
+"report.character.grindingSiege" = "מצור מתמשך";
+"report.character.containedEarly" = "בלימה מוקדמת";
+"report.character.nearMiss" = "כמעט הצלחה";
+
+/* HUD */
+"hud.day" = "יום";
+"hud.pause" = "השהה";
+"hud.resume" = "המשך";
+"hud.spread" = "התפשטות";
+"hud.awareness" = "מודעות";
+"hud.cure_projected %lld" = "תרופה צפויה: יום %lld";
+
+/* Game screen */
+"game.evolve_button" = "התפתחות";
+"game.evolution_tree_title" = "התפתחות";
+
+/* Region status */
+"region.status.lockdown" = "בסגר";
+"region.infection.percent %lld" = "%lld%% נגוע";
+
+/* Home */
+"home.achievements_count %lld %lld" = "%lld מתוך %lld הישגים נפתחו";
+"home.daily_challenge_title" = "האתגר היומי";
+"home.play_daily" = "שחק באתגר היומי";
+"home.select_strain" = "בחר זן";
+"home.select_scenario" = "עולם התחלה";
+"home.select_difficulty" = "רמת קושי";
+"home.start_outbreak" = "התחל התפרצות";
+"home.past_reports" = "דוחות קודמים";
+"home.empty_reports_title" = "עדיין אין דוחות";
+"home.empty_reports_message" = "סיים את המשחק הראשון שלך והדוח שלו יופיע כאן.";
+
+/* Report */
+"report.day_count %lld" = "יום %lld";
+"report.timeline_title" = "ציר זמן ההתפרצות";
+"report.stat.days" = "ימים";
+"report.stat.peak_awareness" = "מודעות שיא";
+"report.stat.final_spread" = "התפשטות סופית";
+"report.stat.regions_lost" = "אזורים שאבדו";
+"report.new_achievements" = "הישגים חדשים";
+"report.share" = "שתף דוח";
+
+/* Common */
+"common.done" = "סיום";
+"common.continue" = "המשך";

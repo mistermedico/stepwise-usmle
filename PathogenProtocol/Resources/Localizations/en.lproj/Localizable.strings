@@ -1,0 +1,138 @@
+/* App */
+"app.name" = "Pathogen Protocol";
+
+/* Languages */
+"language.english" = "English";
+"language.hebrew" = "Hebrew";
+
+/* Regions — fictional, generic place names */
+"region.outland.name" = "Outland Reach";
+"region.gatecross.name" = "Gatecross";
+"region.meridian_delta.name" = "Meridian Delta";
+"region.harbor_reach.name" = "Harbor Reach";
+"region.duskvale.name" = "Duskvale";
+"region.cinderplex.name" = "Cinderplex";
+
+/* Scenarios */
+"scenario.isolated.name" = "Isolated Territory";
+"scenario.isolated.desc" = "Patient zero appears in a quiet, sparsely connected region. Slow start, safer margin.";
+"scenario.hub.name" = "Transport Hub";
+"scenario.hub.desc" = "Patient zero appears in the world's busiest hub. Fast start, high exposure.";
+
+/* Difficulty */
+"difficulty.mild" = "Mild";
+"difficulty.challenging" = "Challenging";
+"difficulty.lethal" = "Lethal";
+
+/* Strains */
+"strain.balanced.name" = "Vectrix";
+"strain.balanced.tagline" = "A steady, well-rounded specimen. No sharp edges, no easy wins.";
+"strain.silent.name" = "Hushvane";
+"strain.silent.tagline" = "Spreads quietly. Slower carrier, but very hard to notice.";
+"strain.virulent.name" = "Emberstrain";
+"strain.virulent.tagline" = "Evolves fast and hits hard — but leaves a trail everyone can see.";
+"strain.opportunist.name" = "Driftspore";
+"strain.opportunist.tagline" = "Built for speed. Outruns caution before it can catch up.";
+
+/* Upgrade categories */
+"upgrade.category.transmission" = "Transmission";
+"upgrade.category.resistance" = "Resistance";
+"upgrade.category.symptoms" = "Symptoms";
+
+/* Upgrades — Transmission */
+"upgrade.transmission.1.name" = "Airborne Traits";
+"upgrade.transmission.1.desc" = "Slightly increases how easily this strain spreads between hosts.";
+"upgrade.transmission.2.name" = "Surface Persistence";
+"upgrade.transmission.2.desc" = "Survives longer outside a host, increasing transmission further.";
+"upgrade.transmission.3.name" = "Rapid Incubation";
+"upgrade.transmission.3.desc" = "Shortens the window before a new host becomes contagious.";
+"upgrade.transmission.4.name" = "Hyper-Vector Bloom";
+"upgrade.transmission.4.desc" = "A major leap in transmission rate across every connected region.";
+
+/* Upgrades — Resistance */
+"upgrade.resistance.1.name" = "Low Signature";
+"upgrade.resistance.1.desc" = "Reduces how quickly this strain is noticed by the Global Response System.";
+"upgrade.resistance.2.name" = "Adaptive Camouflage";
+"upgrade.resistance.2.desc" = "Further dampens detection as awareness starts to build.";
+"upgrade.resistance.3.name" = "Diagnostic Drift";
+"upgrade.resistance.3.desc" = "Slips past early testing efforts, slowing awareness growth even more.";
+"upgrade.resistance.4.name" = "Border Erosion";
+"upgrade.resistance.4.desc" = "Lets the strain keep spreading across borders even after a lockdown is declared.";
+
+/* Upgrades — Symptoms */
+"upgrade.symptoms.1.name" = "Mild Fever";
+"upgrade.symptoms.1.desc" = "A small rise in lethality — but symptoms become slightly easier to spot.";
+"upgrade.symptoms.2.name" = "Chronic Fatigue";
+"upgrade.symptoms.2.desc" = "More severe, more visible. The trade-off sharpens.";
+"upgrade.symptoms.3.name" = "Acute Onset";
+"upgrade.symptoms.3.desc" = "A serious lethality jump, at a real visibility cost.";
+"upgrade.symptoms.4.name" = "Systemic Collapse";
+"upgrade.symptoms.4.desc" = "Maximum lethality. Impossible to miss.";
+
+/* Daily challenge */
+"daily.objective.winWithoutAnyLockdown" = "Win the day's outbreak without triggering a single lockdown.";
+"daily.objective.winWithinFifteenDays" = "Win the day's outbreak within 15 days.";
+"daily.objective.winWithPeakAwarenessBelowHalf" = "Win the day's outbreak while keeping peak awareness under 50%.";
+
+/* Achievements */
+"achievement.first_run.title" = "First Contact";
+"achievement.first_run.desc" = "Complete your first outbreak, win or lose.";
+"achievement.silent_victory.title" = "Silent Outbreak";
+"achievement.silent_victory.desc" = "Win a run without global awareness ever rising above 30%.";
+"achievement.lightning_victory.title" = "Lightning Outbreak";
+"achievement.lightning_victory.desc" = "Win a run in 10 days or fewer.";
+"achievement.full_spread_ten_days.title" = "Full Spread in Ten";
+"achievement.full_spread_ten_days.desc" = "Infect the entire world within 10 days.";
+"achievement.no_lockdown_victory.title" = "Undetected, Uncontained";
+"achievement.no_lockdown_victory.desc" = "Win a run without a single region ever locking down.";
+"achievement.all_branches_maxed.title" = "Fully Evolved";
+"achievement.all_branches_maxed.desc" = "Unlock every upgrade in all three branches in one run.";
+
+/* Outbreak report characters */
+"report.character.silentOutbreak" = "Silent Outbreak";
+"report.character.lightningOutbreak" = "Lightning Outbreak";
+"report.character.grindingSiege" = "Grinding Siege";
+"report.character.containedEarly" = "Contained Early";
+"report.character.nearMiss" = "Near Miss";
+
+/* HUD */
+"hud.day" = "Day";
+"hud.pause" = "Pause";
+"hud.resume" = "Resume";
+"hud.spread" = "Spread";
+"hud.awareness" = "Awareness";
+"hud.cure_projected %lld" = "Cure projected: Day %lld";
+
+/* Game screen */
+"game.evolve_button" = "Evolve";
+"game.evolution_tree_title" = "Evolution";
+
+/* Region status */
+"region.status.lockdown" = "Locked down";
+"region.infection.percent %lld" = "%lld%% infected";
+
+/* Home */
+"home.achievements_count %lld %lld" = "%lld of %lld achievements unlocked";
+"home.daily_challenge_title" = "Today's Challenge";
+"home.play_daily" = "Play Today's Challenge";
+"home.select_strain" = "Select a Strain";
+"home.select_scenario" = "Starting World";
+"home.select_difficulty" = "Difficulty";
+"home.start_outbreak" = "Start Outbreak";
+"home.past_reports" = "Past Reports";
+"home.empty_reports_title" = "No Reports Yet";
+"home.empty_reports_message" = "Finish your first run and its report will appear here.";
+
+/* Report */
+"report.day_count %lld" = "Day %lld";
+"report.timeline_title" = "Outbreak Timeline";
+"report.stat.days" = "Days";
+"report.stat.peak_awareness" = "Peak Awareness";
+"report.stat.final_spread" = "Final Spread";
+"report.stat.regions_lost" = "Regions Lost";
+"report.new_achievements" = "New Achievements";
+"report.share" = "Share Report";
+
+/* Common */
+"common.done" = "Done";
+"common.continue" = "Continue";

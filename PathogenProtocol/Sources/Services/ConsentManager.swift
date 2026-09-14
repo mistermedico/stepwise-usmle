@@ -18,16 +18,16 @@ public final class ConsentManager {
     /// True once UMP reports it's safe to request ads (either consent was obtained,
     /// or the user is outside a region that requires it).
     public var canRequestAds: Bool {
-        UMPConsentInformation.sharedInstance().canRequestAds
+        UMPConsentInformation.sharedInstance.canRequestAds
     }
 
     /// Call once at launch, before `AdManager.start()`. Requests the UMP consent form
     /// when required, then requests the ATT prompt on iOS 14.5+, then starts ads.
     public func requestConsentAndStartAds(completion: @escaping () -> Void) {
         let parameters = UMPRequestParameters()
-        parameters.isTaggedForUnderAgeOfConsent = false
+        parameters.tagForUnderAgeOfConsent = false
 
-        UMPConsentInformation.sharedInstance().requestConsentInfoUpdate(with: parameters) { [weak self] (error: Error?) in
+        UMPConsentInformation.sharedInstance.requestConsentInfoUpdate(with: parameters) { [weak self] (error: Error?) in
             guard error == nil else {
                 completion()
                 return

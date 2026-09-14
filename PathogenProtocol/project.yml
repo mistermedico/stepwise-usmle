@@ -14,6 +14,10 @@ settings:
     DEVELOPMENT_TEAM: "$(DEVELOPMENT_TEAM)"
     ENABLE_PREVIEWS: YES
     ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS: YES
+    # Google's published sample/test AdMob App ID — a safe default so Debug builds
+    # (including the CI test host app) never crash on a missing GADApplicationIdentifier.
+    # Override with a real App ID at archive time; see SECRETS.md / ADMOB_APP_ID.
+    ADMOB_APP_ID: "ca-app-pub-3940256099942544~1458002511"
 
 targets:
   PathogenProtocol:

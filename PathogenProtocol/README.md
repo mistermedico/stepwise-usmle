@@ -98,9 +98,9 @@ Developer. ה-workflow עצמו: `.github/workflows/pathogen-protocol-ios.yml`.
 - [x] נגישות: `accessibilityLabel`/`accessibilityValue`/`accessibilityHint` על מפת האזורים ועץ השדרוגים
 - [x] RTL: `environment(\.layoutDirection)` מוזרם מ-`LocalizationManager` לפי שפת המכשיר; כל הטקסטים דרך `Localizable.strings`
 - [x] Light/Dark Mode: כל הצבעים דרך `AppColor` עם וריאנטים אדפטיביים, בלי `preferredColorScheme` קבוע
-- [ ] **טרם בוצע (דורש Xcode בפועל)**: build ירוק בפועל, הרצה על iPhone SE ו-Pro Max, בדיקת VoiceOver מקצה-לקצה, ולידציית App Icon (ר' למטה)
-- [ ] App Icon: `Resources/Assets.xcassets/AppIcon.appiconset` מוגדר אך **ריק מתמונה** — יש להוסיף קובץ 1024×1024 לפני ארכוב לחנות
-- [ ] Ad unit IDs אמיתיים: `AdUnitID.swift` משתמש ב-Test IDs של Google תמיד ב-Debug; יש להזין ID אמיתיים דרך `Info.plist` keys (`AdMobInterstitialUnitID` וכו') ב-Release, ור' SECRETS.md
+- [x] App Icon: `Resources/Assets.xcassets/AppIcon.appiconset/icon-1024.png` — אייקון 1024×1024 שנוצר פרוגרמטית (Python/Pillow) בהתאם לשפה החזותית של המשחק (הקסגון פתוגן זוהר בסגול-מגנטה, טבעות תגובה עולמית בציאן, קוצי סימפטומים בענבר, על רקע כחול-פחם כהה). זהו אייקון placeholder איכותי אך לא עבודת מיתוג מקצועית — שקלו להחליפו בעיצוב מותאם אישית לפני השקה גדולה.
+- [ ] **טרם בוצע (דורש Xcode/macOS בפועל — לא זמין בסביבה שבה נכתב הקוד)**: build ירוק בפועל, הרצה על iPhone SE ו-Pro Max, בדיקת VoiceOver מקצה-לקצה
+- [ ] **טרם בוצע (דורש חשבון Google AdMob של המפתח — לא ניתן להשלמה על ידי סוכן AI)**: Ad unit IDs אמיתיים. `AdUnitID.swift` משתמש ב-Test IDs של Google תמיד ב-Debug; יש להזין ID אמיתיים דרך `Info.plist` keys (`AdMobInterstitialUnitID` וכו') ב-Release, ור' SECRETS.md ל-`ADMOB_APP_ID`
 
 ## מגבלות ידועות / החלטות מכוונות
 

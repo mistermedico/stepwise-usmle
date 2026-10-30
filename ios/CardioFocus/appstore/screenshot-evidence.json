@@ -1,0 +1,79 @@
+{
+  "status": "actual-native-simulator-screenshots",
+  "runId": "41013755585",
+  "files": [
+    {
+      "file": "appstore/screenshots/en-US/ipad-01-Home-native.png",
+      "device": "iPad Pro 13-inch (M5)",
+      "pixels": [
+        2064,
+        2752
+      ],
+      "sourceTest": "CardioFocusUITests/testCaptureHomeScreen()",
+      "sha256": "81bdf2cc08eb9403a43f45a85fb7178786173692208025c05ec838b33e489d0e"
+    },
+    {
+      "file": "appstore/screenshots/en-US/iphone-06-Progress.png",
+      "device": "iPhone 17 Pro Max",
+      "pixels": [
+        1320,
+        2868
+      ],
+      "sourceTest": "CardioFocusUITests/testStudyPracticeAndNativeScreenshots()",
+      "sha256": "5f7d445362956a400cc6ba87b34f1fafcc52a2a5fc6b48f14fc8c4914f6d30ae"
+    },
+    {
+      "file": "appstore/screenshots/en-US/iphone-05-Flashcards.png",
+      "device": "iPhone 17 Pro Max",
+      "pixels": [
+        1320,
+        2868
+      ],
+      "sourceTest": "CardioFocusUITests/testStudyPracticeAndNativeScreenshots()",
+      "sha256": "d07f5ae7e7468977aba9e41718d5ac6940b35a4f65b5307bbfc8542eeb2360ca"
+    },
+    {
+      "file": "appstore/screenshots/en-US/iphone-04-Answer-explanation.png",
+      "device": "iPhone 17 Pro Max",
+      "pixels": [
+        1320,
+        2868
+      ],
+      "sourceTest": "CardioFocusUITests/testStudyPracticeAndNativeScreenshots()",
+      "sha256": "630abf25e15567ff6d1f1b0439bf05216246188e79876bb2174389b1a26c28b2"
+    },
+    {
+      "file": "appstore/screenshots/en-US/iphone-03-Question-practice.png",
+      "device": "iPhone 17 Pro Max",
+      "pixels": [
+        1320,
+        2868
+      ],
+      "sourceTest": "CardioFocusUITests/testStudyPracticeAndNativeScreenshots()",
+      "sha256": "cbda2edb06d05c8863d74fd375d13b773f893db6625f93871d564ae1a4a519ca"
+    },
+    {
+      "file": "appstore/screenshots/en-US/iphone-02-Learning-unit.png",
+      "device": "iPhone 17 Pro Max",
+      "pixels": [
+        1320,
+        2868
+      ],
+      "sourceTest": "CardioFocusUITests/testStudyPracticeAndNativeScreenshots()",
+      "sha256": "1ef06f28ba0beecef0798711c0420bf6b49d272a7f9bae6398fdd26e1fb74fda"
+    },
+    {
+      "file": "appstore/screenshots/en-US/iphone-01-Learning-path.png",
+      "device": "iPhone 17 Pro Max",
+      "pixels": [
+        1320,
+        2868
+      ],
+      "sourceTest": "CardioFocusUITests/testStudyPracticeAndNativeScreenshots()",
+      "sha256": "91f9a495c29cf241f73f9a7a16697922f234cb26d231ec0c336ad17da1a65c38"
+    }
+  ],
+  "hasIPhone": true,
+  "hasIPad": true,
+  "pixelEditing": false
+}

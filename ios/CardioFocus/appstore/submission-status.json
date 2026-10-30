@@ -1,22 +1,20 @@
 {
   "status": "preparing-not-submitted",
   "nativeSource": "https://github.com/mistermedico/stepwise-usmle/tree/cardiofocus/app-store-review/ios/CardioFocus",
-  "validationRun": "https://github.com/mistermedico/stepwise-usmle/actions/runs/41012694768",
-  "validationState": "in_progress",
+  "validationRun": "https://github.com/mistermedico/stepwise-usmle/actions/runs/41013755585",
+  "validationState": "success",
   "publicWebApp": "https://cardio-step1-he.mistermedico.chatgpt.site",
   "supportURL": "https://cardio-step1-he.mistermedico.chatgpt.site/support.html",
   "privacyURL": "https://cardio-step1-he.mistermedico.chatgpt.site/privacy.html",
-  "appleAccount": "No authenticated Apple session confirmed",
+  "appleAccount": "Confirmed intended profile was inspected but presented Apple login; interactive reauthentication required",
   "appStoreAppId": null,
   "signedIPAUploaderReceipt": null,
   "reviewSubmissionId": null,
   "ownerInputsOutstanding": [
-    "Confirmed Apple Developer/App Store Connect session",
+    "Authenticated Apple Developer/App Store Connect session",
     "Actual Apple team and app record",
-    "Review contact first and last name, email, phone",
-    "Actual publisher/copyright identity",
     "Signing material or authorized signing access",
-    "Final age-rating, privacy, availability and legal declarations"
+    "Final App Store declarations"
   ],
   "firstSuccessfulValidation": {
     "runId": 41011487846,
@@ -33,5 +31,21 @@
     ],
     "device": "iPhone 17 Pro Max simulator"
   },
-  "publicURLsVerifiedHTTP200": true
+  "publicURLsVerifiedHTTP200": true,
+  "ownerContactReceived": true,
+  "ownerContactStorage": "Held privately for Apple review; telephone not committed to source",
+  "testedCommit": "a30305e",
+  "nativeValidation": {
+    "xcode": "26.3",
+    "unitTests": 6,
+    "iPhoneUITests": 2,
+    "iPadUITests": 1,
+    "failures": 0,
+    "screenshots": 7,
+    "devices": [
+      "iPhone 17 Pro Max simulator",
+      "iPad Pro 13-inch (M5) simulator"
+    ],
+    "physicalDeviceTesting": false
+  }
 }

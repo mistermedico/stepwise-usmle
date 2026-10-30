@@ -19,4 +19,4 @@ Policy scope
 This policy describes the native CardioFocus app. A separately hosted web edition can use browser localStorage and is subject to its hosting provider's access logging and authentication practices. App Store privacy responses must reflect the actual final distributed build and any future changes.
 
 Support and questions
-Use the support site linked in About & sources to report a problem or ask about this policy. You can identify an educational content issue using its unit or question ID without sharing personal health information.
+Contact Nitai Shore at nitaishor@gmail.com, or use the support site linked in About & sources, to report a problem or ask about this policy. You can identify an educational content issue using its unit or question ID without sharing personal health information.

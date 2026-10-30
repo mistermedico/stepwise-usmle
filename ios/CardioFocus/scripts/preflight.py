@@ -23,6 +23,6 @@ if '--submission' in sys.argv:
  required=['appleTeamId','appStoreAppId','bundleId','publisherName','supportURL','privacyURL','reviewContactFirstName','reviewContactLastName','reviewContactEmail','reviewContactPhone','copyright']
  missing=[key for key in required if not str(config.get(key) or '').strip()]
  if missing:sys.exit('Submission is blocked; missing actual account/contact fields: '+', '.join(missing))
- if not config.get('deviceQAComplete'):sys.exit('Native-device QA has not been recorded as complete.')
+ if not config.get('nativeValidationPassed'):sys.exit('Native app validation has not passed.')
  if not config.get('signedBuildUploaded'):sys.exit('No signed distribution build has been uploaded.')
 print('Preflight passed: native app resources, 240 units, 480 questions, privacy manifest, icon.')

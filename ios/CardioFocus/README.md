@@ -45,7 +45,7 @@ The release workflow validates profile type, bundle, team, and expiry, imports s
 
 A repository workflow on a new branch may not expose a manual-dispatch UI until that workflow is present on the default branch. Keep the integration branch isolated and use the documented release-trigger branches or merge only when the repository owner chooses to do so. Do not modify the existing web app's production branch merely to activate a workflow.
 
-`fastlane ios submit_review` targets an already processed build and keeps release manual after approval. Its preflight checks require actual account/contact values, signed-build evidence, device QA, and actual iPhone/iPad screenshots. Complete App Store privacy, age-rating, category, content-rights, export, availability and pricing fields in the actual account. The application is intended to be free with no purchases, with worldwide availability where permitted; do not infer legal trader status or sign legal agreements on the owner's behalf.
+`fastlane ios submit_review` targets an already processed build and keeps release manual after approval. Its preflight checks require actual account/contact values, signed-build evidence, passed native validation, and actual iPhone/iPad screenshots. Complete App Store privacy, age-rating, category, content-rights, export, availability and pricing fields in the actual account. The application is intended to be free with no purchases, with worldwide availability where permitted; do not infer legal trader status or sign legal agreements on the owner's behalf.
 
 ## App Store material
 
@@ -64,3 +64,10 @@ Do not label generated mockups as app screenshots. Validation captures native si
 - Privacy: https://cardio-step1-he.mistermedico.chatgpt.site/privacy.html
 
 Support requests are public GitHub issues. Do not post personal health information. Native study records stay on device unless the learner initiates an export. Hosting and external-link destinations have their own access logs and policies.
+
+
+## Recorded native validation — 30 October 2026
+
+The final functional-source validation passed on Xcode 26.3: six unit tests, two iPhone UI tests, and an iPad home-screen UI test. Actual screenshots were captured on iPhone 17 Pro Max (1320×2868) and iPad Pro 13-inch M5 (2064×2752). A native navigation-readability fix and a tab-transition test synchronization fix were verified in this run.
+
+Evidence: https://github.com/mistermedico/stepwise-usmle/actions/runs/41013755585 . Tested commit: `a30305e`. Later changes are submission documentation, screenshots, publisher/privacy contact wording, and release-script checks; application Swift sources are unchanged. Physical-device testing, signed distribution, App Store upload, and Apple review have not occurred.

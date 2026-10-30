@@ -50,6 +50,15 @@ jobs:
           p.write_bytes(base64.b64decode(value,validate=True));p.chmod(0o600)
           with open(os.environ['GITHUB_ENV'],'a') as f:f.write('ASC_KEY_FILE='+str(p)+'\n')
           PY
+      - name: Mask private review-contact fields in public CI logs
+        run: |
+          python3 - <<'PYTHON'
+          import json,os
+          config=json.loads(os.environ.get('CARDIOFOCUS_SUBMISSION_CONFIG_JSON') or '{}')
+          for key in ['reviewContactFirstName','reviewContactLastName','reviewContactEmail','reviewContactPhone']:
+              value=config.get(key)
+              if isinstance(value,str) and value:print('::add-mask::'+value.replace('\n',''))
+          PYTHON
       - name: Validate source and build configuration
         run: python3 scripts/preflight.py
       - name: Generate project

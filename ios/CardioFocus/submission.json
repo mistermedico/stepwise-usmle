@@ -1,0 +1,21 @@
+{
+  "status": "preparing-not-submitted",
+  "bundleId": "com.mistermedico.cardiofocus",
+  "appleTeamId": null,
+  "appStoreAppId": null,
+  "publisherName": null,
+  "supportURL": null,
+  "privacyURL": null,
+  "reviewContactFirstName": null,
+  "reviewContactLastName": null,
+  "reviewContactEmail": null,
+  "reviewContactPhone": null,
+  "copyright": null,
+  "deviceQAComplete": false,
+  "signedBuildUploaded": false,
+  "releaseType": "MANUAL",
+  "price": "FREE",
+  "locale": "en-US",
+  "appVersion": "1.0.0",
+  "contentReview": "independent-medical-review-pending"
+}

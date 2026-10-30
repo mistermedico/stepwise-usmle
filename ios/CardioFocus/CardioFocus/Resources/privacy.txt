@@ -1,0 +1,22 @@
+CardioFocus Privacy Policy
+Effective date: 30 October 2026
+
+CardioFocus is an educational cardiology study app. The native iOS app does not require an account, contain advertising or analytics SDKs, request tracking permission, or transmit your study activity to an app server.
+
+On-device records
+Completed units, bookmarks, answers, session counts, and optional question-review notes are stored in the app's local UserDefaults storage. These records are used only to provide progress and study features. They are not sent to the developer. Device operating-system backup settings may separately include app data in a device backup.
+
+Exports and deletion
+You may export a JSON file using the system file picker. You decide where that file is saved or shared. Resetting progress in the Progress tab deletes the app's local study records. Uninstalling the app removes its local container, subject to operating-system backup behavior. The developer does not have a server-side copy to retrieve or delete.
+
+External links
+If you open a source, privacy, or support link, your browser connects to the selected website. The destination may process IP addresses, access logs, cookies, or information you choose to provide. Its own privacy policy applies. Support is hosted on GitHub; posting a public support issue makes the information you submit public. Do not include health records, patient information, passwords, or other sensitive details.
+
+Medical information
+The app is for study, not patient care. It does not ask for health measurements, access HealthKit, or collect medical records. Notes should relate to educational content rather than identifiable patient information.
+
+Policy scope
+This policy describes the native CardioFocus app. A separately hosted web edition can use browser localStorage and is subject to its hosting provider's access logging and authentication practices. App Store privacy responses must reflect the actual final distributed build and any future changes.
+
+Support and questions
+Use the support site linked in About & sources to report a problem or ask about this policy. You can identify an educational content issue using its unit or question ID without sharing personal health information.

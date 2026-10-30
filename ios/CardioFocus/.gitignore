@@ -1,0 +1,13 @@
+build/
+DerivedData/
+CardioFocus.xcodeproj/
+*.xcuserstate
+xcuserdata/
+*.p8
+*.p12
+*.mobileprovision
+.env
+.env.*
+ExportOptions.plist
+__pycache__/
+.DS_Store

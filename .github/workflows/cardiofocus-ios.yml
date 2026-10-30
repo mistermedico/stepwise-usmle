@@ -1,0 +1,64 @@
+name: CardioFocus iOS validation
+on:
+  push:
+    branches: ['cardiofocus/app-store-review']
+    paths: ['ios/CardioFocus/**', '.github/workflows/cardiofocus-ios.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: ios-validation-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  validate:
+    runs-on: macos-15
+    timeout-minutes: 25
+    defaults:
+      run:
+        working-directory: ios/CardioFocus
+    steps:
+      - uses: actions/checkout@v4
+      - name: Select Xcode with iOS 26 or later SDK
+        run: |
+          python3 scripts/select_xcode.py
+          xcodebuild -version
+          xcrun --sdk iphoneos --show-sdk-version
+      - name: Install project generator
+        run: brew list xcodegen >/dev/null 2>&1 || brew install xcodegen
+      - name: Check curriculum, metadata and privacy manifest
+        run: python3 scripts/preflight.py
+      - name: Generate Xcode project
+        run: xcodegen generate
+      - name: Choose iPhone simulator
+        id: simulator
+        run: python3 scripts/select_simulator.py >> "$GITHUB_OUTPUT"
+      - name: Build and test iPhone app
+        run: |
+          set -o pipefail
+          mkdir -p build
+          xcodebuild test -project CardioFocus.xcodeproj -scheme CardioFocus \
+            -destination '${{ steps.simulator.outputs.destination }}' \
+            -derivedDataPath build/DerivedData -resultBundlePath build/iPhone.xcresult \
+            CODE_SIGNING_ALLOWED=NO 2>&1 | tee build/xcodebuild.log
+      - name: Export real simulator screenshots
+        if: always()
+        run: |
+          if [ -d build/iPhone.xcresult ]; then
+            xcrun xcresulttool export attachments --path build/iPhone.xcresult --output-path build/screenshots || true
+          fi
+      - name: Package generated project
+        if: always()
+        run: |
+          mkdir -p build
+          if [ -d CardioFocus.xcodeproj ]; then ditto -c -k --sequesterRsrc --keepParent CardioFocus.xcodeproj build/CardioFocus.xcodeproj.zip; fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: CardioFocus-iOS-validation
+          path: |
+            ios/CardioFocus/build/xcodebuild.log
+            ios/CardioFocus/build/iPhone.xcresult
+            ios/CardioFocus/build/screenshots
+            ios/CardioFocus/build/CardioFocus.xcodeproj.zip
+            ios/CardioFocus/build/DerivedData/Build/Products/Debug-iphonesimulator/CardioFocus.app
+          retention-days: 14

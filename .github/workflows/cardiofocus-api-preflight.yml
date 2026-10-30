@@ -1,0 +1,39 @@
+name: CardioFocus Apple API readiness
+on:
+  push:
+    branches: ['cardiofocus/api-preflight']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    defaults:
+      run:
+        working-directory: ios/CardioFocus
+    env:
+      ASC_KEY_ID: ${{ secrets.CARDIOFOCUS_ASC_KEY_ID || secrets.ASC_KEY_ID }}
+      ASC_ISSUER_ID: ${{ secrets.CARDIOFOCUS_ASC_ISSUER_ID || secrets.ASC_ISSUER_ID }}
+      ASC_PRIVATE_KEY_P8: ${{ secrets.CARDIOFOCUS_ASC_PRIVATE_KEY_P8 }}
+      ASC_PRIVATE_KEY_BASE64: ${{ secrets.ASC_PRIVATE_KEY_BASE64 }}
+      APPLE_TEAM_ID: ${{ secrets.CARDIOFOCUS_APPLE_TEAM_ID || secrets.APPLE_TEAM_ID }}
+      CERTIFICATE_P12_BASE64: ${{ secrets.CARDIOFOCUS_CERTIFICATE_P12_BASE64 || secrets.CERTIFICATE_P12_BASE64 }}
+      CERTIFICATE_PASSWORD: ${{ secrets.CARDIOFOCUS_CERTIFICATE_PASSWORD || secrets.CERTIFICATE_PASSWORD }}
+      PROVISIONING_PROFILE_BASE64: ${{ secrets.CARDIOFOCUS_PROVISIONING_PROFILE_BASE64 || secrets.PROVISIONING_PROFILE_BASE64 }}
+      CARDIOFOCUS_SUBMISSION_CONFIG_JSON: ${{ secrets.CARDIOFOCUS_SUBMISSION_CONFIG_JSON }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install JWT cryptography support
+        run: python3 -m pip install 'cryptography>=43,<47'
+      - name: Inspect existing credentials and Apple app record without mutations
+        run: python3 scripts/asc_preflight.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: CardioFocus-API-readiness
+          path: ios/CardioFocus/build/api-readiness.json
+          retention-days: 14

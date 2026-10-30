@@ -6,15 +6,13 @@
   "publicWebApp": "https://cardio-step1-he.mistermedico.chatgpt.site",
   "supportURL": "https://cardio-step1-he.mistermedico.chatgpt.site/support.html",
   "privacyURL": "https://cardio-step1-he.mistermedico.chatgpt.site/privacy.html",
-  "appleAccount": "Confirmed intended profile was inspected but presented Apple login; interactive reauthentication required",
+  "appleAccount": "API authentication unavailable until an owner-controlled team API key is configured",
   "appStoreAppId": null,
   "signedIPAUploaderReceipt": null,
   "reviewSubmissionId": null,
   "ownerInputsOutstanding": [
-    "Authenticated Apple Developer/App Store Connect session",
-    "Actual Apple team and app record",
-    "Signing material or authorized signing access",
-    "Final App Store declarations"
+    "Team API Key ID, Issuer ID and private .p8 key via GitHub Secrets/local owner setup",
+    "Initial Apple app record and API-unsupported declarations if not already completed"
   ],
   "firstSuccessfulValidation": {
     "runId": 41011487846,
@@ -47,5 +45,9 @@
       "iPad Pro 13-inch (M5) simulator"
     ],
     "physicalDeviceTesting": false
-  }
+  },
+  "submissionMethod": "App Store Connect API and GitHub Actions; no TinyFish",
+  "apiCredentialsConfigured": false,
+  "apiReadinessRun": "https://github.com/mistermedico/stepwise-usmle/actions/runs/41064630743",
+  "apiCodeTestRun": "https://github.com/mistermedico/stepwise-usmle/actions/runs/41066543575"
 }

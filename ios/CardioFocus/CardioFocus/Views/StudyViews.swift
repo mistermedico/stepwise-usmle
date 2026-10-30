@@ -16,13 +16,15 @@ struct StudyHomeView: View {
                         Text("KNOW THE HEART. UNDERSTAND WHY.").font(.caption.weight(.semibold))
                         Text("Learn the mechanism.\nConnect it to the case.").font(.title2.bold())
                         Text("240 focused units · 480 paired questions\n12 modules · Fully bundled for offline study").font(.subheadline)
-                        if let next = store.curriculum.units.first(where: { !store.progress.completed.contains($0.id) }) {
-                            NavigationLink { UnitDetailView(unit: next) } label: { Label("Continue learning", systemImage: "arrow.right.circle.fill") }
-                                .buttonStyle(.borderedProminent).tint(.white).foregroundStyle(Theme.dark)
-                                .accessibilityIdentifier("continueLearning")
-                        }
                     }.padding(.vertical, 12).foregroundStyle(.white)
                 }.listRowBackground(Theme.dark)
+                if let next = store.curriculum.units.first(where: { !store.progress.completed.contains($0.id) }) {
+                    Section {
+                        NavigationLink { UnitDetailView(unit: next) } label: {
+                            Label("Continue learning", systemImage: "arrow.right.circle.fill").foregroundStyle(Theme.green)
+                        }.accessibilityIdentifier("continueLearning")
+                    }
+                }
                 Section("Your learning path") {
                     ForEach(store.curriculum.modules) { module in
                         NavigationLink { ModuleDetailView(module: module) } label: {

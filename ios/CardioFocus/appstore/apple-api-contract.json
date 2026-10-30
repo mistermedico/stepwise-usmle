@@ -2,7 +2,6 @@
   "source": "https://developer.apple.com/sample-code/app-store-connect/app-store-connect-openapi-specification.zip",
   "checked": "2026-10-30",
   "version": "4.5.1",
-  "sha256": "b65964385a735071bfe1e05dc407b07d7981cd4c5d48cce635860acf740e5696",
   "paths": {
     "/v1/apps": [
       "GET"
@@ -26,5 +25,7 @@
     "/v1/ageRatingDeclarations/{id}": [
       "PATCH"
     ]
-  }
+  },
+  "specificationJSONSHA256": "7518d3a94a8bd701ac25c1c601b95b8f53aad92091affb15a2a9d331713dac1a",
+  "specificationJSONEntry": "openapi.oas.json"
 }

@@ -49,5 +49,7 @@
   "submissionMethod": "App Store Connect API and GitHub Actions; no TinyFish",
   "apiCredentialsConfigured": false,
   "apiReadinessRun": "https://github.com/mistermedico/stepwise-usmle/actions/runs/41064630743",
-  "apiCodeTestRun": "https://github.com/mistermedico/stepwise-usmle/actions/runs/41066543575"
+  "apiCodeTestRun": "https://github.com/mistermedico/stepwise-usmle/actions/runs/41067892926",
+  "apiMockTestCount": 16,
+  "apiLiveAuthenticationPerformed": false
 }

@@ -1,0 +1,72 @@
+require 'json'
+require 'fileutils'
+
+def configuration
+  path = File.expand_path('../submission.json', __dir__)
+  JSON.parse(File.read(path))
+end
+
+def asc_key
+  key_path = ENV.fetch('ASC_KEY_FILE')
+  app_store_connect_api_key(
+    key_id: ENV.fetch('ASC_KEY_ID'),
+    issuer_id: ENV.fetch('ASC_ISSUER_ID'),
+    key_filepath: key_path,
+    in_house: false
+  )
+end
+
+platform :ios do
+  desc 'Upload an already-signed IPA to App Store Connect for processing'
+  lane :upload do
+    config = configuration
+    UI.user_error!('Set the actual App Store app ID in submission.json first') if config['appStoreAppId'].to_s.empty?
+    upload_to_testflight(
+      api_key: asc_key,
+      ipa: ENV.fetch('IPA_PATH'),
+      app_identifier: config.fetch('bundleId'),
+      apple_id: config.fetch('appStoreAppId'),
+      skip_waiting_for_build_processing: true,
+      distribute_external: false
+    )
+  end
+
+  desc 'Apply completed metadata and submit the selected processed build for Apple review'
+  lane :submit_review do
+    sh('python3 scripts/preflight.py --submission')
+    config = configuration
+    screenshot_root = File.expand_path('../appstore/screenshots', __dir__)
+    phone = Dir.glob(File.join(screenshot_root, '**', 'iphone*.png'))
+    ipad = Dir.glob(File.join(screenshot_root, '**', 'ipad*.png'))
+    UI.user_error!('Actual iPhone and iPad screenshots must be prepared before submission') if phone.empty? || ipad.empty?
+    build_number = ENV.fetch('APP_BUILD_NUMBER')
+    upload_to_app_store(
+      api_key: asc_key,
+      app_identifier: config.fetch('bundleId'),
+      app_version: config.fetch('appVersion'),
+      build_number: build_number,
+      metadata_path: File.expand_path('../appstore', __dir__),
+      screenshots_path: screenshot_root,
+      skip_binary_upload: true,
+      skip_screenshots: false,
+      submit_for_review: true,
+      automatic_release: false,
+      run_precheck_before_submit: true,
+      precheck_include_in_app_purchases: false,
+      force: true,
+      copyright: config.fetch('copyright'),
+      app_review_information: {
+        first_name: config.fetch('reviewContactFirstName'),
+        last_name: config.fetch('reviewContactLastName'),
+        email_address: config.fetch('reviewContactEmail'),
+        phone_number: config.fetch('reviewContactPhone'),
+        demo_user: '', demo_password: '',
+        notes: File.read(File.expand_path('../appstore/review_notes.txt', __dir__))
+      },
+      submission_information: {
+        add_id_info_uses_idfa: false,
+        export_compliance_uses_encryption: false
+      }
+    )
+  end
+end

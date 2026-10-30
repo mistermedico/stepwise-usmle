@@ -24,6 +24,12 @@ final class CardioFocusUITests: XCTestCase {
         app.tabBars.buttons["Progress"].tap(); attach("06-Progress", app: app)
     }
     @MainActor
+    func testCaptureHomeScreen() throws {
+        let app = XCUIApplication(); app.launchArguments = ["--ui-testing"]; app.launch()
+        XCTAssertTrue(app.navigationBars["CardioFocus"].waitForExistence(timeout: 20))
+        attach("01-Home-native", app: app)
+    }
+    @MainActor
     private func attach(_ name: String, app: XCUIApplication) {
         let attachment = XCTAttachment(screenshot: app.screenshot()); attachment.name = name; attachment.lifetime = .keepAlways; add(attachment)
     }

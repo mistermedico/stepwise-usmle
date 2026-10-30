@@ -1,0 +1,82 @@
+name: CardioFocus signed upload and Apple review
+on:
+  push:
+    branches: ['cardiofocus/apple-upload', 'cardiofocus/apple-submit-review']
+    paths: ['ios/CardioFocus/**', '.github/workflows/cardiofocus-release.yml']
+  workflow_dispatch:
+    inputs:
+      action:
+        description: 'Upload signed build or submit a processed build for review'
+        type: choice
+        options: [upload, submit_review]
+        default: upload
+      build_number:
+        description: 'Unique CFBundleVersion; for review, an already processed build'
+        type: string
+        required: true
+permissions:
+  contents: read
+jobs:
+  apple:
+    runs-on: macos-15
+    timeout-minutes: 35
+    defaults:
+      run:
+        working-directory: ios/CardioFocus
+    env:
+      ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+      ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+      APP_BUILD_NUMBER: ${{ inputs.build_number || github.run_number }}
+      APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Select supported Xcode
+        run: python3 scripts/select_xcode.py
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3'
+          bundler-cache: true
+          working-directory: ios/CardioFocus
+      - name: Prepare ephemeral App Store Connect key
+        env:
+          ASC_PRIVATE_KEY_BASE64: ${{ secrets.ASC_PRIVATE_KEY_BASE64 }}
+        run: |
+          python3 - <<'PY'
+          import os,base64,pathlib,sys
+          value=os.environ.get('ASC_PRIVATE_KEY_BASE64','')
+          if not value:sys.exit('Configure App Store Connect secrets in this repository; never put private keys in source or chat.')
+          p=pathlib.Path(os.environ['RUNNER_TEMP'])/'AuthKey.p8'
+          p.write_bytes(base64.b64decode(value,validate=True));p.chmod(0o600)
+          with open(os.environ['GITHUB_ENV'],'a') as f:f.write('ASC_KEY_FILE='+str(p)+'\n')
+          PY
+      - name: Validate source and build configuration
+        run: python3 scripts/preflight.py
+      - name: Generate project
+        if: inputs.action == 'upload' || github.ref_name == 'cardiofocus/apple-upload'
+        run: |
+          brew list xcodegen >/dev/null 2>&1 || brew install xcodegen
+          xcodegen generate
+      - name: Archive and sign
+        if: inputs.action == 'upload' || github.ref_name == 'cardiofocus/apple-upload'
+        env:
+          CERTIFICATE_P12_BASE64: ${{ secrets.CERTIFICATE_P12_BASE64 }}
+          CERTIFICATE_PASSWORD: ${{ secrets.CERTIFICATE_PASSWORD }}
+          PROVISIONING_PROFILE_BASE64: ${{ secrets.PROVISIONING_PROFILE_BASE64 }}
+        run: scripts/sign_archive.sh
+      - name: Upload signed build to App Store Connect
+        if: inputs.action == 'upload' || github.ref_name == 'cardiofocus/apple-upload'
+        env:
+          IPA_PATH: build/export/CardioFocus.ipa
+        run: bundle exec fastlane ios upload
+      - name: Submit processed build and metadata for review
+        if: inputs.action == 'submit_review' || github.ref_name == 'cardiofocus/apple-submit-review'
+        run: bundle exec fastlane ios submit_review
+      - name: Remove ephemeral API key
+        if: always()
+        run: rm -f "$RUNNER_TEMP/AuthKey.p8"
+      - uses: actions/upload-artifact@v4
+        if: (inputs.action == 'upload' || github.ref_name == 'cardiofocus/apple-upload') && success()
+        with:
+          name: CardioFocus-signed-build
+          path: ios/CardioFocus/build/export/*.ipa
+          retention-days: 7

@@ -1,0 +1,21 @@
+{
+  "status": "preparing-not-submitted",
+  "nativeSource": "https://github.com/mistermedico/stepwise-usmle/tree/cardiofocus/app-store-review/ios/CardioFocus",
+  "validationRun": "https://github.com/mistermedico/stepwise-usmle/actions/runs/41011487846",
+  "validationState": "in_progress",
+  "publicWebApp": "https://cardio-step1-he.mistermedico.chatgpt.site",
+  "supportURL": "https://cardio-step1-he.mistermedico.chatgpt.site/support.html",
+  "privacyURL": "https://cardio-step1-he.mistermedico.chatgpt.site/privacy.html",
+  "appleAccount": "No authenticated Apple session confirmed",
+  "appStoreAppId": null,
+  "signedIPAUploaderReceipt": null,
+  "reviewSubmissionId": null,
+  "ownerInputsOutstanding": [
+    "Confirmed Apple Developer/App Store Connect session",
+    "Actual Apple team and app record",
+    "Review contact first and last name, email, phone",
+    "Actual publisher/copyright identity",
+    "Signing material or authorized signing access",
+    "Final age-rating, privacy, availability and legal declarations"
+  ]
+}

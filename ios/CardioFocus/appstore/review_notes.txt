@@ -1,0 +1,13 @@
+CardioFocus is an English-language native SwiftUI educational study app for iPhone and iPad. No login, purchases, backend service, tracking, or HealthKit access is required. The curriculum is bundled for offline study.
+
+Suggested review path:
+1. Learn: open Hemodynamics & cardiac physiology, then Cardiac output. Mark the unit complete or save it with the bookmark button.
+2. Select Practice both questions. Answers receive immediate feedback in untimed practice. Expand option analysis for rationale details.
+3. Practice tab: create a timed session. Correct answers are not shown until completion; background time is included in the deadline.
+4. Cards tab: tap a card to reveal its concept and mechanism.
+5. Progress tab: review local activity, export JSON using the system file picker, or reset local data.
+6. About: access references, privacy policy, and support.
+
+There are 240 distinct concepts and 480 paired questions; each pair revisits one concept. Practice accuracy is not a validated exam-readiness measure. The app does not diagnose or treat disease and does not collect health data. Independent medical expert review and full claim-level citation verification are pending; selected claims have been spot-checked against linked professional references. No medical certification or review approval is claimed.
+
+Release should remain manual after Apple approval.

@@ -37,7 +37,7 @@ targets:
         INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone: 'UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight'
         INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad: 'UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight'
         INFOPLIST_KEY_CFBundleDevelopmentRegion: en
-        INFOPLIST_KEY_CardioFocusSupportURL: 'https://mistermedico.github.io/cardiofocus-support/'
+        INFOPLIST_KEY_CardioFocusSupportURL: 'https://cardio-step1-he.mistermedico.chatgpt.site/support.html'
         SUPPORTS_MACCATALYST: NO
   CardioFocusTests:
     type: bundle.unit-test

@@ -40,11 +40,25 @@ jobs:
             -destination '${{ steps.simulator.outputs.destination }}' \
             -derivedDataPath build/DerivedData -resultBundlePath build/iPhone.xcresult \
             CODE_SIGNING_ALLOWED=NO 2>&1 | tee build/xcodebuild.log
+      - name: Choose iPad simulator
+        id: ipad
+        run: python3 scripts/select_simulator.py --ipad >> "$GITHUB_OUTPUT"
+      - name: Capture native iPad home screen
+        run: |
+          set -o pipefail
+          xcodebuild test -project CardioFocus.xcodeproj -scheme CardioFocus \
+            -destination '${{ steps.ipad.outputs.destination }}' \
+            -derivedDataPath build/DerivedData -resultBundlePath build/iPad.xcresult \
+            -only-testing:CardioFocusUITests/CardioFocusUITests/testCaptureHomeScreen \
+            CODE_SIGNING_ALLOWED=NO 2>&1 | tee build/ipad-xcodebuild.log
       - name: Export real simulator screenshots
         if: always()
         run: |
           if [ -d build/iPhone.xcresult ]; then
             xcrun xcresulttool export attachments --path build/iPhone.xcresult --output-path build/screenshots || true
+          fi
+          if [ -d build/iPad.xcresult ]; then
+            xcrun xcresulttool export attachments --path build/iPad.xcresult --output-path build/ipad-screenshots || true
           fi
       - name: Package generated project
         if: always()
@@ -58,7 +72,10 @@ jobs:
           path: |
             ios/CardioFocus/build/xcodebuild.log
             ios/CardioFocus/build/iPhone.xcresult
+            ios/CardioFocus/build/iPad.xcresult
+            ios/CardioFocus/build/ipad-xcodebuild.log
             ios/CardioFocus/build/screenshots
+            ios/CardioFocus/build/ipad-screenshots
             ios/CardioFocus/build/CardioFocus.xcodeproj.zip
             ios/CardioFocus/build/DerivedData/Build/Products/Debug-iphonesimulator/CardioFocus.app
           retention-days: 14

@@ -24,5 +24,11 @@ if '--submission' in sys.argv:
  missing=[key for key in required if not str(config.get(key) or '').strip()]
  if missing:sys.exit('Submission is blocked; missing actual account/contact fields: '+', '.join(missing))
  if not config.get('nativeValidationPassed'):sys.exit('Native app validation has not passed.')
- if not config.get('signedBuildUploaded'):sys.exit('No signed distribution build has been uploaded.')
+ from asc_api import AppleAPI
+ number=os.environ.get('APP_BUILD_NUMBER','')
+ if not number:sys.exit('Actual processed Apple build number is required.')
+ api=AppleAPI.from_environment();app=api.app(config['bundleId'])
+ if not app or app['id']!=str(config['appStoreAppId']):sys.exit('Configured app does not match the authenticated Apple bundle ID.')
+ build=api.processed_build(app['id'],number,config['appVersion'])
+ if not build or build.get('attributes',{}).get('processingState')!='VALID':sys.exit('Apple has not returned a VALID processed build for this exact app/version/build.')
 print('Preflight passed: native app resources, 240 units, 480 questions, privacy manifest, icon.')

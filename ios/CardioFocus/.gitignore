@@ -11,3 +11,7 @@ xcuserdata/
 ExportOptions.plist
 __pycache__/
 .DS_Store
+
+private-review-contact.json
+*.private.json
+.venv/

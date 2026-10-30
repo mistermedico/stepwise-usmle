@@ -45,6 +45,7 @@ def utc(value):return datetime.datetime.fromisoformat(value.replace('Z','+00:00'
 def signing(api,bundle,state_dir):
     state_file=state_dir/'signing-state.json';key_file=state_dir/'distribution-key.pem'
     state=json.loads(state_file.read_text()) if state_file.exists() else {}
+    if state.get('issuerId') and state['issuerId']!=api.issuer_id:raise SetupError('This private signing directory belongs to a different Apple issuer. Select a different --state-directory.')
     certificate=None;key=None
     if state.get('certificateId') and key_file.exists():
         try:certificate=api.request('GET','/v1/certificates/'+state['certificateId'])['data']
@@ -79,7 +80,7 @@ def signing(api,bundle,state_dir):
             except AppleAPIError as error:
                 if error.status in [403,409]:raise SetupError('Apple did not permit a new distribution certificate (permissions or quota). No existing certificates were revoked. Reuse owner-controlled signing material or resolve the Apple account limit.') from None
                 raise
-        state['certificateId']=certificate['id'];private_write(state_file,json.dumps(state).encode())
+        state['certificateId']=certificate['id'];state['issuerId']=api.issuer_id;private_write(state_file,json.dumps(state).encode())
     cert=x509.load_der_x509_certificate(base64.b64decode(certificate['attributes']['certificateContent']))
     teams=cert.subject.get_attributes_for_oid(NameOID.ORGANIZATIONAL_UNIT_NAME)
     if len(teams)!=1:raise SetupError('Could not determine the actual Apple team from its distribution certificate.')
@@ -104,21 +105,15 @@ def signing(api,bundle,state_dir):
 def trigger(branch,message):
     ref=json.loads(gh(['api','repos/'+REPO+'/git/ref/heads/'+SOURCE_BRANCH]))
     head=ref['object']['sha'];commit=json.loads(gh(['api','repos/'+REPO+'/git/commits/'+head]))
-    body={'message':message+' '+datetime.datetime.now(datetime.timezone.utc).isoformat(),'tree':commit['tree']['sha'],'parents':[head]}
+    stamp=datetime.datetime.now(datetime.timezone.utc)
+    body={'message':message+' '+stamp.isoformat(),'tree':commit['tree']['sha'],'parents':[head]}
     created=json.loads(gh(['api','repos/'+REPO+'/git/commits','--input','-'],json.dumps(body).encode()))
-    try:
-        existing=json.loads(gh(['api','repos/'+REPO+'/git/ref/heads/'+branch]))
-    except SetupError:existing=None
-    if existing:
-        old=existing['object']['sha']
-        comparison=json.loads(gh(['api','repos/'+REPO+'/compare/'+old+'...'+head]))
-        if comparison.get('status') not in ['ahead','identical']:
-            raise SetupError('Release-trigger branch diverged. No branch was overwritten; review it manually.')
-        gh(['api','--method','PATCH','repos/'+REPO+'/git/refs/heads/'+branch,'--input','-'],json.dumps({'sha':created['sha'],'force':False}).encode())
-    else:
-        gh(['api','repos/'+REPO+'/git/refs','--input','-'],json.dumps({'ref':'refs/heads/'+branch,'sha':created['sha']}).encode())
-    print('Started '+branch+' at '+created['sha'][:12])
+    # A fresh isolated trigger branch avoids force-updating or overwriting existing branches.
+    unique=branch+'/'+stamp.strftime('%Y%m%dT%H%M%S%fZ')
+    gh(['api','repos/'+REPO+'/git/refs','--input','-'],json.dumps({'ref':'refs/heads/'+unique,'sha':created['sha']}).encode())
+    print('Started '+unique+' at '+created['sha'][:12])
     print('Monitor: https://github.com/'+REPO+'/actions')
+
 
 def main():
     parser=argparse.ArgumentParser()
@@ -134,9 +129,13 @@ def main():
     pem=args.key_file.expanduser().read_bytes()
     api=AppleAPI(key_id,issuer,pem)
     config=json.loads((ROOT/'submission.json').read_text())
-    if args.contact_file:config.update(json.loads(args.contact_file.read_text()))
+    if args.contact_file:config.update(json.loads(args.contact_file.expanduser().read_text()))
     bundle_id=config['bundleId']
     app=api.app(bundle_id)  # Authenticate/read before any Apple mutation.
+    # Prove dedicated repository secret-write access before creating signing resources.
+    set_secret('CARDIOFOCUS_ASC_KEY_ID',key_id)
+    set_secret('CARDIOFOCUS_ASC_ISSUER_ID',issuer)
+    set_secret('CARDIOFOCUS_ASC_PRIVATE_KEY_P8',pem)
     bundle=api.register_bundle(bundle_id)
     print('Bundle identifier registered: '+bundle_id)
     if app is None:
@@ -155,17 +154,21 @@ def main():
         if not build or build.get('attributes',{}).get('processingState')!='VALID':raise SetupError('The selected version/build is not processed and VALID in Apple. Submission was not triggered.')
         config['signedBuildUploaded']=True
         # Derive the team from saved, owner-controlled signing state rather than inventing it.
-        state=json.loads((args.state_directory/'signing-state.json').read_text())
+        state=json.loads((args.state_directory.expanduser()/'signing-state.json').read_text())
         cert=api.request('GET','/v1/certificates/'+state['certificateId'])['data']
         parsed=x509.load_der_x509_certificate(base64.b64decode(cert['attributes']['certificateContent']))
         config['appleTeamId']=parsed.subject.get_attributes_for_oid(NameOID.ORGANIZATIONAL_UNIT_NAME)[0].value
         set_secret('CARDIOFOCUS_SUBMISSION_CONFIG_JSON',json.dumps(config))
-        gh(['api','--method','PATCH','repos/'+REPO+'/actions/variables/CARDIOFOCUS_REVIEW_BUILD_NUMBER','--input','-'],json.dumps({'name':'CARDIOFOCUS_REVIEW_BUILD_NUMBER','value':args.build_number}).encode()) if json.loads(gh(['api','repos/'+REPO+'/actions/variables'])).get('variables') and any(v['name']=='CARDIOFOCUS_REVIEW_BUILD_NUMBER' for v in json.loads(gh(['api','repos/'+REPO+'/actions/variables']))['variables']) else gh(['api','repos/'+REPO+'/actions/variables','--input','-'],json.dumps({'name':'CARDIOFOCUS_REVIEW_BUILD_NUMBER','value':args.build_number}).encode())
+        variables=json.loads(gh(['api','repos/'+REPO+'/actions/variables'])).get('variables',[])
+        body=json.dumps({'name':'CARDIOFOCUS_REVIEW_BUILD_NUMBER','value':args.build_number}).encode()
+        if any(v['name']=='CARDIOFOCUS_REVIEW_BUILD_NUMBER' for v in variables):
+            gh(['api','--method','PATCH','repos/'+REPO+'/actions/variables/CARDIOFOCUS_REVIEW_BUILD_NUMBER','--input','-'],body)
+        else:gh(['api','repos/'+REPO+'/actions/variables','--input','-'],body)
         trigger('cardiofocus/apple-submit-review','Submit processed CardioFocus build for Apple review')
         return
     team,p12,password,profile=signing(api,bundle,args.state_directory.expanduser())
     config['appleTeamId']=team;config['signedBuildUploaded']=False
-    values={'CARDIOFOCUS_ASC_KEY_ID':key_id,'CARDIOFOCUS_ASC_ISSUER_ID':issuer,'CARDIOFOCUS_ASC_PRIVATE_KEY_P8':pem,'CARDIOFOCUS_APPLE_TEAM_ID':team,'CARDIOFOCUS_CERTIFICATE_P12_BASE64':base64.b64encode(p12).decode(),'CARDIOFOCUS_CERTIFICATE_PASSWORD':password,'CARDIOFOCUS_PROVISIONING_PROFILE_BASE64':profile,'CARDIOFOCUS_SUBMISSION_CONFIG_JSON':json.dumps(config)}
+    values={'CARDIOFOCUS_APPLE_TEAM_ID':team,'CARDIOFOCUS_CERTIFICATE_P12_BASE64':base64.b64encode(p12).decode(),'CARDIOFOCUS_CERTIFICATE_PASSWORD':password,'CARDIOFOCUS_PROVISIONING_PROFILE_BASE64':profile,'CARDIOFOCUS_SUBMISSION_CONFIG_JSON':json.dumps(config)}
     for name,value in values.items():set_secret(name,value)
     print('API access, exact app ID, signing and private review metadata configured. No Apple review submission has occurred.')
     if args.start_upload:trigger('cardiofocus/apple-upload','Build, sign and upload CardioFocus')

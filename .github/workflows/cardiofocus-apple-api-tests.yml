@@ -1,0 +1,25 @@
+name: CardioFocus Apple API tests
+on:
+  push:
+    branches: ['cardiofocus/app-store-review']
+    paths: ['ios/CardioFocus/scripts/**', 'ios/CardioFocus/tests/**', 'ios/CardioFocus/fastlane/**', '.github/workflows/cardiofocus-apple-api-tests.yml', '.github/workflows/cardiofocus-release.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  api-code:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install cryptography for synthetic tests
+        run: python3 -m pip install 'cryptography>=43,<47'
+      - name: Test JWT, secret handling, signing reuse and exact review receipts
+        run: python3 -m unittest discover -s ios/CardioFocus/tests -p test_apple_api.py -v
+      - name: Validate shell syntax
+        run: bash -n ios/CardioFocus/scripts/sign_archive.sh
+      - name: Validate Fastlane Ruby syntax
+        run: ruby -c ios/CardioFocus/fastlane/Fastfile

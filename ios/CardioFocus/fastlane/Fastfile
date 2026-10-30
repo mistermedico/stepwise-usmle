@@ -52,6 +52,7 @@ platform :ios do
       skip_screenshots: false,
       submit_for_review: true,
       automatic_release: false,
+      price_tier: 0,
       run_precheck_before_submit: true,
       precheck_include_in_app_purchases: false,
       force: true,

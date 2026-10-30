@@ -71,3 +71,8 @@ Support requests are public GitHub issues. Do not post personal health informati
 The final functional-source validation passed on Xcode 26.3: six unit tests, two iPhone UI tests, and an iPad home-screen UI test. Actual screenshots were captured on iPhone 17 Pro Max (1320×2868) and iPad Pro 13-inch M5 (2064×2752). A native navigation-readability fix and a tab-transition test synchronization fix were verified in this run.
 
 Evidence: https://github.com/mistermedico/stepwise-usmle/actions/runs/41013755585 . Tested commit: `a30305e`. Later changes are submission documentation, screenshots, publisher/privacy contact wording, and release-script checks; application Swift sources are unchanged. Physical-device testing, signed distribution, App Store upload, and Apple review have not occurred.
+
+
+## API route without TinyFish
+
+See [the owner API setup guide](appstore/API-SETUP.md). It provides local, stdin-only GitHub secret configuration, automatic/reusable signing preparation, exact app/build checks, and a review receipt linked to the selected build. No Apple API credentials are currently configured in the project; live readiness run 41064630743 confirmed this. The owner must supply an existing or newly generated team API key through their own computer/GitHub Secrets, not through chat. First app-record creation and API-unsupported account declarations remain one-time actions in Apple's ordinary website.

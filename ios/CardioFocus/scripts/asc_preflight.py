@@ -17,6 +17,7 @@ try:
         bundle=api.bundle(c['bundleId']);report['bundleRegistered']=bool(bundle)
         report['appRecord']={'id':app['id'],'bundleId':app['attributes']['bundleId']} if app else None
         report['status']='api-ready' if app else 'initial-app-record-required'
+        if app and c.get('appStoreAppId') and str(c['appStoreAppId'])!=app['id']:report['status']='configured-app-id-mismatch'
         report['signingSecretsPresent']={name:bool(os.environ.get(name)) for name in ['APPLE_TEAM_ID','CERTIFICATE_P12_BASE64','CERTIFICATE_PASSWORD','PROVISIONING_PROFILE_BASE64']}
 except AppleAPIError as e:report.update(status='apple-api-error',httpStatus=e.status,errorCodes=e.codes)
 except Exception as e:report.update(status='configuration-error',errorType=type(e).__name__)

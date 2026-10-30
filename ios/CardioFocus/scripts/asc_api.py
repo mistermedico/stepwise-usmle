@@ -91,7 +91,7 @@ class AppleAPI:
         accepted=[]
         for submission in submissions:
             if submission.get('attributes',{}).get('state') not in ['WAITING_FOR_REVIEW','IN_REVIEW','COMPLETING','COMPLETE']:continue
-            items=self.collection('/v1/reviewSubmissions/'+submission['id']+'/items',{'limit':200})
+            items=self.collection('/v1/reviewSubmissions/'+submission['id']+'/items',{'limit':200,'include':'appStoreVersion'})
             for item in items:
                 version=item.get('relationships',{}).get('appStoreVersion',{}).get('data')
                 if not version:continue

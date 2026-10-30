@@ -26,7 +26,8 @@ jobs:
     env:
       ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
       ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
-      APP_BUILD_NUMBER: ${{ inputs.build_number || github.run_number }}
+      APP_BUILD_NUMBER: ${{ inputs.build_number || (github.ref_name == 'cardiofocus/apple-upload' && github.run_number) || vars.CARDIOFOCUS_REVIEW_BUILD_NUMBER }}
+      CARDIOFOCUS_SUBMISSION_CONFIG_JSON: ${{ secrets.CARDIOFOCUS_SUBMISSION_CONFIG_JSON }}
       APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
     steps:
       - uses: actions/checkout@v4

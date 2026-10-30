@@ -27,16 +27,19 @@ Run the scheme's unit and UI tests on an available iPhone and iPad simulator. `.
 
 Use an Apple Developer Program account with App Store Connect privileges sufficient to create and submit the app. Sign in directly using the secure browser setup offered in the conversation. Never paste passwords, 2FA codes, private keys, certificate passwords, or session cookies into chat, source code, an issue, or an application artifact.
 
-Owner-controlled missing fields are in `submission.json`. Team IDs and app IDs must be copied from the actual selected Apple account. The local bundle ID is provisional until registered in that account. Genuine review contact details and publisher copyright are required; they are deliberately not invented.
+Owner-controlled missing fields are listed in the public template `submission.json`. Supply actual publisher and review-contact values through the GitHub Actions secret `CARDIOFOCUS_SUBMISSION_CONFIG_JSON` (a JSON object overriding that template); do not commit personal contact details to the public integration branch. Team IDs and app IDs must be copied from the actual selected Apple account. The local bundle ID is provisional until registered in that account. Genuine review contact details and publisher copyright are required; they are deliberately not invented.
 
 ## Signing and upload
 
 Configure these as GitHub Actions secrets for the selected repository, not as committed files:
 
+- `CARDIOFOCUS_SUBMISSION_CONFIG_JSON`: actual account/contact metadata and readiness evidence, supplied privately as a JSON object.
 - `ASC_KEY_ID`, `ASC_ISSUER_ID`, `ASC_PRIVATE_KEY_BASE64`: an App Store Connect API key with the required role.
 - `APPLE_TEAM_ID`: the actual distribution team.
 - `CERTIFICATE_P12_BASE64`, `CERTIFICATE_PASSWORD`: an Apple Distribution certificate and its private key exported as PKCS#12.
 - `PROVISIONING_PROFILE_BASE64`: an App Store distribution profile for the exact bundle ID and certificate.
+
+On the upload-trigger branch, the CI run number is used as a unique build number. For the submit-review trigger branch, set repository variable `CARDIOFOCUS_REVIEW_BUILD_NUMBER` to the actual processed build number; do not use a new arbitrary run number. Manual dispatch accepts the explicit build-number input.
 
 The release workflow validates profile type, bundle, team, and expiry, imports signing material into an ephemeral runner keychain, archives and exports a real distribution IPA, and uploads it using Fastlane. The certificate/profile and API key are required; no production credentials are included in this package.
 

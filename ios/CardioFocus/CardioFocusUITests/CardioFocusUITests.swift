@@ -19,15 +19,26 @@ final class CardioFocusUITests: XCTestCase {
         XCTAssertTrue(app.otherElements["answerExplanation"].exists || app.staticTexts["Key explanation"].exists || app.staticTexts["Correct"].exists)
         attach("04-Answer-explanation", app: app)
         app.buttons["Exit"].tap(); app.buttons["Leave session"].tap()
-        app.tabBars.buttons["Cards"].tap()
-        XCTAssertTrue(app.buttons["flashcard"].waitForExistence(timeout: 5)); attach("05-Flashcards", app: app)
-        app.tabBars.buttons["Progress"].tap(); attach("06-Progress", app: app)
+        XCTAssertTrue(app.buttons["practiceUnit"].waitForExistence(timeout: 10))
+        tapTab("Cards", app: app)
+        XCTAssertTrue(app.buttons["flashcard"].waitForExistence(timeout: 10)); attach("05-Flashcards", app: app)
+        tapTab("Progress", app: app)
+        XCTAssertTrue(app.navigationBars["Your progress"].waitForExistence(timeout: 10))
+        attach("06-Progress", app: app)
     }
     @MainActor
     func testCaptureHomeScreen() throws {
         let app = XCUIApplication(); app.launchArguments = ["--ui-testing"]; app.launch()
         XCTAssertTrue(app.navigationBars["CardioFocus"].waitForExistence(timeout: 20))
         attach("01-Home-native", app: app)
+    }
+    @MainActor
+    private func tapTab(_ name: String, app: XCUIApplication) {
+        let button = app.tabBars.buttons[name].firstMatch
+        XCTAssertTrue(button.waitForExistence(timeout: 10))
+        let ready = XCTNSPredicateExpectation(predicate: NSPredicate(format: "isHittable == true"), object: button)
+        XCTAssertEqual(XCTWaiter.wait(for: [ready], timeout: 10), .completed)
+        button.tap()
     }
     @MainActor
     private func attach(_ name: String, app: XCUIApplication) {

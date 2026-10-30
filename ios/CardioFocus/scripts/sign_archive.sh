@@ -32,7 +32,7 @@ security cms -D -i "$WORK/profile.mobileprovision" > "$WORK/profile.plist"
 python3 - <<'PY'
 import os,plistlib,pathlib,json,shutil,datetime,sys
 p=pathlib.Path(os.environ['SIGNING_WORK_DIR']);profile=plistlib.loads((p/'profile.plist').read_bytes())
-c=json.loads(pathlib.Path('submission.json').read_text());bundle=c['bundleId'];team=os.environ['APPLE_TEAM_ID']
+c=json.loads(pathlib.Path('submission.json').read_text());c.update(json.loads((os.environ.get('CARDIOFOCUS_SUBMISSION_CONFIG_JSON') or '{}')));bundle=c['bundleId'];team=os.environ['APPLE_TEAM_ID']
 if profile.get('TeamIdentifier',[None])[0]!=team:sys.exit('Provisioning team does not match selected Apple team')
 if profile.get('Entitlements',{}).get('application-identifier')!=team+'.'+bundle:sys.exit('Provisioning profile does not match bundle ID')
 if profile.get('Entitlements',{}).get('get-task-allow'):sys.exit('Development profiles are not suitable for App Store distribution')
@@ -44,7 +44,7 @@ shutil.copy(p/'profile.mobileprovision',dest/(profile['UUID']+'.mobileprovision'
 plistlib.dump({'method':'app-store-connect','signingStyle':'manual','teamID':team,'uploadSymbols':True,'provisioningProfiles':{bundle:profile['Name']}},open('ExportOptions.plist','wb'))
 PY
 PROFILE_NAME="$(cat "$WORK/profile-name")"
-BUNDLE_ID="$(python3 -c 'import json;print(json.load(open("submission.json"))["bundleId"])')"
+BUNDLE_ID="$(python3 -c 'import json,os;c=json.load(open("submission.json"));c.update(json.loads((os.environ.get("CARDIOFOCUS_SUBMISSION_CONFIG_JSON") or "{}")));print(c["bundleId"])')"
 mkdir -p build
 xcodebuild archive -project CardioFocus.xcodeproj -scheme CardioFocus -configuration Release \
   -destination 'generic/platform=iOS' -archivePath build/CardioFocus.xcarchive \

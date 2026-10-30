@@ -1,7 +1,7 @@
 {
   "status": "preparing-not-submitted",
   "nativeSource": "https://github.com/mistermedico/stepwise-usmle/tree/cardiofocus/app-store-review/ios/CardioFocus",
-  "validationRun": "https://github.com/mistermedico/stepwise-usmle/actions/runs/41011487846",
+  "validationRun": "https://github.com/mistermedico/stepwise-usmle/actions/runs/41012694768",
   "validationState": "in_progress",
   "publicWebApp": "https://cardio-step1-he.mistermedico.chatgpt.site",
   "supportURL": "https://cardio-step1-he.mistermedico.chatgpt.site/support.html",
@@ -17,5 +17,21 @@
     "Actual publisher/copyright identity",
     "Signing material or authorized signing access",
     "Final age-rating, privacy, availability and legal declarations"
-  ]
+  ],
+  "firstSuccessfulValidation": {
+    "runId": 41011487846,
+    "commit": "a0f615a99afd754acb20f77dcb22d38dc09de00b",
+    "url": "https://github.com/mistermedico/stepwise-usmle/actions/runs/41011487846",
+    "xcode": "26.3",
+    "unitTests": 6,
+    "uiTests": 1,
+    "testFailures": 0,
+    "screenshotCount": 6,
+    "screenshotPixels": [
+      1320,
+      2868
+    ],
+    "device": "iPhone 17 Pro Max simulator"
+  },
+  "publicURLsVerifiedHTTP200": true
 }

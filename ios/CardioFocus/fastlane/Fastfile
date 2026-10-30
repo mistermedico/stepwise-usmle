@@ -3,7 +3,7 @@ require 'fileutils'
 
 def configuration
   path = File.expand_path('../submission.json', __dir__)
-  JSON.parse(File.read(path))
+  JSON.parse(File.read(path)).merge(JSON.parse(ENV['CARDIOFOCUS_SUBMISSION_CONFIG_JSON'].to_s.strip.empty? ? '{}' : ENV['CARDIOFOCUS_SUBMISSION_CONFIG_JSON']))
 end
 
 def asc_key
@@ -23,7 +23,7 @@ platform :ios do
     UI.user_error!('Set the actual App Store app ID in submission.json first') if config['appStoreAppId'].to_s.empty?
     upload_to_testflight(
       api_key: asc_key,
-      ipa: ENV.fetch('IPA_PATH'),
+      ipa: File.expand_path(ENV.fetch('IPA_PATH'), File.expand_path('..', __dir__)),
       app_identifier: config.fetch('bundleId'),
       apple_id: config.fetch('appStoreAppId'),
       skip_waiting_for_build_processing: true,
@@ -33,13 +33,14 @@ platform :ios do
 
   desc 'Apply completed metadata and submit the selected processed build for Apple review'
   lane :submit_review do
-    sh('python3 scripts/preflight.py --submission')
+    sh('python3', File.expand_path('../scripts/preflight.py', __dir__), '--submission')
     config = configuration
     screenshot_root = File.expand_path('../appstore/screenshots', __dir__)
     phone = Dir.glob(File.join(screenshot_root, '**', 'iphone*.png'))
     ipad = Dir.glob(File.join(screenshot_root, '**', 'ipad*.png'))
     UI.user_error!('Actual iPhone and iPad screenshots must be prepared before submission') if phone.empty? || ipad.empty?
     build_number = ENV.fetch('APP_BUILD_NUMBER')
+    UI.user_error!('Supply the actual processed App Store build number') if build_number.strip.empty?
     upload_to_app_store(
       api_key: asc_key,
       app_identifier: config.fetch('bundleId'),

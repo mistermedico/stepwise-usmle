@@ -39,7 +39,7 @@ Configure these as GitHub Actions secrets for the selected repository, not as co
 - `CERTIFICATE_P12_BASE64`, `CERTIFICATE_PASSWORD`: an Apple Distribution certificate and its private key exported as PKCS#12.
 - `PROVISIONING_PROFILE_BASE64`: an App Store distribution profile for the exact bundle ID and certificate.
 
-On the upload-trigger branch, the CI run number is used as a unique build number. For the submit-review trigger branch, set repository variable `CARDIOFOCUS_REVIEW_BUILD_NUMBER` to the actual processed build number; do not use a new arbitrary run number. Manual dispatch accepts the explicit build-number input.
+The API setup helper chooses a build number newer than the existing Apple builds and encodes it in an isolated release-trigger branch. Review branches encode the exact already processed build number, so an unrelated CI run number cannot select the wrong build. Manual dispatch accepts an explicit build number; legacy direct trigger branches can use the repository build-number variables.
 
 The release workflow validates profile type, bundle, team, and expiry, imports signing material into an ephemeral runner keychain, archives and exports a real distribution IPA, and uploads it using Fastlane. The certificate/profile and API key are required; no production credentials are included in this package.
 

@@ -3,7 +3,7 @@ No TinyFish, Apple-account password, or App Store session cookie is used.
 Private keys are read locally and sent to GitHub through stdin, never command arguments.
 """
 from __future__ import annotations
-import argparse,base64,datetime,getpass,json,os,secrets,subprocess,sys,time
+import argparse,base64,datetime,getpass,json,os,re,secrets,subprocess,sys,time
 from pathlib import Path
 from cryptography import x509
 from cryptography.hazmat.primitives import hashes,serialization
@@ -102,6 +102,19 @@ def signing(api,bundle,state_dir):
     p12=pkcs12.serialize_key_and_certificates(b'CardioFocus Distribution',key,cert,None,serialization.BestAvailableEncryption(password.encode()))
     return team,p12,password,profile['attributes']['profileContent']
 
+def choose_upload_build(api,app_id,marketing_version,requested=None):
+    builds=api.collection('/v1/builds',{'filter[app]':app_id,'filter[preReleaseVersion.version]':marketing_version,'filter[preReleaseVersion.platform]':'IOS','limit':200})
+    def parts(value):
+        if not re.fullmatch(r'[0-9]+(?:\.[0-9]+){0,2}',value):raise SetupError('Existing build format is unexpected; review build numbering manually.')
+        numbers=[int(p) for p in value.split('.')];return tuple(numbers+[0]*(3-len(numbers)))
+    existing=[parts(b['attributes']['version']) for b in builds]
+    if requested:
+        candidate=parts(requested)
+        if candidate[0]<1 or (existing and candidate<=max(existing)):raise SetupError('Choose a build number newer than the existing Apple builds.')
+        return requested
+    return str(max((p[0] for p in existing),default=0)+1)
+
+
 def trigger(branch,message):
     ref=json.loads(gh(['api','repos/'+REPO+'/git/ref/heads/'+SOURCE_BRANCH]))
     head=ref['object']['sha'];commit=json.loads(gh(['api','repos/'+REPO+'/git/commits/'+head]))
@@ -159,19 +172,16 @@ def main():
         parsed=x509.load_der_x509_certificate(base64.b64decode(cert['attributes']['certificateContent']))
         config['appleTeamId']=parsed.subject.get_attributes_for_oid(NameOID.ORGANIZATIONAL_UNIT_NAME)[0].value
         set_secret('CARDIOFOCUS_SUBMISSION_CONFIG_JSON',json.dumps(config))
-        variables=json.loads(gh(['api','repos/'+REPO+'/actions/variables'])).get('variables',[])
-        body=json.dumps({'name':'CARDIOFOCUS_REVIEW_BUILD_NUMBER','value':args.build_number}).encode()
-        if any(v['name']=='CARDIOFOCUS_REVIEW_BUILD_NUMBER' for v in variables):
-            gh(['api','--method','PATCH','repos/'+REPO+'/actions/variables/CARDIOFOCUS_REVIEW_BUILD_NUMBER','--input','-'],body)
-        else:gh(['api','repos/'+REPO+'/actions/variables','--input','-'],body)
-        trigger('cardiofocus/apple-submit-review','Submit processed CardioFocus build for Apple review')
+        trigger('cardiofocus/apple-submit-review/'+args.build_number,'Submit processed CardioFocus build for Apple review')
         return
     team,p12,password,profile=signing(api,bundle,args.state_directory.expanduser())
     config['appleTeamId']=team;config['signedBuildUploaded']=False
     values={'CARDIOFOCUS_APPLE_TEAM_ID':team,'CARDIOFOCUS_CERTIFICATE_P12_BASE64':base64.b64encode(p12).decode(),'CARDIOFOCUS_CERTIFICATE_PASSWORD':password,'CARDIOFOCUS_PROVISIONING_PROFILE_BASE64':profile,'CARDIOFOCUS_SUBMISSION_CONFIG_JSON':json.dumps(config)}
     for name,value in values.items():set_secret(name,value)
     print('API access, exact app ID, signing and private review metadata configured. No Apple review submission has occurred.')
-    if args.start_upload:trigger('cardiofocus/apple-upload','Build, sign and upload CardioFocus')
+    if args.start_upload:
+        number=choose_upload_build(api,app['id'],config['appVersion'],args.build_number)
+        trigger('cardiofocus/apple-upload/'+number,'Build, sign and upload CardioFocus')
     else:print('Use --start-upload to trigger the signed macOS build after setup.')
 
 if __name__=='__main__':

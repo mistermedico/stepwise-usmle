@@ -30,6 +30,15 @@ jobs:
       APPLE_TEAM_ID: ${{ secrets.CARDIOFOCUS_APPLE_TEAM_ID || secrets.APPLE_TEAM_ID }}
     steps:
       - uses: actions/checkout@v4
+      - name: Resolve immutable build number from release branch or explicit input
+        run: |
+          python3 - <<'PYTHON'
+          import os,re,sys
+          parts=os.environ.get('GITHUB_REF_NAME','').split('/')
+          number=parts[2] if len(parts)>=4 and parts[1] in ['apple-upload','apple-submit-review'] else os.environ.get('APP_BUILD_NUMBER','')
+          if not re.fullmatch(r'[0-9]+(?:\.[0-9]+){0,2}',number):sys.exit('An actual numeric build number is required.')
+          with open(os.environ['GITHUB_ENV'],'a') as f:f.write('APP_BUILD_NUMBER='+number+'\n')
+          PYTHON
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'

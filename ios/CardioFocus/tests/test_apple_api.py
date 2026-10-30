@@ -125,6 +125,11 @@ class OwnerSetupTests(unittest.TestCase):
   output=io.StringIO()
   with patch.object(setup,'gh',return_value=b'') as call,contextlib.redirect_stdout(output):setup.set_secret('CARDIOFOCUS_TEST','SYNTHETIC_PRIVATE_VALUE')
   self.assertNotIn('SYNTHETIC_PRIVATE_VALUE',output.getvalue());self.assertNotIn('SYNTHETIC_PRIVATE_VALUE',' '.join(call.call_args.args[0]));self.assertEqual(call.call_args.args[1],b'SYNTHETIC_PRIVATE_VALUE')
+ def test_new_upload_build_is_newer_than_existing_app_versions(self):
+  api=Mock();api.collection.return_value=[{'attributes':{'version':'2.99.1'}},{'attributes':{'version':'3'}}]
+  self.assertEqual(setup.choose_upload_build(api,'APP','1.0.0'),'4')
+  with self.assertRaises(setup.SetupError):setup.choose_upload_build(api,'APP','1.0.0','2')
+  self.assertEqual(setup.choose_upload_build(api,'APP','1.0.0','5'),'5')
  def test_private_writer_refuses_symlink(self):
   if os.name=='nt':self.skipTest('POSIX O_NOFOLLOW check')
   with tempfile.TemporaryDirectory() as directory:

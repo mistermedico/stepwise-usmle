@@ -14,7 +14,7 @@ https://appstoreconnect.apple.com/access/integrations/api
 
 The key must be allowed to access the app and the Certificates, Identifiers & Profiles API. If Apple denies certificate creation, no existing certificate is revoked. Save the `.p8` download privately; Apple typically offers the private-key download only once. Record its Key ID and Issuer ID. Never paste the private key into chat, source, issues, or public logs.
 
-On the owner's Mac, Windows, or Linux computer, install Python 3.10+ and the GitHub CLI. Authenticate `gh` as an account permitted to manage Actions secrets and contents in `mistermedico/stepwise-usmle`. A personal/fine-grained credential needs the appropriate repository Secrets, Variables, Contents, and Actions permissions. The ChatGPT integration's narrower credential is not sufficient to manage secrets.
+On the owner's Mac, Windows, or Linux computer, install Python 3.10+ and the GitHub CLI. Authenticate `gh` as an account permitted to manage Actions secrets and contents in `mistermedico/stepwise-usmle`. A personal/fine-grained credential needs the appropriate repository Secrets, Contents, and Actions permissions. The ChatGPT integration's narrower credential is not sufficient to manage secrets.
 
 From the extracted setup package:
 
@@ -84,6 +84,6 @@ Private review-contact fields are masked individually in public CI logs. Runtime
 
 ## Evidence and validation limits
 
-Fifteen mocked local tests cover JWT signatures, origin/redirect restrictions, exact app selection, bundle-ID idempotency, reusable signing material, private file permissions, secret stdin handling, editable age-rating selection, and exact-build review receipts. These tests do not prove live Apple API access; live authentication remains blocked until an owner-controlled key is configured. Native Swift sources and curriculum are unchanged from the passing iPhone/iPad validation run 41013755585.
+Sixteen mocked local tests cover JWT signatures, origin/redirect restrictions, exact app selection, bundle-ID idempotency, reusable signing material, private file permissions, secret stdin handling, editable age-rating selection, and exact-build review receipts. These tests do not prove live Apple API access; live authentication remains blocked until an owner-controlled key is configured. Native Swift sources and curriculum are unchanged from the passing iPhone/iPad validation run 41013755585.
 
 Official API contract: https://developer.apple.com/sample-code/app-store-connect/app-store-connect-openapi-specification.zip

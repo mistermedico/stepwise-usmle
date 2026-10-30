@@ -2,7 +2,7 @@ name: CardioFocus iOS validation
 on:
   push:
     branches: ['cardiofocus/app-store-review']
-    paths: ['ios/CardioFocus/**', '.github/workflows/cardiofocus-ios.yml']
+    paths: ['ios/CardioFocus/CardioFocus/**', 'ios/CardioFocus/CardioFocusTests/**', 'ios/CardioFocus/CardioFocusUITests/**', 'ios/CardioFocus/project.yml', '.github/workflows/cardiofocus-ios.yml']
   workflow_dispatch:
 permissions:
   contents: read
